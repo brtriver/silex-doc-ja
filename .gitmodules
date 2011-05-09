@@ -1,0 +1,3 @@
+[submodule "Silex.git"]
+	path = Silex.git
+	url = https://github.com/fabpot/Silex.git
