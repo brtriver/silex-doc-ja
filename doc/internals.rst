@@ -1,91 +1,80 @@
-Internals
+内部の仕組み
 =========
 
-This chapter will tell you a bit about how Silex works
-internally.
+この章ではSilex内部でどのように処理しているかについて説明します。
 
 Silex
 -----
 
-Application
+アプリケーション (Application)
 ~~~~~~~~~~~
 
-The application is the main interface to Silex. It
-implements Symfony2's `HttpKernelInterface
+アプリケーションは Silex の中心となるインターフェースです。
+Symfony2 の `HttpKernelInterface
 <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernelInterface.html>`_,
-so you can pass a `Request
+を実装しています。
+そのため、 `Request
 <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_
-to the ``handle`` method and it will return a `Response
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_.
+を ``handle`` メソッドに渡すことで `Response
+<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_
+が返されます.
 
-It extends the ``Pimple`` service container, allowing
-for flexibility on the outside as well as the inside. you
-could replace any service, and you are also able to read
-them.
+これは ``Pimple`` サービスコンテナを拡張して実現されています。
+そのため、内部から扱うのと同じぐらい外部からでも柔軟性をもって利用することができます。
+つまりどのサービスも置き換えることができ、それらを読み込むことができます。
 
-The application makes strong use of the `EventDispatcher
+アプリケーションは Symfony2 HttpKernel イベントをフックするために `EventDispatcher
 <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
-to hook into the Symfony2 HttpKernel events. This allows
-fetching the ``Request``, converting string responses into
-``Response`` objects and handling Exceptions. We also use it
-to dispatch some custom events like before/after filters and
-errors.
+を使っています。
+イベントディスパッチャーのおかげで ``Request`` を取得し文字列のレスポンスを ``Response`` オブジェクトに変換したり例外をハンドリングしたりすることができます。
+この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。
 
-Controller
+コントローラー (Controller)
 ~~~~~~~~~~
 
-The Symfony2 `Route
+Symfony2 の `ルーティング (Route)
 <http://api.symfony.com/2.0/Symfony/Component/Routing/Route.html>`_
-is actually quite powerful. Routes
-can be named, which allows for URL generation. They can
-also have requirements for the variable parts. In order
-to allow settings these through a nice interface the
-``match`` method (which is used by ``get``, ``post``, etc.)
-returns an instance of the ``Controller``, which wraps
-a route.
+は本当に強力な機能です。
 
-ControllerCollection
+ルーティングに名前が付けることができ、そのルーティング名でURLを生成することができます。
+URLの可変部分を必須項目にすることもできます。
+すばらしいインターフェースを通してこれらの設定を行えるようにするために、(``get``, ``post`` メソッドなどから呼び出される) ``match`` メソッド  は ``Controller`` のインスタンスを返してくれます。
+そして、この ``Controller`` がルーティングを包み込んでいます。
+
+コントローラーコレクション (ControllerCollection)
 ~~~~~~~~~~~~~~~~~~~~
 
-One of the goals of exposing the `RouteCollection
+`ルーティングコレクション (RouteCollection)
 <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
-was to make it mutable, so extensions could add stuff to it.
-The challenge here is the fact that routes know nothing
-about their name. The name only has meaning in context
-of the ``RouteCollection`` and cannot be changed.
+を見えるようにした目的の1つは変更できるようにするためでした。その結果、エクステンションで要素をルーティングコレクションに追加できるようになりました。
+この試みはルーティングが自分たちの名前を全くしらないということが本当のところです。
+名前は ``RouteCollection`` の前後関係においてのみ意味を持っていて、その名前は変えることができません。
 
-To solve this challenge we came up with a staging area
-for routes. The ``ControllerCollection`` holds the
-controllers until ``flush`` is called, at which point
-the routes are added to the ``RouteCollection``. Also,
-the controllers are then frozen. This means that they can
-no longer be modified and will throw an Exception if
-you try to do so.
+この試みを解決するために、私たちはルーティングのための中間の準備領域を用意することを思いつきました。
+``ControllerCollection`` は ``flush`` が呼ばれるまでコントローラーを保持しています。
+そして ``flush`` が呼ばれた時点でルーティングを ``ルーティングコレクション (RouteCollection)``に追加します。
+そしてコントローラーは凍結(freeze)されます。
+これが意味することは凍結されるとルーティング名を変更することはできず、もし変更しようとすると例外を投げるということです。
 
-Unfortunately no good way for flushing implicitly
-could be found, which is why flushing is now always
-explicit. The Application will flush, but if you want
-to read the ``ControllerCollection`` before the
-request takes place, you will have to call flush
-yourself.
+あいにくflush以外の良い方法が思いつきませんでした。なぜならflushを呼ぶということに曖昧さがないからです。
+アプリケーションは flushを自動で呼び出しますが、リクエストが処理される前に``ControllerCollection``を読みたいのなら、あなた自身でflushを呼ぶ必要があります。
 
-The ``Application`` provides a shortcut ``flush``
-method for flushing the ``ControllerCollection``.
+``Application`` には ``ControllerCollection``を flush するための ``flush``というショートカットメソッドが用意されています。
 
 Symfony2
 --------
 
-Following Symfony2 components are used by Silex:
+以下の Symfony2 コンポーネントが Silex　で利用されています:
 
-* **ClassLoader**: For autoloading classes.
+* **ClassLoader**: クラスの自動読み込みのため
 
-* **HttpFoundation**: For ``Request`` and ``Response``.
+* **HttpFoundation**: ``Request`` と ``Response`` のため.
 
-* **HttpKernel**: Because we need a heart.
+* **HttpKernel**: なぜなら中枢部分が必要だから
 
-* **Routing**: For matching defined routes.
+* **Routing**: 定義したルーティングと一致するかどうかを確認するため
 
-* **EventDispatcher**: For hooking into the HttpKernel.
+* **EventDispatcher**: HttpKernelにフックするため
 
-For more information, `check out the Symfony website
+より多くの情報を知りたい場合は、　`Symfony のサイトをチェックしてみてください
 <http://symfony.com/>`_.
