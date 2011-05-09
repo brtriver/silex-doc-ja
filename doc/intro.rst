@@ -1,26 +1,23 @@
-Introduction
+イントロダクション
 ============
 
-Silex is a PHP microframework for PHP 5.3. It is built on the shoulders
-of Symfony2 and Pimple and also inspired by sinatra.
+Silex は PHP 5.3 以上で動作する PHPマイクロフレームワークです。 Symfony2 のコンポーネントと Pimple を利用して構築されており、 sinatra からもインスパイアされています。
 
-A microframework provides the guts for building simple single-file apps.
-Silex aims to be:
+マイクロフレームワークを使うことでシンプルな1ファイル構成でアプリケーションを書くことができます。
+Silex には次のような目的があります:
 
-* *Concise*: Silex exposes a intuitive and concise API that is fun to use.
+* *簡潔*: Silex は直感的であり使っていて楽しくなる簡潔なAPIが用意されています。
 
-* *Extensible*: Silex has an extension system based around the Pimple
-  micro service-container that makes it even easier to tie in third party
-  libraries.
+* *高い拡張性*: Silex は Pimple というマイクロサービスコンテナーを利用した拡張機能を備えています。
+  Pimple によって簡単にサードパーティーのライブラリを利用できます。
 
-* *Testable*: Silex uses Symfony2's HttpKernel which abstracts request and
-  response. This makes it very easy to test apps and the framework itself.
-  It also respects the HTTP specification and encourages its proper use.
+* *テスト*: Silex は Symfony2 の リクエストとレスポンスを抽象化しているHttpKernelコンポーネントを利用しています。
+  このおかげで、アプリケーションやフレームワーク自身をテストすることはとても簡単になっています。
+  また、HTTPの仕様書を順守し適切な利用を促進します。
 
-In a nutshell, you define controllers and map them to routes, all in one
-step.
+簡潔に述べると、コントローラーを定義しそれらをルーティングにマップする作業のすべてをたった1ステップで行うことができるのです。
 
-**Let's go!** ::
+**使ってみましょう!** ::
 
     require_once __DIR__.'/silex.phar';
 
@@ -32,16 +29,14 @@ step.
 
     $app->run();
 
-All that is needed to get access to the Framework is to include
-``silex.phar``. This phar (PHP Archive) file will take care of the rest.
+フレームワークを利用するために必要なことは ``silex.phar`` をインクルードするだけです。
+あとは、phar(PHP アーカイブ)ファイルが処理を行ってくれます。
 
-Next we define a route to ``/hello/{name}`` that matches for ``GET``
-requests. When the route matches, the function is executed and the return
-value is sent back to the client.
+次に、``GET``リクエストで``/hello/{name}``へのルーティングを定義します。
+ルーティングに一致するリクエストの場合は関数が実行されクライアントに返却される値がreturnで返されます。
 
-Finally, the app is run. It's really that easy!
+最後に、アプリケーションを実行(run)します。　本当に簡単でしょ!!
 
-Installing Silex is as easy as it can get. Download the `silex.phar`_ file
-and you're done!
+Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 `silex.phar` _ ファイルをダウンロードすれば完了です!
 
 .. _silex.phar: http://silex-project.org/get/silex.phar
