@@ -1,14 +1,13 @@
-Usage
+使用方法
 =====
 
-This chapter describes how to use Silex.
+この章では Silex の使い方について説明します。
 
 Bootstrap
 ---------
 
-To include the Silex all you need to do is require the ``silex.phar``
-file and create an instance of ``Silex\Application``. After your
-controller definitions, call the ``run`` method on your application.
+Silex をインクルードするために必要なことは ``silex.phar`` ファイルを require し、 ``Silex\Application`` のインスタンスを作成するだけです。
+あなたのコントローラーを定義したあとに、 ``run`` メソッドをアプリケーション上で呼んでください。
 
 ::
 
@@ -16,14 +15,14 @@ controller definitions, call the ``run`` method on your application.
 
     $app = new Silex\Application();
 
-    // definitions
+    // コントローラーの処理内容を定義する
 
     $app->run();
 
-The use statement aliases ``Silex\Application`` to ``Application``.
+``Silex\Application``　のエイリアスとして ``Application`` が利用できます。
 
-One other thing you have to do is configure your web server. If you
-are using apache you can use a ``.htaccess`` file for this.
+もうひとつあなたがやらなければならないことは、サーバーの設定を行うことです。
+もしApacheを使っていて ``.htaccess`` を利用することができるのならば次のように設定してください。
 
 .. code-block:: apache
 
@@ -38,54 +37,47 @@ are using apache you can use a ``.htaccess`` file for this.
 
 .. note::
 
-    If your site is not at the webroot level you will have to uncomment the
-    ``RewriteBase`` statement and adjust the path to point to your directory,
-    relative from the webroot.
+　　　　もし、 Silex を配置するディレクトリが Webのドキュメントルートでない場合は、　``RewriteBase`` のコメントを外し
+    Webのドキュメントルートからの相対パスであなたのディレクトリ構造に合わせたパスを指定するようにしてください。
 
-Routing
+ルーティング (Routing)
 -------
 
-In Silex you define a route and the controller that is called when that
-route is matched
+Silex ではルーティングと、そのルーティングに一致したときに実行されるコントローラーを定義します
 
-A route pattern consists of:
+ルーティングのパターンは次のような構成になっています:
 
-* *Pattern*: The route pattern defines a path that points to a resource.
-  The pattern can include variable parts and you are able to set
-  RegExp requirements for them.
+* *パターン (Pattern)*: ルーティングパターンでリソースへのパスを定義します。
+  パターンは可変部分を含むことができ、可変部分において正規表現を使った必須項目を設定することができます。
 
-* *Method*: One of the following HTTP methods: ``GET``, ``POST``, ``PUT``
-  ``DELETE``. This describes the interaction with the resource. Commonly
-  only ``GET`` and ``POST`` are used, but it is possible to use the
-  others as well.
+* *メソッド (Method)*: 以下の HTTPメソッド のどれかを指定します: ``GET``, ``POST``, ``PUT``
+  ``DELETE``. これはリソースとの相互作用を表しています。 
+  一般的には、 ``GET`` と ``POST`` だけが利用されますが、他のメソッドも使うことが可能です。
 
-The controller is defined using a closure like this::
+コントローラーはクロージャーを次のように使うことで定義できます:
 
     function () {
         // do something
     }
 
-Closures are anonymous functions that may import state from outside
-of their definition. This is different from globals, because the outer
-state does not have to be global. For instance, you could define a
-closure in a function and import local variables of that function.
+クロージャーは定義の外部から状態を取り込むことができる無名関数のことです。
+これはグローバル変数とは異なります、なぜなら外部の状態はグローバルなものではないからです。
+たとえば、メソッドの中にクロージャーを定義することができ、メソッドのローカル変数を取り込むことができます。
 
 .. note::
 
-    Closures that do not import scope are referred to as lambdas.
-    Because in PHP all anonymous functions are instances of the
-    ``Closure`` class, we will not make a distinction here.
+　　　　スコープを取り込まないクロージャーはラムダのようだと言われます。
+    なぜならPHPの無名関数はすべて ``Closure`` クラスのインスタンスであり、区別することができないからです。
 
-The return value of the closure becomes the content of the page.
+クロージャーの戻り値はページのコンテンツになります。
 
-There is also an alternate way for defining controllers using a
-class method. The syntax for that is ``ClassName::methodName``.
-Static methods are also possible.
+クラスメソッドを利用してコントローラを定義する方法もあります。
+``ClassName::methodName`` でのスタティックな呼び出し構文も利用可能です。
 
-Example GET route
+GET ルーティングの例
 ~~~~~~~~~~~~~~~~~
 
-Here is an example definition of a ``GET`` route::
+ここに ``GET`` ルーティングを定義した例があります:
 
     $blogPosts = array(
         1 => array(
@@ -106,16 +98,15 @@ Here is an example definition of a ``GET`` route::
         return $output;
     });
 
-Visiting ``/blog`` will return a list of blog post titles. The ``use``
-statement means something different in this context. It tells the
-closure to import the $blogPosts variable from the outer scope. This
-allows you to use it from within the closure.
+``/blog`` へアクセスすると 投稿されたブログのタイトルの一覧が返されます。
+ここで使われている ``use`` はこの文脈では別のものであることを意味します。
+外部スコープから $blogPosts 変数を取り込むということをクロージャーに知らせています。
+``use`` を使うことでクロージャー内で渡した変数を使うことができるようになります。
 
-Dynamic routing
+動的ルーティング (Dynamic routing)
 ~~~~~~~~~~~~~~~
 
-Now, you can create another controller for viewing individual blog
-posts::
+さて、ブログの個々の記事を閲覧するためのもう1つ別のコントローラーを用意してみましょう:
 
     use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -130,19 +121,18 @@ posts::
                 "<p>{$post['body']}</p>";
     });
 
-This route definition has a variable ``{id}`` part which is passed
-to the closure.
+ルーティングはクロージャーに渡される ``{id}`` という変数を定義しています。 
 
-As you can see, we are throwing a ``NotFoundHttpException`` if the
-post does not exist. We will see how to handle this later on.
+見てわかるように、 もし記事が存在しない場合は ``NotFoundHttpException`` を投げます。
+後ほど、どのようにハンドリングしているかを説明します。
 
-Example POST route
+POST ルーティングの例
 ~~~~~~~~~~~~~~~~~~
 
-POST routes signify the creation of a resource. An example for this is a
-feedback form. We will use `Swift Mailer
-<http://swiftmailer.org/>`_ and assume a copy of it to be present in the
-``vendor/swiftmailer`` directory.
+POSTルーティングはリソースの生成を意味します。
+この例となるのがフィードバック形式です。
+ここでは `Swift Mailer
+<http://swiftmailer.org/>`_ を使うので ``Swift Mailer`` のコピーが　``vendor/swiftmailer``　に置かれているとします。
 
 ::
 
@@ -166,32 +156,28 @@ feedback form. We will use `Swift Mailer
         return new Response('Thank you for your feedback!', 201);
     });
 
-It is pretty straight forward. We include the Swift Mailer library,
-set up a message and send that message.
+かなり単純な方法です。 Swift Mailer ライブラリをインクルードしメッセージを作成しそれを送信しています。
 
-The current ``request`` service is retrieved using the array key syntax.
-You can find more information about services in the *Services* chapter.
-The request is an instance of `Request
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_,
-so you can fetch variables using the request's ``get`` method.
+ここで ``request``サービスは 配列のキーを使って取得しています。
+サービスのことについてもっと知りたいのであれば、 *Services* の章を参照してください。
+リクエストは `Request
+<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスであり,
+リクエストの ``get`` メソッドを使うことで変数を取得することができます。
 
-Instead of returning a string we are returning an instance of
-`Response
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_.
-This allows setting an HTTP
-status code, in this case it is set to ``201 Created``.
+文字列を返す代わりに `Response
+<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_ のインスタンスを返すことができます。
+また、HTTPのステータスコードを設定することもでき、今回の場合であれば ``201 Created`` が設定されています。
 
 .. note::
 
-    Silex always uses a ``Response`` internally, it converts strings to
-    responses with status code ``200 Ok``.
+　　　　Silexはいつも ``Response`` を内部で利用し、 HTTPのステータスコードを ``200 OK`` で、文字列を レスポンスのインスタンスに変換しています。 
 
-Other methods
+他のメソッド
 ~~~~~~~~~~~~~
 
-You can create controllers for most HTTP methods. Just call one of these
-methods on your application: ``get``, ``post``, ``put``, ``delete``. You
-can also call ``match``, which will match all methods.
+ほとんどのHTTPメソッドのためのコントローラーを作ることが可能です。 ただ次の中のメソッドから1つを利用すれば良いだけです:
+``get``, ``post``, ``put``, ``delete``. 
+また、 ``match`` メソッドを利用することもでき、この場合はすべてのメソッドに一致します。
 
 ::
 
@@ -201,20 +187,20 @@ can also call ``match``, which will match all methods.
 
 .. note::
 
-    The order in which the routes are defined is significant. The first
-    matching route will be used, so place more generic routes at the bottom.
+    ルーティングがどのような順番で定義されたかはとても重要です。
+    最初に一致したルーティングが利用されるからです。そのため、汎用的なルーティングは一番下に定義するようにしてください。
 
-Route variables
+ルーティング変数
 ~~~~~~~~~~~~~~~
 
-As has been show before you can define variable parts in a route like this::
+
+前に説明したように、次のようにルーティングにおいて変数を定義することができます::
 
     $app->get('/blog/show/{id}', function ($id) {
         ...
     });
 
-It is also possible to have more than one variable part, just make sure the
-closure arguments match the names of the variable parts.
+2つ以上の変数部分を定義することもできますし、変数部分の名前で一致させた引数をクロージャーに渡すことができます。
 
 ::
 
@@ -222,28 +208,28 @@ closure arguments match the names of the variable parts.
         ...
     });
 
-While it's not suggested, you could also do this (note the switched arguments)::
+説明していませんでしたが、次のように引数の順番を入れ替えることだってできます。::
 
     $app->get('/blog/show/{postId}/{commentId}', function ($commentId, $postId) {
         ...
     });
 
-Requirements
+必須項目
 ~~~~~~~~~~~~
 
-In some cases you may want to only match certain expressions. You can define
-requirements using regular expressions by calling ``assert`` on the
-``Controller`` object, which is returned by the routing methods.
+特定のパターンのみ一致させたい場合があるでしょう。そのときは正規表現を ``Controller`` オブジェクトの ``assert`` メソッドを呼ぶことで必須項目を定義することができます。
+そしてこの ``Controller`` オブジェクトはルーティングメソッドによって返されます。
 
-The following will make sure the ``id`` argument is numeric, since ``\d+``
-matches any amount of digits::
+次のコードは ``\id+`` で数値に一致するようにしているので ``id`` 引数が数字であることがわかります::
+
 
     $app->get('/blog/show/{id}', function ($id) {
         ...
     })
     ->assert('id', '\d+');
 
-You can also chain these calls::
+
+チェーン(chain) で呼び出すこともできます::
 
     $app->get('/blog/show/{postId}/{commentId}', function ($postId, $commentId) {
         ...
@@ -251,11 +237,10 @@ You can also chain these calls::
     ->assert('postId', '\d+')
     ->assert('commentId', '\d+');
 
-Default values
+標準の値
 ~~~~~~~~~~~~~~
 
-You can define a default value for any route variable by calling ``value`` on
-the ``Controller`` object.
+``Controller`` オブジェクトの ``value`` メソッドを呼ぶことでどんなルーティングでも標準の値を定義することができます。
 
 ::
 
@@ -264,16 +249,14 @@ the ``Controller`` object.
     })
     ->value('pageName', 'index');
 
-This will allow matching ``/``, in which case the ``pageName`` variable will
-have the value ``index``.
+この例では ``/`` がルーティングに一致し、 そして ``pageName`` 変数は ``index`` になります。
 
-Named routes
+名前ルーティング (Named routes)
 ~~~~~~~~~~~~
 
-Certain extensions (such as ``UrlGenerator``) can make use of named routes.
-By default Silex will generate a route name for you, that cannot really be
-used. You can give a route a name by calling ``bind`` on the ``Controller``
-object that is returned by the routing methods.
+エクステンションの中には名前ルーティングを使うことができるものがあります (``UrlGenerator``など)。
+標準では Silex はあなたの代わりにルーティング名を生成してくれます。しかし、これらは利用されません。
+ルーティングメソッドによって返される``Controller`` オブジェクトの ``bind`` メソッドを呼び出すことでルーティングに名前を付けることができます。
 
 ::
 
@@ -290,14 +273,13 @@ object that is returned by the routing methods.
 
 .. note::
 
-    It only makes sense to name routes if you use extensions that make use
-    of the ``RouteCollection``.
+    使おうとしているエクステンションが ``RouteCollection`` を利用しているときのみ名前ルーティングは意味があります。
 
-Before and after filters
+前処理と後処理
 ------------------------
 
-Silex allows you to run code before and after every request. This happens
-through before and after filters. All you need to do is pass a closure::
+すべてのリクエストの前後でコードを走らせることが可能です。
+beforeフィルターとafterフィルターを通して処理されます。利用方法はメソッドにクロージャーを渡すだけです::
 
     $app->before(function () {
         // set up
@@ -307,15 +289,14 @@ through before and after filters. All you need to do is pass a closure::
         // tear down
     });
 
-Error handlers
+エラーハンドリング
 --------------
 
-If some part of your code throws an exception you will want to display
-some kind of error page to the user. This is what error handlers do. You
-can also use them to do additional things, such as logging.
+コードのどこかで例外が発生するとユーザーにエラーページのようなもので表示したいことがあるでしょう。
+これらエラーハンドラーがやることなのです。
+ログ処理のような処理を追加してエラーハンドリングを使うこともできます。
 
-To register an error handler, pass a closure to the ``error`` method
-which takes an ``Exception`` argument and returns a response::
+エラーハンドラーを登録するために、 ``Exception`` を引数に持ち、レスポンスを返してくれる ``error`` メソッドにクロージャーを渡します::
 
     use Symfony\Component\HttpFoundation\Response;
 
@@ -323,8 +304,7 @@ which takes an ``Exception`` argument and returns a response::
         return new Response('We are sorry, but something went terribly wrong.', 500);
     });
 
-You can also check for specific errors by using ``instanceof``, and handle
-them differently::
+``instanceof`` を使うことで特定のエラーだけを確認することもできます。そしてエラーの種類で処理を変えることができます::
 
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -339,53 +319,50 @@ them differently::
         return new Response('We are sorry, but something went terribly wrong.', $code);
     });
 
-If you want to set up logging you can use a separate error handler for that.
-Just make sure you register it before the response error handlers, because
-once a response is returned, the following handlers are ignored.
+ログ処理を行いたいなら、このためにエラーハンドラーを分けて使うことができます。
+レスポンスのエラーハンドラーの前にエラーを登録しなければならないということだけに注意してください。
+なぜならレスポンスが返されてしまうと、次のようなハンドラーは無視されてしまうからです。
 
 .. note::
 
-    Silex ships with an extension for `Monolog <https://github.com/Seldaek/monolog>`_
-    which handles logging of errors. Check out the *Extensions* chapter
-    for details.
+    Silex はエラーのログ処理を行うために `Monolog <https://github.com/Seldaek/monolog>`_
+    を利用するためのエクステンションを利用することができます。
+    詳しくは *Extensions* の章を参照してください。
 
-Redirects
+リダイレクト
 ---------
 
-You can redirect to another page by returning a redirect response, which
-you can create by calling the ``redirect`` method::
+リダイレクト処理のレスポンスを返すことでどんなページにもリダイレクトすることができます。このリダイレクト処理は
+``redirect`` メソッドを呼ぶことで作成することができます::
 
     $app->get('/', function () use ($app) {
         return $app->redirect('/hello');
     });
 
-This will redirect from ``/`` to ``/hello``.
+この例では ``/`` から ``/hello`` にリダイレクトしようとします。
 
-Security
+セキュリティー
 --------
 
-Make sure to protect your application against attacks.
+アプリケーションをアタックなどの攻撃から防御する方法を確認しておきましょう。
 
-Escaping
+エスケープ処理
 ~~~~~~~~
 
-When outputting any user input (either route variables GET/POST variables
-obtained from the request), you will have to make sure to escape it
-correctly, to prevent Cross-Site-Scripting attacks.
+(ルーティングから取得される GET/POST の変数も含め)ユーザー入力した値はどんなものであれアプリケーションを通して出力するときは、正しくエスケープ処理を行う必要があります。
+そうすることでクロスサイトスクリプティング(XSS)を防ぐことができます。
 
-* **Escaping HTML**: PHP provides the ``htmlspecialchars`` function for this.
-  Silex provides a shortcut ``escape`` method::
+* **HTMLのエスケープ処理**: HTMLのエスケープ処理のために PHP は ``htmlspecialchars``関数　を用意してくれています。
+  Silex ではこの関数へのショートカットとして ``escape``メソッドを次のように使うことができます::
 
       $app->get('/name', function () use ($app) {
           $name = $app['request']->get('name');
           return "You provided the name {$app->escape($name)}.";
       });
 
-  If you use the Twig template engine you should use its escaping or even
-  auto-escaping mechanisms.
+  もし Twigテンプレートを使うのであれば、Twigが用意してくれているエスケープのための記述を使ったり、自動エスケープ機能を使うべきです。
 
-* **Escaping JSON**: If you want to provide data in JSON format you should
-  use the PHP ``json_encode`` function::
+* **JSONのエスケープ処理**: もし JSON フォーマットのデータをアプリケーションをで提供するなら、 PHP の ``json_encode``関数を使います::
 
       use Symfony\Component\HttpFoundation\Response;
 
@@ -398,117 +375,108 @@ correctly, to prevent Cross-Site-Scripting attacks.
           );
       });
 
-Reusing applications
+アプリケーションの再利用
 --------------------
 
-To make your applications reusable, return the ``$app`` variable instead of
-calling the ``run()`` method::
+あなたが作成したアプリケーションをより再利用しやすくするためには、次のように ``run`` メソッドを呼ぶ代わりに ``$app``変数を返すようにします::
 
     // blog.php
     require_once __DIR__.'/silex.phar';
 
     $app = new Silex\Application();
 
-    // define your blog app
+    // あなたのブログアプリケーションを定義
     $app->get('/post/{id}', function ($id) { ... });
 
-    // return the app instance
+    // アプリケーションのインスタンスを返す
     return $app;
 
-Running this application can now be done like this::
+返されたアプリケーションのインスタンスは次のようにして使うことができます::
 
     $app = require __DIR__.'/blog.php';
     $app->run();
 
-This pattern allows you to easily "mount" this application under any other
-one::
+このパターンを利用することで、他のどのアプリケーションの中でもこのアプリケーションを簡単に "マウント" することができます。::
 
     $blog = require __DIR__.'/blog.php';
 
     $app = new Silex\Application();
     $app->mount('/blog', $blog);
 
-    // define your main app
+    // 中心となるアプリケーションを定義
 
     $app->run();
 
-Now, blog posts are available under the ``/blog/post/{id}`` route, along side
-any other routes you might have defined.
+これで、 すでに定義している他のルーティングに加えて ``/blog/post/{id}`` というルーティングでブログの投稿処理を行うことができるようになりました。
 
-If you mount many applications, you might want to avoid the overhead of
-loading them all on each request by using the ``LazyApplication`` wrapper::
+もし大量のアプリケーションをマウントするのであれば、毎回のリクエストでこれらすべてのアプリケーションを読み込むことによるオーバーヘッドを避けたいことがあるでしょう。
+その場合は、 ``LazyApplication`` ラッパーを使うことでオーバーヘッドを避けることができます::
 
     $blog = new Silex\LazyApplication(__DIR__.'/blog.php');
 
-Console
+コンソール
 -------
 
-Silex includes a lightweight console for updating to the latest
-version.
+Silex には Silex を最新バージョンにアップデートするための軽量なコンソールが用意されています。
 
-To find out which version of Silex you are using, just invoke
-``silex.phar`` on the command-line without any arguments:
+あなたが利用している Silex のバージョンを知るためには、 ``silex.phar`` をコマンドラインから引数無しで呼び出すだけです:
 
 .. code-block:: text
 
     $ php silex.phar
     Silex version 0a243d3 2011-04-17 14:49:31 +0200
 
-To check that your are using the latest version, run the ``check`` command:
+最新バージョンかどうかを確認するためには、 ``check`` コマンドを実行します:
 
 .. code-block:: text
 
     $ php silex.phar check
 
-To update ``silex.phar`` to the latest version, invoke the ``update``
-command:
+``silex.phar`` を最新バージョンに更新するためには、 ``update`` コマンドを実行します:
 
 .. code-block:: text
 
     $ php silex.phar update
 
-This will automatically download a new ``silex.phar`` from
-``silex-project.org`` and replace the existing one.
+これで自動的に新しい ``silex.phar`` を ``silex-project.org`` からダウンロードして既存のものと置き換えてくれます。
 
 Pitfalls
 --------
 
-There are some things that can go wrong. Here we will try and outline the
-most frequent ones.
+Silex が思ったように動かないときがあるかもしれません。そういったときのためにここによくある動かない原因についてまとめておきましょう。
 
-PHP configuration
+PHP の設定
 ~~~~~~~~~~~~~~~~~
 
-Certain PHP distributions have restrictive default Phar settings. Setting
-the following may help.
+PHPのバージョンによってはPharの設定が制限されている場合があります。
+その場合は、次のように設定することで解決するかもしれません:
 
 .. code-block:: ini
 
     phar.readonly = Off
     phar.require_hash = Off
 
-If you are on Suhosin you will also have to set this:
+もし Suhosin のPHPを使っている場合は、次の設定も行っておく必要があります:
 
 .. code-block:: ini
 
     suhosin.executor.include.whitelist = phar
 
-Phar-Stub bug
+Phar-Stub のバグ
 ~~~~~~~~~~~~~
 
-Some PHP installations have a bug that throws a ``PharException`` when trying
-to include the Phar. It will also tell you that ``Silex\Application`` could not
-be found. A workaround is using the following include line::
+インストールされているPHPのバージョンによっては Phar をインクルードしようとすると ``PharException`` が発生する場合があります。
+そして ``Silex\Application`` が見つからないとも言われることもあります。
+この場合は回避策として次のように書くことです:
 
     require_once 'phar://'.__DIR__.'/silex.phar/autoload.php';
 
-The exact cause of this issue could not be determined yet.
+この問題の的確な原因はまだ断定されていません。
 
-IIS configuration
+IIS での設定
 -----------------
 
-If you are using the Internet Information Services from Windows, you can use
-this sample ``web.config`` file:
+もし Windows から IIS を利用している場合は、次の簡単な ``web.config`` ファイルを使うことができます:
 
 .. code-block:: xml
 
