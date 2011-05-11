@@ -1,24 +1,21 @@
-Services
+サービス
 ========
 
-Silex is not only a microframework. It is also a micro service container.
-It does this by extending `Pimple <https://github.com/fabpot/Pimple>`_
-which provides service goodness in just 44 NCLOC.
+Silex はマイクロフレームワークであることはもちろんのこと、マイクロサービスコンテナーでもあります。
+Silex はたったの44行(コメント抜きの行数)で書かれた `Pimple <https://github.com/fabpot/Pimple>`_
+を拡張してマイクロサービスコンテナとして動作するようになっています。
 
-Dependency Injection
+DI (Dependency Injection)
 --------------------
 
 .. note::
 
-    You can skip this if you already know what Dependency Injection is.
+　　　　もし　Dependency Injection について既に理解しているのであればこの節は読まなくても大丈夫です。
 
-Dependency Injection is a design pattern where you pass dependencies
-to services instead of creating them from within the service or
-relying on globals. This generally leads to code that is decoupled,
-re-usable, flexible and testable.
+Dependency Injection は 外部のサービスやグローバル領域のから依存するものを作成する代わりにそれらをサービスに渡すというデザインパターンです。
+一般的にコードをカプセル化し、再利用性を高め、柔軟性がありテストを書き易くするために用いられます。
 
-Here is an example of a class that takes a ``User`` object and stores
-it as a file in JSON format::
+ここにクラスのサンプルがあります。このクラスでは ``User`` オブジェクトを引数として必要としており、オブジェクトから取得できる属性をJSONフォーマットでファイルに書き出しています。
 
     class JsonUserPersister
     {
@@ -38,66 +35,59 @@ it as a file in JSON format::
         }
     }
 
-In this simple example the dependency is the ``basePath`` property.
-It is passed to the constructor. This means you can create several
-independent instances with different base paths. Of course
-dependencies do not have to be simple strings. More often they are
-in fact other services.
+この簡単なサンプルでの依存関係の指定は ``basePath`` プロパティです。
+このプロパティはクラスのコンストラクターに渡されています。
+こうすることで、異なる basePath　を持った複数の独立したインスタンスを作成することができるということです。
+もちろん依存関係の指定を単なる文字列にすべきではありません。なぜなら多くの場合は他のサービスを指定することがよくあるからです。
 
-Container
+コンテナー (Container)
 ~~~~~~~~~
 
-A DI or service container is responsible for creating and storing
-services. It can recursively create dependencies of the requested
-services and inject them. It does so lazily, which means a service
-is only created when you actually need it.
+DI や サービスコンテナーはサービスを生成したり保存しておく責任があります。
+そして再起的に必要とされているサービスの依存関係を生成しそれらを注入(inject)することができます。
+そしてこの作業は遅延読み込み(lazily)で行われます、つまり、そのサービスが本当に必要になったときにのみ生成されるということです。
 
-Most containers are quite complex and are configured through XML
-or YAML files.
+ほとんどのコンテナーは非常に複雑でXMLやYAMLファイルを使って設定が記述されています。
 
-Pimple is different.
+しかし、 Pipmple は違うのです。
 
 Pimple
 ------
 
-Pimple is probably the simplest service container out there. It
-makes strong use of closures implements the ArrayAccess interface.
+Pimple は存在するサービスコンテナーの中でもおそらく最もシンプルなものです。
+配列アクセス(ArrayAccess) のインターフェースを実装したクロージャーを活用しています。
 
-We will start off by creating a new instance of Pimple -- and
-because ``Silex\Application`` extends ``Pimple`` all of this
-applies to Silex as well. ::
+新しい Pimple のインスタンスを作成するところから始めてみましょう -- 
+そして　``Silex\Application``　は ``Pimple`` を拡張したものなのでこれからの説明はすべて Silex においても適用できます::
 
     $container = new Pimple();
 
-or ::
+もしくは ::
 
     $app = new Silex\Application();
 
-Parameters
+パラメーター
 ~~~~~~~~~~
 
-You can set parameters (which are usually strings) by setting
-an array key on the container::
+コンテナー上に配列のキーを指定することで (通常は文字列で) パラメータをセットすることができます::
 
     $app['some_parameter'] = 'value';
 
-The array key can be anything, by convention periods are
-used for namespacing. ::
+配列のキーは何でもかまいません。習慣的にピリオドは名前空間のような目的で使うことができます::
 
     $app['asset.host'] = 'http://cdn.mysite.com/';
 
-Reading parameter values is possible with the same
-syntax. ::
+設定したパラメータの値は同じ構文で呼び出すことができます::
 
     echo $app['some_parameter'];
 
-Service definitions
+サービスの定義
 ~~~~~~~~~~~~~~~~~~~
 
-Defining services is no different than defining parameters.
-You just set an array key on the container to be a closure.
-However, when you retrieve the service, the closure is executed.
-This allows for lazy service creation.
+サービスを定義することはパラメータを定義することとなんら違いはありません。
+コンテナーに配列のキーでクロージャーを設定するだけです。
+サービスを取得するときにクロージャーは実行されます。
+このようにしてサービスを遅延して作成することができます
 
 ::
 
@@ -105,64 +95,55 @@ This allows for lazy service creation.
         return new Service();
     };
 
-And to retrieve the service, use::
+そして、サービスを取得するためには次のようにします::
 
     $service = $app['some_service'];
 
-Every time you call ``$app['some_service']``, a new instance
-of the service is created.
+``$app['some_service']`` を呼び出せば、呼び出す度に新しいサービスのインスタンスが生成されます。
 
-Shared services
+共有サービス (Shared services)
 ~~~~~~~~~~~~~~~
 
-You may want to use the same instance of a service across all
-of your code. In order to do that you can make a *shared*
-service. ::
+コード全体で共通のサービスのインスタンスを使いたいときもあるでしょう。
+そのようなために、 *shared* サービスを作ることができるようになっています ::
 
     $app['some_service'] = $app->share(function () {
         return new Service();
     });
 
-This will create the service on first invocation, and then
-return the existing instance on any subsequent access.
+最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返すということをやっています。
 
-Access container from closure
+クロージャーからコンテナーへのアクセス
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In many cases you will want to access the service container
-from within a service definition closure. For example when
-fetching services the current service depends on.
+多くの場合、クロージャーの中からサービスコンテナーにアクセスしたい場合があるでしょう。
+たとえば、既存の依存しているサービスを取得したいような場合です。
 
-Because of this, the container is passed to the closure as
-an argument. ::
+このためには、引数を使ってクロージャーにコンテナーを渡します::
 
     $app['some_service'] = function ($app) {
         return new Service($app['some_other_service'], $app['some_service.config']);
     };
 
-Here you can see an example of Dependency Injection.
-``some_service`` depends on ``some_other_service`` and
-takes ``some_service.config`` as configuration options.
-The dependency is only created when ``some_service`` is
-accessed, and it is possible to replace either of the
-dependencies by simply overriding those definitions.
+これがDIのサンプルになります。
+``some_service`` は ``some_other_service`` に依存しており、``some_service.config`` を設定オプションとして利用することができます。
+``some_service`` にアクセスが発生し生成されるときだけ依存関係があり、これらの定義を上書きするだけで依存関係を書き換えることができます。
 
 .. note::
 
-    This also works for shared services.
+    この仕組みは共有サービスでも動作します。
 
-Protected closures
+保護されたクロージャー (Protected closures)
 ~~~~~~~~~~~~~~~~~~
 
+コンテナーはサービスのための工場(factory)としてクロージャーがあると理解しているので。クロージャーを読みこむとにいつも実行します。
 Because the container sees closures as factories for
 services, it will always execute them when reading them.
 
-In some cases you will however want to store a closure
-as a parameter, so that you can fetch it and execute it
-yourself -- with your own arguments.
+しかしながら、パラメータとしてクロージャーを保存したいときがあるでしょう。
+たとえば、クロージャーを取得しあなた自身が定義した引数で実行したいような場合です。
 
-This is why Pimple allows you to protect your closures
-from being executed, by using the ``protect`` method.
+こういった理由で Pimple は ``protect``メソッドを使うことであなたが作成したクロージャーが実行されないようにいつも保護することができます。
 
 ::
 
@@ -170,67 +151,58 @@ from being executed, by using the ``protect`` method.
         return $a + $b;
     });
 
-    // will not execute the closure
+    // クロージャーは実行されません
     $add = $app['closure_parameter'];
 
-    // calling it now
+    // この時点でクロージャーが実行されます
     echo $add(2, 3);
 
-Note that protected closures do not get access to
-the container.
+保護されたクロージャーはコンテナーにアクセスすることがdけいないということに注意してください。
 
-Core services
+コアサービス (Core services)
 -------------
 
-Silex defines a range of services which can be used
-or replaced. You probably don't want to mess with most
-of them.
+Silex は利用したり置き換えることができるサービスの範囲を定義しています。
+これらの大部分はさわりたいと思わないでしょう。
 
-* **request**: Contains the current request object,
-  which is an instance of `Request
-  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_.
-  It gives you access to ``GET``, ``POST`` parameters
-  and lots more!
+* **リクエスト (request)**: 現在のリクエストオブジェクトを保持しており,
+  このオブジェクトは `Request
+  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_
+  のインスタンスです。
+  ``GET``、 ``POST`` やさらに多くのパラメーターにアクセスすることができます!
 
-  Example usage::
+  利用例::
 
     $id = $app['request']->get('id');
 
-* **autoloader**: This service provides you with a
-  `UniversalClassLoader
+* **オートローダー (autoloader)**: このサービスは `UniversalClassLoader
   <http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html>`_
-  that is already registered. You can register prefixes
-  and namespaces on it.
+  によって提供されています。
+  接頭辞や名前空間を登録することができます。
 
-  Example usage, autoloads Twig classes::
+  利用例 (Twigのクラスのオートロードの設定)::
 
     $app['autoloader']->registerPrefix('Twig_', $app['twig.class_path']);
 
-* **routes**: The `RouteCollection
-  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
-  that is used internally. You can add, modify, read
-  routes.
+* **ルーティング (routes)**: 内部で利用されている `RouteCollection
+  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_。
+  ルーティングの追加、修正、読み込みを行うことができます。
 
-* **controllers**: The ``Silex\ControllerCollection``
-  that is used internally. Check the *Internals*
-  chapter for more information.
+* **コントローラー (controllers)**: 内部で利用されている ``Silex\ControllerCollection``。
+  詳細については *Internals* の章を参照してください。
 
-* **dispatcher**: The `EventDispatcher
-  <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
-  that is used internally. It is the core of the Symfony2
-  system and is used quite a bit by Silex.
+* **ディスパッチャー (dispatcher)**: 内部で利用されている `EventDispatcher
+  <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_。
+  Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。
 
-* **resolver**: The `ControllerResolver
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
-  that is used internally. It takes care of executing the
-  controller with the right arguments.
+* **リゾルバー (resolver)**: 内部で利用されている　`ControllerResolver
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_。
+　　正しい引数でコントローラーが実行されるように注意を払ってくれています。
 
-* **kernel**: The `HttpKernel
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_
-  that is used internally. The HttpKernel is the heart of
-  Symfony2, it takes a Request as input and returns a
-  Response as output.
+* **カーネル (kernel)**: 内部で利用されている `HttpKernel
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_。
+　　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。
 
 .. note::
 
-    All of these Silex core services are shared.
+　　　　これらすべての Silex のコアサービスは共有されています。
