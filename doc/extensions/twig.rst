@@ -1,45 +1,33 @@
 TwigExtension
 =============
 
-The *TwigExtension* provides integration with the `Twig
-<http://www.twig-project.org/>`_ template engine.
+*TwigExtension* を利用すれば `Twig
+<http://www.twig-project.org/>` テンプレートエンジンを使うことができます。
 
-Parameters
+設定パラメータ
 ----------
 
-* **twig.path**: Path to the directory containing twig template
-  files.
+* **twig.path**: twigのテンプレートファイルが入っているディレクトリへのパスです。
 
-* **twig.templates** (optional): If this option is provided
-  you don't have to provide a ``twig.path``. It is an
-  associative array of template names to template contents.
-  Use this if you want to define your templates inline.
+* **twig.templates** (オプション):このオプションを設定すると``twig.path``を設定する必要はなくなります。テンプレート名とテンプレート内容の連想配列で設定します。テンプレートをインラインで書きたい場合に使用します。
 
-* **twig.options** (optional): An associative array of twig
-  options. Check out the twig documentation for more information.
+* **twig.options** (オプション): twigオプションの連想配列です。詳細な設定内容はtwigのドキュメントを参照してください。
 
-* **twig.class_path** (optional): Path to where the Twig
-  library is located.
+* **twig.class_path** (オプション): twigのライブラリが入っているディレクトリへのパスです。
 
-Services
+サービス
 --------
 
-* **twig**: The ``Twig_Environment`` instance. The main way of
-  interacting with Twig.
+* **twig**: ``Twig_Environment``のインスタンスです。twigと連携するのに使います。
 
-* **twig.configure**: Protected closure that takes the Twig
-  environment as an argument. You can use it to add more
-  custom globals.
+* **twig.configure**: Twig environmentを引数に取る保護されたクロージャです。カスタムグローバル変数を追加するのに使います。
 
-* **twig.loader**: The loader for Twig templates which uses
-  the ``twig.path`` and the ``twig.templates`` options. You
-  can also replace the loader completely.
+* **twig.loader**: ``twig.path``と``twig.templates``の設定を利用したTwigテンプレートのローダー(loader)です。ローダー(loader)を完全に置き換えることもできます。
 
-Registering
+登録
 -----------
 
-Make sure you place a copy of *Twig* in the ``vendor/twig``
-directory.
+*Twig* のライブラリのコピーが ``vendor/twig`` にある場合の書き方です。
 
 ::
 
@@ -50,13 +38,12 @@ directory.
 
 .. note::
 
-    Twig is not compiled into the ``silex.phar`` file. You have to
-    add your own copy of Twig to your application.
+    Twigは``silex.phar``には含まれていません。開発者は自分でTwigライブラリのコピーをアプリケーションに組み込む必要があります。
 
-Usage
+使い方
 -----
 
-The Twig extension provides a ``twig`` service.
+Twig extensionは``twig``サービスを提供します。
 
 ::
 
@@ -66,12 +53,10 @@ The Twig extension provides a ``twig`` service.
         ));
     });
 
-This will render a file named ``views/hello.twig``.
+``views/hello.twig``を使って描画します。
 
-It also registers the application as a global named
-``app``. So you can access any services from within your
-view. For example to access ``$app['request']->getHost()``,
-just put this in your template:
+$appは``app``という名前のグローバル変数として登録されるので、ビューから全てのサービスを利用することができます。 
+例えば``$app['request']->getHost()``に（ビューから）アクセスするためには、テンプレートに下記のように書くだけです。
 
 .. code-block:: jinja
 
