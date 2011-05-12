@@ -37,6 +37,8 @@ Silex には次のような目的があります:
 
 最後に、アプリケーションを実行(run)します。　本当に簡単でしょ!!
 
+(訳者注)　ブラウザからアクセスするときは http://example.com/hello/yourname というように作成したルーティング名でアクセスしてください
+
 Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 `silex.phar` _ ファイルをダウンロードすれば完了です!
 
 .. _silex.phar: http://silex-project.org/get/silex.phar
