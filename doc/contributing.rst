@@ -1,24 +1,25 @@
-Contributing
+プロジェクトへの貢献
 ============
 
-We are open to contributions to the Silex code. If you find
-a bug or want to contribute an extension, just follow these
-steps.
+私たちは Silex のコードへの貢献をオープンにしています。
+もしバグを見つけたり、エクステンションで貢献したいと思ったなら次の手順に従ってください。
 
-* Fork `the Silex repository <https://github.com/fabpot/Silex>`_
-  on github.
+* `Silex のリポジトリ <https://github.com/fabpot/Silex>`_
+   を github からフォークしてください。
 
-* Make your feature addition or bug fix.
+* 機能を追加したり、バグフィックスを行ってください。
 
-* Add tests for it. This is important so we don't break it in a future version unintentionally.
+* 追加した作業へのテストを行ってください。未来のバージョンが動かなくなってしまわないようにするために重要な作業です。
 
-* Send a pull request. Bonus points for topic branches.
+* プルリクエストを送ってください。　Bonus points for topic branches.
 
-If you have a big change or would like to discuss something,
-please join us on the `mailing list
-<http://groups.google.com/group/silex-php>`_.
+もし大きな変更をおこなったり、何かしらの議論を必要とする場合は、
+`メーリングリスト
+<http://groups.google.com/group/silex-php>`_
+に参加してください。
 
 .. note::
 
-    Any code you contribute must be licensed under the MIT
+　　　　あなたが貢献してくれるコードはすべて MIT ライセンス になります。
+    (原文)　Any code you contribute must be licensed under the MIT
     License.
