@@ -1,11 +1,11 @@
 エクステンション (Extensions)
-==========
+=================================
 
 Silex はエクステンションのためのインターフェースを提供しています。
 エクステンションはアプリケーション上にサービスとして定義します。
 
 エクステンションの読み込み
-------------------
+-------------------------------------
 
 エクステンションを読み込んで使うためには、アプリケーションにそのエクステンションを登録しなければなりません ::
 
@@ -46,20 +46,26 @@ Silex はエクステンションのためのインターフェースを提供�
 あなたのオリジナルのエクステンションを作成するときはこの振る舞いに注意してください。
 
 エクステンションの読み込み
--------------------
+---------------------------
 
 標準で用意されているエクステンションは以下の通りです。
 これらすべてのエクステンションの名前空間は ``Silex\Extension`` になります。
 
 * :doc:`DoctrineExtension <extensions/doctrine>`
 * :doc:`MonologExtension <extensions/monolog>`
-* :doc:HttpCacheExtension
+* :doc:`SessionExtension <extensions/session>`
+* :doc:`TwigExtension <extensions/twig>`
+* :doc:`TranslationExtension <extensions/translation>`
+* :doc:`UrlGeneratorExtension <extensions/url_generator>`
+* :doc:`ValidatorExtension <extensions/validator>`
+* :doc:`HttpCacheExtension <extensions/http_cache>`
+
 ==================
 
 *HttpCacheExtension* で Symfony2 のリバースプロキシーを利用することができます。
 
 パラメーター
-----------
+-------------
 
 * **http_cache.cache_dir**: HTTP のキャッシュデータを保存するためのキャッシュディレクトリ
 
@@ -84,7 +90,7 @@ Silex はエクステンションのためのインターフェースを提供�
     ));
 
 使い方
------
+------
 
 Silex は レスポンス HTTP ヘッダーを設定することで Vanish のようなリバースプロキシーを利用することができます::
 
@@ -126,16 +132,11 @@ Silex は レスポンス HTTP ヘッダーを設定することで Vanish の�
     $app['http_cache']->handle($request)->send();
 
 より詳細については、 `Symfony2 HTTP キャッシュについてのドキュメント
-    <http://symfony.com/doc/current/book/http_cache.html>`_ を参照してください。
-`SessionExtension <extensions/session>`
-* :doc:`TwigExtension <extensions/twig>`
-* :doc:`TranslationExtension <extensions/translation>`
-* :doc:`UrlGeneratorExtension <extensions/url_generator>`
-* :doc:`ValidatorExtension <extensions/validator>`
-* :doc:`HttpCacheExtension <extensions/http_cache>`
+<http://symfony.com/doc/current/book/http_cache.html>`_ 
+を参照してください。
 
 エクステンションの作成
----------------------
+----------------------
 
 エクステンションは ``Silex\ExtensionInterface`` を実装しなければなりません。
 
@@ -189,7 +190,7 @@ $name を引数としてとり、 ``hello.default_name`` を返してくれま�
 そのため ``/hello?name=Fabien`` のようなパスでリクエストします。
 
 クラスの読み込み (Class loading)
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``MonologExtension`` や ``TwigExtension`` を見てもらえばわかるように、エクステンションは外部ライブラリを簡単に利用できる仕組みです。
 ごく普通のライブラリで、 `PSR-0 Naming Standard <http://groups.google.com/group/php-standards/web/psr-0-final-proposal>`_

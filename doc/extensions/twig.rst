@@ -2,10 +2,10 @@ TwigExtension
 =============
 
 *TwigExtension* を利用すれば `Twig
-<http://www.twig-project.org/>_` テンプレートエンジンを使うことができます。
+<http://www.twig-project.org/>`_ テンプレートエンジンを使うことができます。
 
 設定パラメータ
-----------
+--------------
 
 * **twig.path**: twig のテンプレートファイルが入っているディレクトリへのパスです。
 
@@ -41,7 +41,7 @@ TwigExtension
     Twig は ``silex.phar`` には含まれていません。開発者は自分で Twig ライブラリのコピーをアプリケーションに組み込む必要があります。
 
 使い方
------
+------
 
 Twig extension は ``twig`` サービスを提供します。
 

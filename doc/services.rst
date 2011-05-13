@@ -6,16 +6,19 @@ Silex はたったの44行(コメント抜きの行数)で書かれた `Pimple <
 を拡張してマイクロサービスコンテナとして動作するようになっています。
 
 DI (Dependency Injection)
---------------------
+---------------------------
 
 .. note::
 
-　　　　もし　Dependency Injection について既に理解しているのであればこの節は読まなくても大丈夫です。
+    もし　Dependency Injection について既に理解しているのであればこの節は読まなくても大丈夫です。
 
 Dependency Injection は 外部のサービスやグローバル領域のから依存するものを作成する代わりにそれらをサービスに渡すというデザインパターンです。
 一般的にコードをカプセル化し、再利用性を高め、柔軟性がありテストを書き易くするために用いられます。
 
 ここにクラスのサンプルがあります。このクラスでは ``User`` オブジェクトを引数として必要としており、オブジェクトから取得できる属性をJSONフォーマットでファイルに書き出しています。
+
+
+::
 
     class JsonUserPersister
     {
@@ -41,7 +44,7 @@ Dependency Injection は 外部のサービスやグローバル領域のから�
 もちろん依存関係の指定を単なる文字列にすべきではありません。なぜなら多くの場合は他のサービスを指定することがよくあるからです。
 
 コンテナー (Container)
-~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 DI や サービスコンテナーはサービスを生成したり保存しておく責任があります。
 そして再起的に必要とされているサービスの依存関係を生成しそれらを注入(inject)することができます。
@@ -67,7 +70,7 @@ Pimple は存在するサービスコンテナーの中でもおそらく最も�
     $app = new Silex\Application();
 
 パラメーター
-~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 コンテナー上に配列のキーを指定することで (通常は文字列で) パラメータをセットすることができます::
 
@@ -102,7 +105,7 @@ Pimple は存在するサービスコンテナーの中でもおそらく最も�
 ``$app['some_service']`` を呼び出せば、呼び出す度に新しいサービスのインスタンスが生成されます。
 
 共有サービス (Shared services)
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 コード全体で共通のサービスのインスタンスを使いたいときもあるでしょう。
 そのようなために、 *shared* サービスを作ることができるようになっています ::
@@ -114,7 +117,7 @@ Pimple は存在するサービスコンテナーの中でもおそらく最も�
 最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返すということをやっています。
 
 クロージャーからコンテナーへのアクセス
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 多くの場合、クロージャーの中からサービスコンテナーにアクセスしたい場合があるでしょう。
 たとえば、既存の依存しているサービスを取得したいような場合です。
@@ -134,7 +137,7 @@ Pimple は存在するサービスコンテナーの中でもおそらく最も�
     この仕組みは共有サービスでも動作します。
 
 保護されたクロージャー (Protected closures)
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 コンテナーはサービスのための工場(factory)としてクロージャーがあると理解しているので。クロージャーを読みこむとにいつも実行します。
 Because the container sees closures as factories for
@@ -143,7 +146,7 @@ services, it will always execute them when reading them.
 しかしながら、パラメータとしてクロージャーを保存したいときがあるでしょう。
 たとえば、クロージャーを取得しあなた自身が定義した引数で実行したいような場合です。
 
-こういった理由で Pimple は ``protect``メソッドを使うことであなたが作成したクロージャーが実行されないようにいつも保護することができます。
+こういった理由で Pimple は ``protect`` メソッドを使うことであなたが作成したクロージャーが実行されないようにいつも保護することができます。
 
 ::
 
@@ -160,7 +163,7 @@ services, it will always execute them when reading them.
 保護されたクロージャーはコンテナーにアクセスすることがdけいないということに注意してください。
 
 コアサービス (Core services)
--------------
+-----------------------------
 
 Silex は利用したり置き換えることができるサービスの範囲を定義しています。
 これらの大部分はさわりたいと思わないでしょう。
@@ -185,24 +188,26 @@ Silex は利用したり置き換えることができるサービスの範囲�
     $app['autoloader']->registerPrefix('Twig_', $app['twig.class_path']);
 
 * **ルーティング (routes)**: 内部で利用されている `RouteCollection
-  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_。
+  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
+  。
   ルーティングの追加、修正、読み込みを行うことができます。
 
-* **コントローラー (controllers)**: 内部で利用されている ``Silex\ControllerCollection``。
+* **コントローラー (controllers)**: 内部で利用されている ``Silex\ControllerCollection`` 。
   詳細については *Internals* の章を参照してください。
 
 * **ディスパッチャー (dispatcher)**: 内部で利用されている `EventDispatcher
-  <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_。
-  Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。
+  <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
+  。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。
 
-* **リゾルバー (resolver)**: 内部で利用されている　`ControllerResolver
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_。
-　　正しい引数でコントローラーが実行されるように注意を払ってくれています。
+* **リゾルバー (resolver)**: 内部で利用されている `ControllerResolver
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
+  。　正しい引数でコントローラーが実行されるように注意を払ってくれています。
 
 * **カーネル (kernel)**: 内部で利用されている `HttpKernel
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_。
-　　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_
+  。　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。
+
 
 .. note::
 
-　　　　これらすべての Silex のコアサービスは共有されています。
+    これらすべての Silex のコアサービスは共有されています。

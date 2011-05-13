@@ -1,5 +1,5 @@
 内部の仕組み
-=========
+============
 
 この章ではSilex内部でどのように処理しているかについて説明します。
 
@@ -7,7 +7,7 @@ Silex
 -----
 
 アプリケーション (Application)
-~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 アプリケーションは Silex の中心となるインターフェースです。
 Symfony2 の `HttpKernelInterface
@@ -30,7 +30,7 @@ Symfony2 の `HttpKernelInterface
 この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。
 
 コントローラー (Controller)
-~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony2 の `ルーティング (Route)
 <http://api.symfony.com/2.0/Symfony/Component/Routing/Route.html>`_
@@ -42,7 +42,7 @@ URLの可変部分を必須項目にすることもできます。
 そして、この ``Controller`` がルーティングを包み込んでいます。
 
 コントローラーコレクション (ControllerCollection)
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `ルーティングコレクション (RouteCollection)
 <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
@@ -52,14 +52,14 @@ URLの可変部分を必須項目にすることもできます。
 
 この試みを解決するために、私たちはルーティングのための中間の準備領域を用意することを思いつきました。
 ``ControllerCollection`` は ``flush`` が呼ばれるまでコントローラーを保持しています。
-そして ``flush`` が呼ばれた時点でルーティングを ``ルーティングコレクション (RouteCollection)``に追加します。
+そして ``flush`` が呼ばれた時点でルーティングを ``ルーティングコレクション (RouteCollection)`` に追加します。
 そしてコントローラーは凍結(freeze)されます。
 これが意味することは凍結されるとルーティング名を変更することはできず、もし変更しようとすると例外を投げるということです。
 
 あいにくflush以外の良い方法が思いつきませんでした。なぜならflushを呼ぶということに曖昧さがないからです。
 アプリケーションは flushを自動で呼び出しますが、リクエストが処理される前に``ControllerCollection``を読みたいのなら、あなた自身でflushを呼ぶ必要があります。
 
-``Application`` には ``ControllerCollection``を flush するための ``flush``というショートカットメソッドが用意されています。
+``Application`` には ``ControllerCollection``を flush するための ``flush`` というショートカットメソッドが用意されています。
 
 Symfony2
 --------
@@ -76,5 +76,5 @@ Symfony2
 
 * **EventDispatcher**: HttpKernelにフックするため
 
-より多くの情報を知りたい場合は、　`Symfony のサイトをチェックしてみてください
+より多くの情報を知りたい場合は、 `Symfony のサイトをチェックしてみてください
 <http://symfony.com/>`_.
