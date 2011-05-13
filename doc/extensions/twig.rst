@@ -2,7 +2,7 @@ TwigExtension
 =============
 
 *TwigExtension* を利用すれば `Twig
-<http://www.twig-project.org/>` テンプレートエンジンを使うことができます。
+<http://www.twig-project.org/>_` テンプレートエンジンを使うことができます。
 
 設定パラメータ
 ----------
