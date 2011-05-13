@@ -1,32 +1,29 @@
-Testing
+テスト
 =======
 
-Because Silex is built on top of Symfony2, it is very easy to write functional
-tests for your application. Functional tests are automated software tests that
-ensure that your code is working correctly. They go through the user interface,
-using a fake browser, and mimic the actions a user would do.
+Silex は Symfony2 のさらにその上に構築されているフレームワークです。
+つまり機能テストを書き易いということです。機能テストというのはあなたの書いたコードが正しく動いているかどうかを保証するために自動的にソフトウェアのテストを行う仕組みのことです。
+疑似ブラウザを使ったユーザーインターフェースを通してユーザーが行うであろう動き擬似的に再現することができます。
 
-Why
+なぜ？
 ---
 
-If you are not familiar with software tests, you may be wondering why you would
-need this. Every time you make a change to your application, you have to test
-it. This means going through all the pages and making sure they are still
-working. Functional tests save you a lot of time, because they enable you to
-test your application in usually under a second by running a single command.
+ソフトウェアのテストに慣れてないのであれば、このようなテストがなぜ必要なのかと思われるかもしれません。
+アプリケーションに修正を加えるた場合は必ずテストを行わなければなりません。
+修正後にもすべてのページにおいて正しく動作することを確認しなければならないということです。
+機能テストを行うことで時間短縮にもなります。なぜなら、たった1つのコマンドであなたの代わりに数秒でテストすることができるからです。
 
-For more information on functional testing, unit testing, and automated
-software tests in general, check out `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
-and `Bulat Shakirzyanov's talk on Clean Code <http://www.slideshare.net/avalanche123/clean-code-5609451>`_.
+機能テスト、単体テストそしてテストの自動化についてもっと知りたい場合は、 `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
+のページと`Bulat Shakirzyanov さんのクリーンなコードについてのスライド <http://www.slideshare.net/avalanche123/clean-code-5609451>`_
+をチェックしてみてください。
 
 PHPUnit
 -------
 
 `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
-is the de-facto standard testing framework for PHP. It was built for
-writing unit tests, but it can be used for functional tests too. You write
-tests by creating a new class, that extends the ``PHPUnit_Framework_TestCase``.
-Your test cases are methods prefixed with ``test``.
+はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。
+新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは ``PHPUnit_Framework_TestCase`` を拡張するようにします。
+そして、テストケースのメソッド名の先頭に ``test`` を付けるようにします。
 
 ::
 
@@ -38,9 +35,8 @@ Your test cases are methods prefixed with ``test``.
         }
     }
 
-In your test cases, you do assertions on the state of what you are testing. In
-this case we are testing a contact form, so we would want to assert that the
-page loaded correctly and contains our form.
+テストケースにおいて、あなたがテスト時に期待する条件(アサーション)を書いておきます。
+今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています。
 
 ::
 
@@ -54,17 +50,15 @@ page loaded correctly and contains our form.
             $this->assertContains('<form', $pageContent);
         }
 
-Here you see some of the available assertions. There is a full list available
-in the `Writing Tests for PHPUnit
-<http://www.phpunit.de/manual/current/en/writing-tests-for-phpunit.html>`_
-section of the PHPUnit documentation.
+アサーションは複数用意されているので、一覧を PHPUnit のドキュメントにある `PHPUnit 用のテストの書き方
+<http://www.phpunit.de/manual/current/ja/writing-tests-for-phpunit.html>`_
+の章でで確認することができます。
 
-WebTestCase
+Web テストケース
 -----------
 
-Symfony2 provides a WebTestCase class that can be used to write functional
-tests. The Silex version of this class is ``Silex\WebTestCase``, and you can
-use it by making your test extend it::
+Symfony2 は WebTestCase クラスという機能テストを書くために利用することができるクラスを提供してくれています。
+Silex のために用意したバージョンは``Silex\WebTestCase`` であり、このクラスを拡張することでテストを書くことができます:: 
 
     use Silex\WebTestCase;
 
@@ -73,22 +67,18 @@ use it by making your test extend it::
         ...
     }
 
-To make your application testable, you need to make sure you follow "Reusing
-applications" instructions from :doc:`usage`.
+アプリケーションのテストを行い易くするために、次のような :doc:`usage` にある "アプリケーションの再利用性" の部分に書かれているようにしましょう。
 
-For your WebTestCase, you will have to implement a ``createApplication``
-method, which returns your application. It will probably look like this::
+WebTestCase のために、 ``createApplication`` メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
+次のようなコードになります::
 
         public function createApplication()
         {
             return require __DIR__.'/path/to/app.php';
         }
 
-Make sure you do **not** use ``require_once`` here, as this method will be
-executed before every test.
-
-The WebTestCase provides a ``createClient`` method. A client acts as a browser,
-and allows you to interact with your application. Here's how it works::
+ここで決して ``require_once`` を **使わない** という点に注意してください。なぜなら、このメソッドは各テストの前に実行されるからです。
+こうすることでアプリケーションとやりとりすることができるようになります。以下でどのように動作しているかをみてみましょう::
 
         public function testInitialPage()
         {
@@ -101,42 +91,39 @@ and allows you to interact with your application. Here's how it works::
             ...
         }
 
-There are several things going on here. You have both a ``Client`` and a
-``Crawler``.
+このコードに見慣れない用語がでてきます。 それは ``Client`` と ``Crawler`` です。
 
-You can also access the application through ``$this->app``.
+また、 ``$this->app`` を通してアプリケーションにアクセスすることもできます。
 
-Client
+クライアント (Client)
 ------
 
-The client represents a browser. It holds your browsing history, cookies and
-more. The ``request`` method allows you to make a request to a page on your
-application.
+クライアントはブラウザを表現したものです。　画面遷移した履歴やクッキーなどを保持しておくことができます。
+``request`` メソッドを使うことでテストするアプリケーションへのアクセスするためのリクエストを作ることができます。
 
 .. note::
 
-    You can find some documentation for it in `the client section of the testing
-    chapter of the Symfony2 documentation
-    <http://symfony.com/doc/current/book/testing.html#the-test-client>`_.
+    `Symfony2 のドキュメントにあるテストの章のクライアント
+    <http://symfony.com/doc/current/book/testing.html#the-test-client>`_
+    の部分でもう少し詳しく知ることができます。
 
-Crawler
+クローラー (Crawler)
 -------
 
-The crawler allows you to inspect the content of a page. You can filter it
-using CSS expressions and lots more.
+クローラーを使うことでページのコンテンツを調査することができます。CSS エクスプレッションを使ってコンテンツのフィルタリング処理をしたりなど色々できます。
 
 .. note::
 
-    You can find some documentation for it in `the crawler section of the testing
-    chapter of the Symfony2 documentation
-    <http://symfony.com/doc/current/book/testing.html#the-test-client>`_.
+    `Symfony2 のドキュメントにあるテストの章のクローラー
+    <http://symfony.com/doc/current/book/testing.html#the-test-client>`_
+    の部分でもう少し詳しく知ることができます。    
 
-Configuration
+設定
 -------------
 
-The suggested way to configure PHPUnit is to create a ``phpunit.xml.dist``
-file, a ``tests`` folder and your tests in ``tests/YourApp/Tests/YourTest.php``.
-The ``phpunit.xml.dist`` file should look like this:
+PHPUnit を設定するためには ``phpunit.xml.dis`` ファイルを作成するという方法があります。
+``tests`` フォルダーを作成し ``tests/YourApp/Tests/YourTest.php`` のようなファイルにテストを書きます。
+``phpunit.xml.dist`` ファイルは次のような内容になります:
 
 .. code-block:: xml
 
@@ -158,10 +145,9 @@ The ``phpunit.xml.dist`` file should look like this:
         </testsuites>
     </phpunit>
 
-You can also configure a bootstrap file for autoloading and whitelisting for
-code coverage reports.
+ファイルの自動読み込みのためのブートストラップや、コードカバレッジのレポートのためのホワイトリストを設定することもできます。
 
-Your ``tests/YourApp/Tests/YourTest.php`` should look like this::
+そして、 ``tests/YourApp/Tests/YourTest.php`` は次のようになります::
 
     namespace YourApp\Tests;
 
@@ -180,4 +166,4 @@ Your ``tests/YourApp/Tests/YourTest.php`` should look like this::
         }
     }
 
-Now, when running ``phpunit`` on the command line, your tests should run.
+これで、 ``phpunit`` をコマンドラインから実行することで、あなたが書いたテストケースが処理されます。
