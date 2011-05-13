@@ -1,21 +1,20 @@
-Extensions
+エクステンション (Extensions)
 ==========
 
-Silex provides a common interface for extensions. These
-define services on the application.
+Silex はエクステンションのためのインターフェースを提供しています。
+エクステンションはアプリケーション上にサービスとして定義します。
 
-Loading extensions
+エクステンションの読み込み
 ------------------
 
-In order to load and use an extension, you must register it
-on the application. ::
+エクステンションを読み込んで使うためには、アプリケーションにそのエクステンションを登録しなければなりません ::
 
     $app = new Silex\Application();
 
     $app->register(new Acme\DatabaseExtension());
 
-You can also provide some parameters as a second argument. These
-will be set **before** the extension is registered.
+第２引数としてパラメーターを提供することもできます。
+この作業はエクステンションが登録される **前** に行う必要があります。
 
 ::
 
@@ -25,52 +24,120 @@ will be set **before** the extension is registered.
         'database.password' => 'secret_root_password',
     ));
 
-Conventions
+規約
 -----------
 
-You need to watch out in what order you do certain things when
-interacting with extensions. Just keep to these rules:
+エクステンションとやりとりするときにどのような順序でやりとりを行うかを知っておく必要があります。
+以下に説明するルールに従うだけです:
 
-* Class paths (for the autoloader) must be defined **before**
-  the extension is registered. Passing it as a second argument
-  to ``Application::register`` qualifies too, because it sets
-  the passed parameters first.
+* (オートローダーのための) クラスへのパスはエクステンションが登録される **前** に定義しなければなりません。
+  パスは``Application::register`` の第２引数として渡してください。
+  なぜなら渡されたパラメーターを最初にセットするからです。
+  
+  *理由: エクステンションは、自身が登録されるときにオートローダーを設定しようとします。
+  もしこの時点でクラスのパスが渡されていなければオートローダーを登録することができないからです。*
 
-  *Reason: The extension will set up the autoloader at
-  extension register time. If the class path is not set
-  at that point, no autoloader can be registered.*
+* エクステンションのサービスを上書き処理はエクステンションが登録された *後* にしなくてはなりません。
 
-* Overriding existing services must occur **after** the
-  extension is registered.
+  *理由: サービスがすでに存在していると、エクステンションはそれを上書きしようとするからです。*
 
-  *Reason: If the services already exist, the extension
-  will overwrite it.*
+* サービスがアクセスされる前のタイミングであればパラメーターをセットすることができます。
 
-* You can set parameters any time before the service is
-  accessed.
+あなたのオリジナルのエクステンションを作成するときはこの振る舞いに注意してください。
 
-Make sure to stick to this behavior when creating your
-own extensions.
-
-Included extensions
+エクステンションの読み込み
 -------------------
 
-There are a few extensions that you get out of the box.
-All of these are within the ``Silex\Extension`` namespace.
+標準で用意されているエクステンションは以下の通りです。
+これらすべてのエクステンションの名前空間は ``Silex\Extension`` になります。
 
 * :doc:`DoctrineExtension <extensions/doctrine>`
 * :doc:`MonologExtension <extensions/monolog>`
-* :doc:`SessionExtension <extensions/session>`
+* :doc:HttpCacheExtension
+==================
+
+*HttpCacheExtension* で Symfony2 のリバースプロキシーを利用することができます。
+
+パラメーター
+----------
+
+* **http_cache.cache_dir**: HTTP のキャッシュデータを保存するためのキャッシュディレクトリ
+
+* **http_cache.options** (オプション): `HttpCache
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
+  コンストラクターのためのオプションを配列
+
+サービス
+--------
+
+* **http_cache**: `HttpCache
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_,
+  インスタンス
+
+登録
+-----------
+
+::
+
+    $app->register(new Silex\Extension\HttpCacheExtension(), array(
+        'cache_dir' => __DIR__.'/cache/',
+    ));
+
+使い方
+-----
+
+Silex は レスポンス HTTP ヘッダーを設定することで Vanish のようなリバースプロキシーを利用することができます::
+
+    $app->get('/', function() {
+        return new Response('Foo', 200, array(
+            'Cache-Control' => 's-maxage=5',
+        ));
+    });
+
+このエクステンションを `http_cache` サービスをリクエストにハンドルし使うことで Silex アプリケーションで Symfony2 のリバースプロクシーを使うことができます::
+
+    $app['http_cache']->handle($request)->send();
+
+また、エクステンションは `ESI
+<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_ もサポートしています::
+
+    $app->get('/', function() {
+        return new Response(<<<EOF
+    <html>
+        <body>
+            Hello
+            <esi:include src="/included" />
+        </body>
+    </html>
+
+    EOF
+        , 200, array(
+            'Cache-Control' => 's-maxage=20',
+            'Surrogate-Control' => 'content="ESI/1.0"',
+        ));
+    });
+
+    $app->get('/included', function() {
+        return new Response('Foo', 200, array(
+            'Cache-Control' => 's-maxage=5',
+        ));
+    });
+
+    $app['http_cache']->handle($request)->send();
+
+より詳細については、 `Symfony2 HTTP キャッシュについてのドキュメント
+    <http://symfony.com/doc/current/book/http_cache.html>`_ を参照してください。
+`SessionExtension <extensions/session>`
 * :doc:`TwigExtension <extensions/twig>`
 * :doc:`TranslationExtension <extensions/translation>`
 * :doc:`UrlGeneratorExtension <extensions/url_generator>`
 * :doc:`ValidatorExtension <extensions/validator>`
 * :doc:`HttpCacheExtension <extensions/http_cache>`
 
-Creating an extension
+エクステンションの作成
 ---------------------
 
-Extensions must implement the ``Silex\ExtensionInterface``.
+エクステンションは ``Silex\ExtensionInterface`` を実装しなければなりません。
 
 ::
 
@@ -79,12 +146,10 @@ Extensions must implement the ``Silex\ExtensionInterface``.
         function register(Application $app);
     }
 
-This is very straight forward, just create a new class that
-implements the ``register`` method.  In this method you must
-define services on the application which then may make use
-of other services and parameters.
+これはとても単純な利用例であり、 ``register`` メソッドを実装しているだけの新しいクラスを作成しているだけです。
+このメソッドで、他のサービスやパラメータを利用するようなアプリケーション上にサービスを定義することができます。
 
-Here is an example of such an extension::
+次がそのようなエクステンションのサンプルです::
 
     namespace Acme;
 
@@ -103,12 +168,11 @@ Here is an example of such an extension::
         }
     }
 
-This class provides a ``hello`` service which is a protected
-closure. It takes a name argument and will return
-``hello.default_name`` if no name is given. If the default
-is also missing, it will use an empty string.
+このクラスは ``hello`` サービスを提供します。このサービスは保護されたクロージャーです。
+$name を引数としてとり、 ``hello.default_name`` を返してくれます。
+初期値を与えられていない場合は空の文字列を使います。
 
-You can now use this extension as follows::
+このエクステンションは次のように使うことができます::
 
     $app = new Silex\Application();
 
@@ -121,23 +185,19 @@ You can now use this extension as follows::
         return $app['hello']($name);
     });
 
-In this example we are getting the ``name`` parameter from the
-query string, so the request path would have to be ``/hello?name=Fabien``.
+このサンプルでは ``name``　パラメーターの値をクエリーストリングから取得しています。
+そのため ``/hello?name=Fabien`` のようなパスでリクエストします。
 
-Class loading
+クラスの読み込み (Class loading)
 ~~~~~~~~~~~~~
 
-Extensions are great for tying in external libraries as you
-can see by looking at the ``MonologExtension`` and
-``TwigExtension``. If the library is decent and follows the
-`PSR-0 Naming Standard <http://groups.google.com/group/php-standards/web/psr-0-final-proposal>`_
-or the PEAR Naming Convention, it is possible to autoload
-classes using the ``UniversalClassLoader``.
+``MonologExtension`` や ``TwigExtension`` を見てもらえばわかるように、エクステンションは外部ライブラリを簡単に利用できる仕組みです。
+ごく普通のライブラリで、 `PSR-0 Naming Standard <http://groups.google.com/group/php-standards/web/psr-0-final-proposal>`_
+やPEARの命名ルールに準拠しているのであれば、 ``UniversalClassLoader`` を使ったクラスの自動読み込みが可能です。
 
-As described in the *Services* chapter, there is an
-*autoloader* service which can be used for this.
+*Services* の章で説明したように、 *autoloader* サービスによってこのようなクラスの自動読み込みが行われます。
 
-Here is an example of how to use it (based on `Buzz <https://github.com/kriswallsmith/Buzz>`_)::
+では、この自動読み込みをどのように使うかを見てみましょう。 (ここでは `Buzz <https://github.com/kriswallsmith/Buzz>`_ をライブラリとして読み込みます)::
 
     namespace Acme;
 
@@ -156,8 +216,7 @@ Here is an example of how to use it (based on `Buzz <https://github.com/kriswall
         }
     }
 
-This allows you to simply provide the class  path as an
-option when registering the extension::
+次のようにエクステンションを登録するときにオプションで渡すことで簡単にクラスのパスを追加することができます::
 
     $app->register(new BuzzExtension(), array(
         'buzz.class_path' => __DIR__.'/vendor/buzz/lib',
@@ -165,6 +224,5 @@ option when registering the extension::
 
 .. note::
 
-    For libraries that do not use PHP 5.3 namespaces you can use ``registerPrefix``
-    instead of ``registerNamespace``, which will use an underscore as directory
-    delimiter.
+    PHP 5.3 の名前空間を使っていないライブラリの場合は ``registerNamespace`` の代わりに ``registerPrefix`` を使うことができます。
+    こうすることでディレクトリの区切り記号としてアンダースコアーを使うことができます。
