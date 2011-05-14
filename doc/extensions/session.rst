@@ -1,50 +1,46 @@
 SessionExtension
 ================
 
-The *SessionExtension* provides a service for storing data persistently
-between requests.
+*SessionExtension* を使うことで永続的にリクエスト間でデータを保存するためのサービスを提供することができます。
 
-Parameters
-----------
+パラメーター
+------------
 
-* **session.storage.options**: An array of options that is passed to the
-  constructor of the ``session.storage`` service.
+* **session.storage.options**: ``session.storage`` サービスのコンストラクタに渡すオプションの配列。
 
-  In case of the default ``NativeSessionStorage``, the possible options are:
+  標準の ``NativeSessionStorage`` の場合、使用可能なオプションは以下の通りです::
 
-  * **name**: The cookie name (_SESS by default)
-  * **id**: The session id (null by default)
-  * **lifetime**: Cookie lifetime
-  * **path**: Cookie path
-  * **domain**: Cookie domain
-  * **secure**: Cookie secure (HTTPS)
-  * **httponly**: Whether the cookie is http only
+  * **name**: Cookie の名前 (標準は _SESS)
+  * **id**: セッション ID (標準は null)
+  * **lifetime**: Cookie のライフタイム
+  * **path**: Cookie のパス
+  * **domain**: Cookie のドメイン
+  * **secure**: Cookie のセキュア設定 (HTTPS)
+  * **httponly**: Cookie が httpオンリーかどうかの設定
 
-  However, all of these are optional. Sessions last as long as the browser
-  is open. To override this, set the ``lifetime`` option.
+  しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
+  これを上書きするためには、 ``lifetime`` オプションを設定します。
 
-Services
+サービス
 --------
 
-* **session**: An instance of Symfony2's `Session
-  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Session.html>`_.
+* **session**: Symfony2　の `Session 
+  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Session.html>`_ のインスタンス。
 
-* **session.storage**: A service that is used for persistence of the
-  session data. Defaults to a `NativeSessionStorage
-  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/SessionStorage/NativeSessionStorage.html>`_.
+* **session.storage**: セッションデータの永続化のために利用されるサービス。 標準は `NativeSessionStorage    <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/SessionStorage/NativeSessionStorage.html>`_
 
-Registering
+
+登録
 -----------
 
 ::
 
     $app->register(new Silex\Extension\SessionExtension());
 
-Usage
------
+使い方
+-------
 
-The Session extension provides a ``session`` service. Here is an
-example that authenticates a user and creates a session for him::
+セッションのエクステンションは ``session`` サービスを提供します。以下にユーザーを認証しそのユーザーのためにセッションを作成するサンプルです::
 
     use Symfony\Component\HttpFoundation\Response;
 

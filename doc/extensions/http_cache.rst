@@ -1,24 +1,25 @@
 HttpCacheExtension
 ==================
 
-The *HttpCacheExtension* provides support for the Symfony2 Reverse Proxy.
+*HttpCacheExtension* で Symfony2 のリバースプロクシー をサポートすることができます。
 
-Parameters
-----------
+パラメーター
+------------
 
-* **http_cache.cache_dir**: The cache directory to store the HTTP cache data.
+* **http_cache.cache_dir**: HTTP キャッシュデータを保存するディレクトリ。
 
-* **http_cache.options** (optional): An array of options for the `HttpCache
+* **http_cache.options** (オプション): `HttpCache
   <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
-  constructor.
+  コンストラクタのためのオプションの配列。
 
-Services
+サービス
 --------
 
-* **http_cache**: An instance of `HttpCache
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_,
+* **http_cache**: `HttpCache
+  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
+  のインスタンス
 
-Registering
+登録
 -----------
 
 ::
@@ -27,11 +28,10 @@ Registering
         'cache_dir' => __DIR__.'/cache/',
     ));
 
-Usage
------
+使い方
+-------
 
-Silex already supports any Reverse Proxy like Varnish out of the box by
-setting Response HTTP cache headers::
+Silex は標準で HTTP キャッシュヘッダーを返すように設定することで Vanish のようなリバースプロクシーをサポートしています:: 
 
     $app->get('/', function() {
         return new Response('Foo', 200, array(
@@ -39,13 +39,12 @@ setting Response HTTP cache headers::
         ));
     });
 
-This extension allows you to use the Symfony2 reverse proxy natively with
-Silex applications by using the `http_cache` service to handle the Request::
+このエクステンションを使い Silex のアプリケーションはリクエストを操作するために `http_cache` サービスを追加することで Symfony2 のリバースプロクシーを使うことができるようになります。::
 
     $app['http_cache']->handle($request)->send();
 
-The extension also provide `ESI
-<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_ support::
+このエクステンションは `ESI
+<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_ もサポートしています。::
 
     $app->get('/', function() {
         return new Response(<<<EOF
@@ -71,5 +70,6 @@ The extension also provide `ESI
 
     $app['http_cache']->handle($request)->send();
 
-For more information, consult the `Symfony2 HTTP Cache documentation
-<http://symfony.com/doc/current/book/http_cache.html>`_.
+詳細については、 `Symfony2 HTTP キャッシュのドキュメント 
+<http://symfony.com/doc/current/book/http_cache.html>`_
+を参照してください。

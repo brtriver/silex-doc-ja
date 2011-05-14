@@ -1,50 +1,41 @@
 MonologExtension
 ================
 
-The *MonologExtension* provides a default logging mechanism
-through Jordi Boggiano's `Monolog <https://github.com/Seldaek/monolog>`_
-library.
+*MonologExtension* を使うことで Jordi Boggiano さんの
+`Monolog <https://github.com/Seldaek/monolog>`_ ライブラリを通して標準のログ機能を提供します。
 
-It will log requests and errors and allow you to add debug
-logging to your application, so you don't have to use
-``var_dump`` so much anymore. You can use the grown-up
-version called ``tail -f``.
+リクエストやエラーを記録しアプリケーションにデバッグを記録するようになります。
+そのため ``var_dump`` をもう使う必要はなくなります。
+これからはさらに一歩進んで ``tail -f``　コマンドを使うことができるようになります。
 
-Parameters
-----------
+パラメーター
+------------
 
-* **monolog.logfile**: File where logs are written to.
+* **monolog.logfile**: ログファイルの場所。
 
-* **monolog.class_path** (optional): Path to where the
-  Monolog library is located.
+* **monolog.class_path** (オプション): Monolog ライブラリを設置したパス。
 
-* **monolog.level** (optional): Level of logging defaults
-  to ``DEBUG``. Must be one of ``Logger::DEBUG``, ``Logger::INFO``,
-  ``Logger::WARNING``, ``Logger::ERROR``. ``DEBUG`` will log
-  everything, ``INFO`` will log everything except ``DEBUG``,
-  etc.
+* **monolog.level** (オプション): ``DEBUG`` に標準で記録するログのレベル。
+  ``Logger::DEBUG``, ``Logger::INFO``, ``Logger::WARNING``, ``Logger::ERROR`` のどれかを指定します。 
+  ``DEBUG`` はどんなものでも記録します。 ``INFO`` は ``DEBUG`` 意外のものを記録します。  
 
-* **monolog.name** (optional): Name of the monolog channel,
-  defaults to ``myapp``.
+* **monolog.name** (オプション): Monolog チャンネルの名前。　標準は ``myapp`` 。
 
-Services
+サービス
 --------
 
-* **monolog**: The monolog logger instance.
+* **monolog**: monolog のログインスタンス。
 
-  Example usage::
+  利用方法 ::
 
     $app['monolog']->addDebug('Testing the Monolog logging.');
 
-* **monolog.configure**: Protected closure that takes the
-  logger as an argument. You can override it if you do not
-  want the default behavior.
+* **monolog.configure**: 引数としてロガーを取る保護されたクロージャー。標準の振る舞いを使いたくない場合は上書きすることができます。
 
-Registering
+登録
 -----------
 
-Make sure you place a copy of *Monolog* in the ``vendor/monolog``
-directory.
+``vendor/monolog`` ディレクトリに *Monolog* のコピーを置いていることを確認してください。
 
 ::
 

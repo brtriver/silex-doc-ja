@@ -1,62 +1,53 @@
 DoctrineExtension
 =================
 
-The *DoctrineExtension* provides integration with the `Doctrine DBAL
-<http://www.doctrine-project.org/projects/dbal>`_ for easy database acccess.
+*DoctrineExtension* を使うことでデータベースへアクセスするための `Doctrine DBAL
+<http://www.doctrine-project.org/projects/dbal>`_ を利用することができます。
 
 .. note::
 
-    There is only a Doctrine DBAL. An ORM service is **not** supplied.
+    Doctrine DBAL だけで ORM サービスは提供 **されません**
 
-Parameters
-----------
+パラメーター
+---------------
 
-* **db.options**: Array of Doctrine DBAL options.
+* **db.options**: Doctrine DBAL のオプションを指定する配列
 
-  These options are available:
+  以下のオプションが利用できます:
 
-  * **driver**: The database driver to use, defaults to ``pdo_mysql``.
-    Can be any of: ``pdo_mysql``, ``pdo_sqlite``, ``pdo_pgsql``,
-    ``pdo_oci``, ``oci8``, ``ibm_db2``, ``pdo_ibm``, ``pdo_sqlsrv``.
+  * **driver**: 利用するデータベースドライバ。 標準では ``pdo_mysql`` です。
+    次のどれかを指定できます: ``pdo_mysql``、 ``pdo_sqlite``、 ``pdo_pgsql``、
+    ``pdo_oci``、 ``oci8``、 ``ibm_db2``、 ``pdo_ibm``、 ``pdo_sqlsrv``.
 
-  * **dbname**: The name of the database to connect to.
+  * **dbname**: 接続先のデータベース名。
 
-  * **host**: The host of the database to connect to. Defaults to
-    localhost.
+  * **host**: 接続先のホスト名。 標準は localhost。
 
-  * **user**: The host of the database to connect to. Defaults to
-    root.
+  * **user**: 接続先のデータベースのユーザー名。　標準は root。
 
-  * **password**: The host of the database to connect to.
+  * **password**: 接続先のデータベースのパスワード。
 
-  * **path**: Only relevant for ``pdo_sqlite``, specifies the path to
-    the SQLite database.
+  * **path**: ``pdo_sqlite`` だけに必要な項目で SQLite のデータベースのパスを指定。
 
-  These and additional options are described in detail in the `Doctrine DBAL
-  configuration documentation <http://www.doctrine-project.org/docs/dbal/2.0/en/reference/configuration.html>`_.
+  これらのオプションの詳細については `Doctrine DBAL 設定についてのドキュメント <http://www.doctrine-project.org/docs/dbal/2.0/en/reference/configuration.html>`_ を参照してください。
 
-* **db.dbal.class_path** (optional): Path to where the
-  Doctrine DBAL is located.
+* **db.dbal.class_path** (オプション): Doctrine DBAL を配置したパス。
 
-* **db.common.class_path** (optional): Path to where
-  Doctrine Common is located.
+* **db.common.class_path** (オプション): Doctrine Common を配置したパス。
 
-Services
+サービス
 --------
 
-* **db**: The database connection, instance of
-  ``Doctrine\DBAL\Connection``.
+* **db**: データベースコネクション、　``Doctrine\DBAL\Connection``のインスタンス。
 
-* **db.config**: Configuration object for Doctrine. Defaults to
-  an empty ``Doctrine\DBAL\Configuration``.
+* **db.config**: Doctrine のための設定オブジェクト。　標準は空の ``Doctrine\DBAL\Configuration`` 。
 
-* **db.event_manager**: Event Manager for Doctrine.
+* **db.event_manager**: Doctrine のためのイベントマネージャー。
 
-Registering
+登録
 -----------
 
-Make sure you place a copy of*Doctrine DBAL* in ``vendor/doctrine-dbal``
-and *Doctrine Common* in ``vendor/doctrine-common``.
+*Doctrine DBAL* が　``vendor/doctrine-dbal``　に、そして　*Doctrine Common*　が ``vendor/doctrine-common`` にコピーされているかを確認してください。
 
 ::
 
@@ -69,11 +60,10 @@ and *Doctrine Common* in ``vendor/doctrine-common``.
         'db.common.class_path'  => __DIR__.'/vendor/doctrine-common/lib',
     ));
 
-Usage
------
+使い方
+-------
 
-The Doctrine extension provides a ``db`` service. Here is a usage
-example::
+Doctrine のエクションテンションで ``db`` サービスを使うことができます。以下が使い方のサンプルです。::
 
     $app->get('/blog/show/{id}', function ($id) use ($app) {
         $sql = "SELECT * FROM posts WHERE id = ?";
@@ -83,5 +73,6 @@ example::
                 "<p>{$post['body']}</p>";
     });
 
-For more information, consult the `Doctrine DBAL documentation
-<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_.
+より詳細については、　`Doctrine DBAL documentation
+<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_
+を見てください。
