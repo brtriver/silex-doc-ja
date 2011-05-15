@@ -1,44 +1,41 @@
 TranslationExtension
 =====================
 
-The *TranslationExtension* provides a service for translating your application
-into different languages.
+*TranslationExtension* は複数の異なる言語にアプリケーションを翻訳するためのサービスを提供します。
 
-Parameters
-----------
+パラメーター
+------------
 
-* **translator.messages**: A mapping of locales to message arrays. This parameter
-  contains the translation data in all languages.
+* **translator.messages**: メッセージとロケールのマッピングした配列。　このパラメーターは全ての言語の翻訳されたデータを含む。
 
-* **locale** (optional): The locale for the translator. You will most likely want
-  to set this based on some request parameter. Defaults to ``en``.
+* **locale** (オプション): 翻訳のための使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は ``en`` です。
 
-* **locale_fallback** (optional): Fallback locale for the translator. It will
-  be used when the current locale has no messages set.
+* **locale_fallback** (オプション): 翻訳のための使用する代替のためのロケール。　現在のロケールが設定されていないときに利用されます。
 
-* **translation.class_path** (optional): Path to where
-  the Symfony2 Translation component is located.
+* **translation.class_path** (オプション): Symfony2 の Translation コンポーネントを配置したパス。
 
-Services
+サービス
 --------
 
-* **translator**: An instance of `Translator
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/Translator.html>`_,
-  that is used for translation.
+* **translator**: 翻訳のために利用される `Translator
+  <http://api.symfony.com/2.0/Symfony/Component/Translation/Translator.html>`_
+  のインスタンス。
 
-* **translator.loader**: An instance of an implementation of the translation
-  `LoaderInterface <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/LoaderInterface.html>`_,
-  defaults to an `ArrayLoader
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/ArrayLoader.html>`_.
+* **translator.loader**: 翻訳の　
+  `LoaderInterface 
+  <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/LoaderInterface.html>`_
+  を実装したインスタンス、 標準は  
+  `ArrayLoader
+  <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/ArrayLoader.html>`_ 。
 
-* **translator.message_selector**: An instance of `MessageSelector
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/MessageSelector.html>`_.
+* **translator.message_selector**: `MessageSelector
+  <http://api.symfony.com/2.0/Symfony/Component/Translation/MessageSelector.html>`_ のインスタンス。
 
-Registering
+登録
 -----------
 
-Make sure you place a copy of the Symfony2 Translation component in
-``vendor/symfony/src``. You can simply clone the whole Symfony2 into vendor.
+Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/src`` に配置されていることを確認してください。
+一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです。
 
 ::
 
@@ -47,11 +44,10 @@ Make sure you place a copy of the Symfony2 Translation component in
         'translation.class_path'    => __DIR__.'/vendor/symfony/src',
     ));
 
-Usage
------
+使い方
+--------
 
-The Translation extension provides a ``translator`` service and makes use of
-the ``translator.messages`` parameter.
+Translation エクステンションは ``translator`` サービスを提供し、　``translator.messages``　パラメーターを利用します。
 
 ::
 
@@ -80,43 +76,43 @@ the ``translator.messages`` parameter.
         return $app['translator']->trans($message, array('%name%' => $name));
     });
 
-The above example will result in following routes:
+上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう:
 
-* ``/en/hello/igor`` will return ``Hello igor``.
+* ``/en/hello/igor`` は ``Hello igor`` を返す。
+                     
+* ``/de/hello/igor`` は ``Hallo igor`` を返す。
+                     
+* ``/fr/hello/igor`` は ``Bonjour igor`` を返す。
+                     
+* ``/it/hello/igor`` は ``Hello igor`` を返す。 (代替設定のため).
 
-* ``/de/hello/igor`` will return ``Hallo igor``.
-
-* ``/fr/hello/igor`` will return ``Bonjour igor``.
-
-* ``/it/hello/igor`` will return ``Hello igor`` (because of the fallback).
-
-Recipes
+レシピ
 -------
 
-YAML-based language files
+YAMLで言語ファイル
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Having your translation in PHP files can be inconvenient. This recipe will
-show you how to load translations from external YAML files.
+PHPファイルで翻訳ファイルを用意することは不便でしょう。
+このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。
 
-First you will need the ``Config`` and ``Yaml`` components from Symfony2. Also
-make sure you register them with the autoloader. You can just clone the entire
-Symfony2 repository into ``vendor/symfony``.
+まず最初に Symfony2 にある ``Config`` と ``Yaml`` コンポーネントが必要です。
+オートローダーでこれらのコンポーネントが登録されるようにします。
+そのために Symfony2 全体のリポジトリを ``vendor/symfony`` ディレクトリにクローンしてしまいます。
 
 ::
 
     $app['autoloader']->registerNamespace('Symfony', __DIR__.'/vendor/symfony/src');
 
-Next, you have to create the language mappings in YAML files. A naming you can
-use is ``locales/en.yml``. Just do the mapping in this file as follows:
+
+次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは ``locals/en.yml`` を使います。
+マッピングは以下のようなファイルで用意するだけです:
 
 .. code-block:: yaml
 
     hello: Hello %name%
     goodbye: Goodbye %name%
 
-Repeat this for all of your languages. Then set up the ``translator.messages`` to map
-languages to files::
+この作業をあなたが使いたい全ての言語ファイル分用意します。そして、　ファイルに言語をマッピングするために ``translator.messages`` を設定します::
 
     $app['translator.messages'] = array(
         'en' => __DIR__.'/locales/en.yml',
@@ -124,9 +120,8 @@ languages to files::
         'fr' => __DIR__.'/locales/fr.yml',
     );
 
-Finally override the ``translator.loader`` to use a ``YamlFileLoader`` instead of the
-default ``ArrayLoader``::
+最後に ``ArrayLoader`` の代わりに ``YamlFileLoader`` を使うために ``translator.loader`` を上書きします。::
 
     $app['translator.loader'] = new Symfony\Component\Translation\Loader\YamlFileLoader();
 
-And that's all you need to load translations from YAML files.
+これで YAML ファイルから翻訳データを読み込むことができます。

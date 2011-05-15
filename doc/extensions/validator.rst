@@ -1,39 +1,38 @@
 ValidatorExtension
 =====================
 
-The *ValidatorExtension* provides a service for validating data. It is
-most useful when used with the *FormExtension*, but can also be used
-standalone.
+*ValidatorExtension* はデータをバリデーションするためのサービスを提供します。
+*FormExtension* と一緒に利用するととても便利です。
+しかし、このエクステンションは単独で利用することも可能です。
 
-Parameters
-----------
+パラメーター
+------------
 
-* **validator.class_path** (optional): Path to where
-  the Symfony2 Validator component is located.
+* **validator.class_path** (オプション): Symfony2 Validator コンポーネントへのパス
 
-Services
+サービス
 --------
 
-* **validator**: An instance of `Validator
-  <http://api.symfony.com/2.0/Symfony/Component/Validator/Validator.html>`_.
+* **validator**: `Validator
+  <http://api.symfony.com/2.0/Symfony/Component/Validator/Validator.html>`_ のインスタンス。
 
-* **validator.mapping.class_metadata_factory**: Factory for metadata loaders,
-  which can read validation constraint information from classes. Defaults to
-  StaticMethodLoader--ClassMetadataFactory.
+* **validator.mapping.class_metadata_factory**: メタデータ読み込みのためのファクトリー。
+  バリデーション制約情報をクラスから読み込むことができます。
+  標準では StaticMethodLoader--ClassMetadataFactory 。
 
-  This means you can define a static ``loadValidatorMetadata`` method on your
-  data class, which takes a ClassMetadata argument. Then you can set
-  constraints on this ClassMetadata instance.
+  これを利用することでデータクラスに静的な　``loadValidatorMetadata``　を定義できるということです。
+  このメソッドは Classmetadata を引数として取ります。
+  そして ClassMetadata インスタンス上に制約を設定することができるようになります。
 
-* **validator.validator_factory**: Factory for ConstraintValidators. Defaults
-  to a standard ``ConstraintValidatorFactory``. Mostly used internally by the
-  Validator.
+* **validator.validator_factory**: ConstraintValidators のためのファクトリー。
+    標準は ``ConstraintValidatorFactory`` 。
+    ほとんどが Validator の内部で利用されます。
 
-Registering
+登録
 -----------
 
-Make sure you place a copy of the Symfony2 Validator component in
-``vendor/symfony/src``. You can simply clone the whole Symfony2 into vendor.
+Symfony2 Validator　バリデーターのコピーを ``vendor/symfony/src`` にあることを確認してください。
+Symfony2 全体を vendor ディレクトリにコピーするだけです。 
 
 ::
 
@@ -41,15 +40,15 @@ Make sure you place a copy of the Symfony2 Validator component in
         'validator.class_path'    => __DIR__.'/vendor/symfony/src',
     ));
 
-Usage
------
+使い方
+-------
 
-The Validator extension provides a ``validator`` service.
+Validator エクステンションは ``validator`` サービスを提供しまうs。
 
-Validating values
-~~~~~~~~~~~~~~~~~
+値のバリデーション
+~~~~~~~~~~~~~~~~~~~
 
-You can validate values directly using the ``validateValue`` validator method.
+直接 ``validateValue`` バリデーターメソッドを使うことで値の検証が行えます。
 
 ::
 
@@ -60,15 +59,15 @@ You can validate values directly using the ``validateValue`` validator method.
         return $violations;
     });
 
-This is relatively limited.
 
-Validating object properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+この使い方は他に比べて制限的です。
 
-If you want to add validations to a class, you can implement a static
-``loadValidatorMetadata`` method as described under *Services*. This allows
-you to define constraints for your object properties. It also works with
-getters.
+オブジェクトのプロパティのバリデーション
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+もしクラスにバリデーションを追加したいなら、 *Services* よりも下層に静的な ``loadValidatorMetadata`` メソッドを書くことで実装することができます。
+こうすることでオブジェクトのパラメーターに制約を定義することができます。
+また、 getter メソッドとしても動作します。
 
 ::
 
@@ -97,8 +96,8 @@ getters.
         return $violations;
     });
 
-You will have to handle the display of these violations yourself. You can
-however use the *FormExtension* which can make use of the *ValidatorExtension*.
+これらのバリデーションをあなた自身で表示するように操作しなければならならないでしょう。
+しかし、 *ValidatorExtension* を使っている *FormExtension* を使うことができます。
 
-For more information, consult the `Symfony2 Validation documentation
-<http://symfony.com/doc/2.0/book/validation.html>`_.
+詳細については、 `Symfony2 Validation のドキュメント
+<http://symfony.com/doc/2.0/book/validation.html>`_ を参照してください。

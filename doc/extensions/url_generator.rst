@@ -1,36 +1,33 @@
 UrlGeneratorExtension
 =====================
 
-The *UrlGeneratorExtension* provides a service for generating
-URLs for named routes.
+*UrlGeneratorExtension* は名前ルーティングのためにURLを生成するためのサービスです。
 
-Parameters
-----------
+パラメーター
+------------
 
-None.
+無し。
 
-Services
+サービス
 --------
 
-* **url_generator**: An instance of `UrlGenerator
-  <http://api.symfony.com/2.0/Symfony/Component/Routing/Generator/UrlGenerator.html>`_,
-  using the `RouteCollection
-  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
-  that is provided through the ``routes`` service.
-  It has a ``generate`` method, which takes the route name as an argument,
-  followed by an array of route parameters.
+* **url_generator**: ``routes`` サービスを通して提供されている 
+    `RouteCollection <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_ 
+    を使う `UrlGenerator
+    <http://api.symfony.com/2.0/Symfony/Component/Routing/Generator/UrlGenerator.html>`_
+    のインスタンス。 ``generate`` メソッドが存在して、このメソッドは引数としてルーティング名と、ルーティングパラメータの配列を必要とします。
 
-Registering
+登録
 -----------
 
 ::
 
     $app->register(new Silex\Extension\UrlGeneratorExtension());
 
-Usage
------
+使い方
+------
 
-The UrlGenerator extension provides a ``url_generator`` service.
+UrlGenerator エクステンションは ``url_generator`` サービスを提供します。
 
 ::
 
