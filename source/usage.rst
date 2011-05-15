@@ -452,11 +452,11 @@ beforeフィルターとafterフィルターを通して処理されます。利
 
 Silex には Silex を最新バージョンにアップデートするための軽量なコンソールが用意されています。
 
-あなたが利用している Silex のバージョンを知るためには、 ``silex.phar`` をコマンドラインから引数無しで呼び出すだけです:
+あなたが利用している Silex のバージョンを知るためには、 ``silex.phar`` をコマンドラインから引数で ``version`` を指定して呼び出します:
 
 .. code-block:: text
 
-    $ php silex.phar
+    $ php silex.phar version
     Silex version 0a243d3 2011-04-17 14:49:31 +0200
 
 最新バージョンかどうかを確認するためには、 ``check`` コマンドを実行します:
