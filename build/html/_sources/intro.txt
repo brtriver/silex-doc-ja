@@ -39,6 +39,6 @@ Silex には次のような目的があります:
 
 (訳者注)　ブラウザからアクセスするときは http://example.com/hello/yourname というように作成したルーティング名でアクセスしてください
 
-Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 `silex.phar` _ ファイルをダウンロードすれば完了です!
+Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 `silex.phar`_ ファイルをダウンロードすれば完了です!
 
 .. _silex.phar: http://silex-project.org/get/silex.phar
