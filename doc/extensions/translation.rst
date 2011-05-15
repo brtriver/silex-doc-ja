@@ -47,7 +47,7 @@ Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/sr
 使い方
 --------
 
-Translation エクステンションは ``translator`` サービスを提供し、　``translator.messages``　パラメーターを利用します。
+Translation エクステンションは ``translator`` サービスを提供し、 ``translator.messages`` パラメーターを利用します。
 
 ::
 

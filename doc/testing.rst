@@ -60,7 +60,7 @@ Web テストケース
 ----------------
 
 Symfony2 は WebTestCase クラスという機能テストを書くために利用することができるクラスを提供してくれています。
-Silex のために用意したバージョンは``Silex\WebTestCase`` であり、このクラスを拡張することでテストを書くことができます:: 
+Silex のために用意したバージョンは ``Silex\WebTestCase`` であり、このクラスを拡張することでテストを書くことができます:: 
 
     use Silex\WebTestCase;
 
