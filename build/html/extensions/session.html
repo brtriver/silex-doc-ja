@@ -74,17 +74,19 @@
 <ul>
 <li><p class="first"><strong>session.storage.options</strong>: <tt class="docutils literal"><span class="pre">session.storage</span></tt> サービスのコンストラクタに渡すオプションの配列。</p>
 <p>標準の <tt class="docutils literal"><span class="pre">NativeSessionStorage</span></tt> の場合、使用可能なオプションは以下の通りです:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="o">*</span> <span class="o">**</span><span class="nx">name</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">の名前</span> <span class="p">(</span><span class="err">標準は</span> <span class="nx">_SESS</span><span class="p">)</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">id</span><span class="o">**:</span> <span class="err">セッション</span> <span class="nx">ID</span> <span class="p">(</span><span class="err">標準は</span> <span class="k">null</span><span class="p">)</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">lifetime</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">のライフタイム</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">path</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">のパス</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">domain</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">のドメイン</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">secure</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">のセキュア設定</span> <span class="p">(</span><span class="nx">HTTPS</span><span class="p">)</span>
-<span class="o">*</span> <span class="o">**</span><span class="nx">httponly</span><span class="o">**:</span> <span class="nx">Cookie</span> <span class="err">が</span> <span class="nx">http</span><span class="err">オンリーかどうかの設定</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li><strong>name</strong>: Cookie の名前 (標準は _SESS)</li>
+<li><strong>id</strong>: セッション ID (標準は null)</li>
+<li><strong>lifetime</strong>: Cookie のライフタイム</li>
+<li><strong>path</strong>: Cookie のパス</li>
+<li><strong>domain</strong>: Cookie のドメイン</li>
+<li><strong>secure</strong>: Cookie のセキュア設定 (HTTPS)</li>
+<li><strong>httponly</strong>: Cookie が httpオンリーかどうかの設定</li>
+</ul>
 <p>しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
 これを上書きするためには、 <tt class="docutils literal"><span class="pre">lifetime</span></tt> オプションを設定します。</p>
+<p>However, all of these are optional. Sessions last as long as the browser
+is open. To override this, set the <tt class="docutils literal"><span class="pre">lifetime</span></tt> option.</p>
 </li>
 </ul>
 </div>

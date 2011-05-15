@@ -8,7 +8,7 @@ SessionExtension
 
 * **session.storage.options**: ``session.storage`` サービスのコンストラクタに渡すオプションの配列。
 
-  標準の ``NativeSessionStorage`` の場合、使用可能なオプションは以下の通りです::
+  標準の ``NativeSessionStorage`` の場合、使用可能なオプションは以下の通りです:
 
   * **name**: Cookie の名前 (標準は _SESS)
   * **id**: セッション ID (標準は null)
@@ -20,6 +20,10 @@ SessionExtension
 
   しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
   これを上書きするためには、 ``lifetime`` オプションを設定します。
+
+  However, all of these are optional. Sessions last as long as the browser
+  is open. To override this, set the ``lifetime`` option.
+
 
 サービス
 --------
