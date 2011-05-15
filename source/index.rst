@@ -1,5 +1,8 @@
-Silex
-=====
+Silex ドキュメント (日本語)
+=============================
+
+Silex のドキュメントのためのサイトです。 Silex は Symfony2 コンポーネントベースの PHP のマイクロフレームワークです。
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
     :maxdepth: 1
@@ -11,4 +14,18 @@ Silex
     testing
     internals
     contributing
-    extensions/index
+
+標準組み込み エクステンション
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+    :maxdepth: 1
+
+    extensions/doctrine
+    extensions/monolog
+    extensions/session
+    extensions/translation
+    extensions/twig
+    extensions/url_generator
+    extensions/validator
+    extensions/http_cache
