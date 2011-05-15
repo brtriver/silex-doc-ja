@@ -187,27 +187,45 @@ Silex は利用したり置き換えることができるサービスの範囲�
 
     $app['autoloader']->registerPrefix('Twig_', $app['twig.class_path']);
 
-* **ルーティング (routes)**: 内部で利用されている `RouteCollection
+* **routes**: 内部で利用されている `RouteCollection
   <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
   。
   ルーティングの追加、修正、読み込みを行うことができます。
 
-* **コントローラー (controllers)**: 内部で利用されている ``Silex\ControllerCollection`` 。
+* **controllers**: 内部で利用されている ``Silex\ControllerCollection`` 。
   詳細については *Internals* の章を参照してください。
 
-* **ディスパッチャー (dispatcher)**: 内部で利用されている `EventDispatcher
+* **dispatcher**: 内部で利用されている `EventDispatcher
   <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
   。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。
 
-* **リゾルバー (resolver)**: 内部で利用されている `ControllerResolver
+* **resolver**: 内部で利用されている `ControllerResolver
   <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
   。　正しい引数でコントローラーが実行されるように注意を払ってくれています。
 
-* **カーネル (kernel)**: 内部で利用されている `HttpKernel
+* **kernel**: 内部で利用されている `HttpKernel
   <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_
   。　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。
 
+* **request_context**: リクエストのコンテクストとは Router と UrlGenerator で利用されるリクエストを簡易化したものです。
 
 .. note::
 
     これらすべての Silex のコアサービスは共有されています。
+
+コアのパラメーター
+---------------
+
+* **request.http_port** (オプション): HTTPSでないURLのための標準のポートを上書きできます。
+  このパラメータで現在利用しているポートを指定することができます。
+
+  標準は 80 番です。
+
+  このパラメーターは ``UrlGeneratorExtension`` で利用されます。
+
+* **request.https_port** (オプション): HTTPSのURLのための標準のポートを上書きできます。
+  もし現在のリクエストが HTTPS であれば、このパラメータで現在利用しているポートを指定することができます。
+
+  標準は 443 番です。
+
+  このパラメーターは ``UrlGeneratorExtension`` で利用されます。

@@ -214,6 +214,39 @@ POSTルーティングはリソースの生成を意味します。
         ...
     });
 
+ルーティングで取得される変数の変換
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+コントローラーにルーティングで取得した変数を注入する前に、変換処理を行うことができます::
+
+    $app->get('/user/{id}', function ($id) {
+        // ...
+    })->convert('id', function ($id) { return (int) $id; });
+
+たとえば、ルーティングで取得した変数をオブジェクトに変換し異なるコントローラー間で再利用性を高めたい場合などに便利です::
+
+    $userProvider = function ($id) {
+        return new User($id);
+    };
+
+    $app->get('/user/{user}', function (User $user) {
+        // ...
+    })->convert('user', $userProvider);
+
+    $app->get('/user/{user}/edit', function (User $user) {
+        // ...
+    })->convert('user', $userProvider);
+
+変換処理のコールバックは ``Request`` を第2引数として受け取ることができます::
+
+    $callback = function ($post, Request $request) {
+        return new Post($request->attributes->get('slug'));
+    };
+
+    $app->get('/blog/{id}/{slug}', function (Post $post) {
+        // ...
+    })->convert('post', $callback);
+
 必須項目
 ~~~~~~~~~~~~
 
