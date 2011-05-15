@@ -1,3 +1,6 @@
 [submodule "Silex.git"]
 	path = Silex.git
 	url = https://github.com/fabpot/Silex.git
+[submodule "symfony-docs-ja-sphinx.git"]
+	path = symfony-docs-ja-sphinx.git
+	url = git@github.com:brtriver/symfony-docs-ja-sphinx.git
