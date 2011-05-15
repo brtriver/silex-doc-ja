@@ -21,9 +21,6 @@ SessionExtension
   しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
   これを上書きするためには、 ``lifetime`` オプションを設定します。
 
-  However, all of these are optional. Sessions last as long as the browser
-  is open. To override this, set the ``lifetime`` option.
-
 
 サービス
 --------
