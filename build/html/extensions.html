@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>エクステンション (Extensions) &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
+    <link rel="next" title="テスト" href="testing.html" />
+    <link rel="prev" title="サービス" href="services.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="testing.html" title="テスト"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="services.html" title="サービス"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="extensions">
+<h1>エクステンション (Extensions)<a class="headerlink" href="#extensions" title="Permalink to this headline">¶</a></h1>
+<p>Silex はエクステンションのためのインターフェースを提供しています。
+エクステンションはアプリケーション上にサービスとして定義します。</p>
+<div class="section" id="id1">
+<h2>エクステンションの読み込み<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>エクステンションを読み込んで使うためには、アプリケーションにそのエクステンションを登録しなければなりません</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\DatabaseExtension</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>第２引数としてパラメーターを提供することもできます。
+この作業はエクステンションが登録される <strong>前</strong> に行う必要があります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\DatabaseExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;database.dsn&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;mysql:host=localhost;dbname=myapp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;database.user&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;database.password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;secret_root_password&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>規約<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>エクステンションとやりとりするときにどのような順序でやりとりを行うかを知っておく必要があります。
+以下に説明するルールに従うだけです:</p>
+<ul>
+<li><p class="first">(オートローダーのための) クラスへのパスはエクステンションが登録される <strong>前</strong> に定義しなければなりません。
+パスは <tt class="docutils literal"><span class="pre">Application::register</span></tt> の第２引数として渡してください。
+なぜなら渡されたパラメーターを最初にセットするからです。</p>
+<p><em>理由: エクステンションは、自身が登録されるときにオートローダーを設定しようとします。
+もしこの時点でクラスのパスが渡されていなければオートローダーを登録することができないからです。</em></p>
+</li>
+<li><p class="first">エクステンションのサービスを上書き処理する場合はエクステンションが登録された <strong>後</strong> にしなくてはなりません。</p>
+<p><em>理由: サービスがすでに存在していると、エクステンションはそれを上書きしようとするからです。</em></p>
+</li>
+<li><p class="first">サービスがアクセスされる前のタイミングであればパラメーターをセットすることができます。</p>
+</li>
+</ul>
+<p>あなたのオリジナルのエクステンションを作成するときはこの振る舞いに注意してください。</p>
+</div>
+<div class="section" id="id3">
+<h2>エクステンションの読み込み<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>標準で用意されているエクステンションは以下の通りです。
+これらすべてのエクステンションの名前空間は <tt class="docutils literal"><span class="pre">Silex\Extension</span></tt> になります。</p>
+<ul class="simple">
+<li><a class="reference internal" href="extensions/doctrine.html"><em>DoctrineExtension</em></a></li>
+<li><a class="reference internal" href="extensions/monolog.html"><em>MonologExtension</em></a></li>
+<li><a class="reference internal" href="extensions/session.html"><em>SessionExtension</em></a></li>
+<li><a class="reference internal" href="extensions/twig.html"><em>TwigExtension</em></a></li>
+<li><a class="reference internal" href="extensions/translation.html"><em>TranslationExtension</em></a></li>
+<li><a class="reference internal" href="extensions/url_generator.html"><em>UrlGeneratorExtension</em></a></li>
+<li><a class="reference internal" href="extensions/validator.html"><em>ValidatorExtension</em></a></li>
+<li><a class="reference internal" href="extensions/http_cache.html"><em>HttpCacheExtension</em></a></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>エクステンションの作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>エクステンションは <tt class="docutils literal"><span class="pre">Silex\ExtensionInterface</span></tt> を実装しなければなりません。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ExtensionInterface</span>
+<span class="p">{</span>
+    <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>これはとても単純な利用例であり、 <tt class="docutils literal"><span class="pre">register</span></tt> メソッドを実装している新しいクラスを作成しているだけです。
+このメソッドで、他のサービスやパラメータを利用するようなアプリケーション上にサービスを定義することができます。</p>
+<p>次がそのようなエクステンションのサンプルです:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Acme</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Silex\ExtensionInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">HelloExtension</span> <span class="k">implements</span> <span class="nx">ExtensionInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$default</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;hello.default_name&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;hello.default_name&#39;</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+            <span class="nv">$name</span> <span class="o">=</span> <span class="nv">$name</span> <span class="o">?:</span> <span class="nv">$default</span><span class="p">;</span>
+            <span class="k">return</span> <span class="s2">&quot;Hello </span><span class="si">$name</span><span class="s2">&quot;</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>このクラスは <tt class="docutils literal"><span class="pre">hello</span></tt> サービスを提供します。このサービスは保護されたクロージャーです。
+$name を引数として取り、 <tt class="docutils literal"><span class="pre">hello.default_name</span></tt> を返してくれます。
+初期値を与えられていない場合は空の文字列を使います。</p>
+<p>このエクステンションは次のように使うことができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\HelloExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;hello.default_name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Igor&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$name</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">](</span><span class="nv">$name</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>このサンプルでは <tt class="docutils literal"><span class="pre">name</span></tt> パラメーターの値をクエリーストリングから取得しています。
+そのため <tt class="docutils literal"><span class="pre">/hello?name=Fabien</span></tt> のようなパスでリクエストします。</p>
+<div class="section" id="class-loading">
+<h3>クラスの読み込み (Class loading)<a class="headerlink" href="#class-loading" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">MonologExtension</span></tt> や <tt class="docutils literal"><span class="pre">TwigExtension</span></tt> を見てもらえばわかるように、エクステンションは外部ライブラリを簡単に利用できる仕組みです。
+ごく普通のライブラリで、 <a class="reference external" href="http://groups.google.com/group/php-standards/web/psr-0-final-proposal">PSR-0 Naming Standard</a>
+や PEAR の命名ルールに準拠しているのであれば、 <tt class="docutils literal"><span class="pre">UniversalClassLoader</span></tt> を使ったクラスの自動読み込みが可能です。</p>
+<p><em>Services</em> の章で説明したように、 <em>autoloader</em> サービスによってこのようなクラスの自動読み込みが行われます。</p>
+<p>では、この自動読み込みをどのように使うかを見てみましょう。 (ここでは <a class="reference external" href="https://github.com/kriswallsmith/Buzz">Buzz</a> をライブラリとして読み込みます):</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Acme</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Silex\ExtensionInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BuzzExtension</span> <span class="k">implements</span> <span class="nx">ExtensionInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">});</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz.class_path&#39;</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerNamespace</span><span class="p">(</span><span class="s1">&#39;Buzz&#39;</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz.class_path&#39;</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>次のようにエクステンションを登録するときにオプションで渡すことで簡単にクラスのパスを追加することができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">BuzzExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;buzz.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/buzz/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">PHP 5.3 の名前空間を使っていないライブラリの場合は <tt class="docutils literal"><span class="pre">registerNamespace</span></tt> の代わりに <tt class="docutils literal"><span class="pre">registerPrefix</span></tt> を使うことができます。
+こうすることでディレクトリの区切り記号としてアンダースコアーを使うことができます。</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">エクステンション (Extensions)</a><ul>
+<li><a class="reference internal" href="#id1">エクステンションの読み込み</a></li>
+<li><a class="reference internal" href="#id2">規約</a></li>
+<li><a class="reference internal" href="#id3">エクステンションの読み込み</a></li>
+<li><a class="reference internal" href="#id4">エクステンションの作成</a><ul>
+<li><a class="reference internal" href="#class-loading">クラスの読み込み (Class loading)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="services.html"
+                        title="previous chapter">サービス</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="testing.html"
+                        title="next chapter">テスト</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/extensions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="testing.html" title="テスト"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="services.html" title="サービス"
+             >previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

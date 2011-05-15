@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TwigExtension &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Silex" href="index.html" />
+    <link rel="next" title="UrlGeneratorExtension" href="url_generator.html" />
+    <link rel="prev" title="TranslationExtension" href="translation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="url_generator.html" title="UrlGeneratorExtension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="translation.html" title="TranslationExtension"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Silex</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="twigextension">
+<h1>TwigExtension<a class="headerlink" href="#twigextension" title="Permalink to this headline">¶</a></h1>
+<p><em>TwigExtension</em> を利用すれば <a class="reference external" href="http://www.twig-project.org/">Twig</a> テンプレートエンジンを使うことができます。</p>
+<div class="section" id="id1">
+<h2>設定パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>twig.path</strong>: twig のテンプレートファイルが入っているディレクトリへのパスです。</li>
+<li><strong>twig.templates</strong> (オプション):このオプションを設定すると <tt class="docutils literal"><span class="pre">twig.path</span></tt> を設定する必要はなくなります。テンプレート名とテンプレート内容の連想配列で設定します。テンプレートをインラインで書きたい場合に使用します。</li>
+<li><strong>twig.options</strong> (オプション): twig オプションの連想配列です。詳細な設定内容は twig のドキュメントを参照してください。</li>
+<li><strong>twig.class_path</strong> (オプション): twig のライブラリが入っているディレクトリへのパスです。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>twig</strong>: <tt class="docutils literal"><span class="pre">Twig_Environment</span></tt> のインスタンスです。twigと連携するのに使います。</li>
+<li><strong>twig.configure</strong>: Twig environment を引数に取る保護されたクロージャです。カスタムグローバル変数を追加するのに使います。</li>
+<li><strong>twig.loader</strong>: <tt class="docutils literal"><span class="pre">twig.path</span></tt> と <tt class="docutils literal"><span class="pre">twig.templates</span></tt> の設定を利用したTwigテンプレートのローダー(loader)です。ローダー(loader)を完全に置き換えることもできます。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><em>Twig</em> のライブラリのコピーが <tt class="docutils literal"><span class="pre">vendor/twig</span></tt> にある場合の書き方です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\TwigExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;twig.path&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;twig.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/twig/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Twig は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> には含まれていません。開発者は自分で Twig ライブラリのコピーをアプリケーションに組み込む必要があります。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Twig extension は <tt class="docutils literal"><span class="pre">twig</span></tt> サービスを提供します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;hello.twig&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">views/hello.twig</span></tt> を使って描画します。</p>
+<p>$appは <tt class="docutils literal"><span class="pre">app</span></tt> という名前のグローバル変数として登録されるので、ビューから全てのサービスを利用することができます。
+例えば <tt class="docutils literal"><span class="pre">$app['request']-&gt;getHost()</span></tt> に（ビューから）アクセスするためには、テンプレートに下記のように書くだけです。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.request.host</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">TwigExtension</a><ul>
+<li><a class="reference internal" href="#id1">設定パラメータ</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="translation.html"
+                        title="previous chapter">TranslationExtension</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="url_generator.html"
+                        title="next chapter">UrlGeneratorExtension</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/twig.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="url_generator.html" title="UrlGeneratorExtension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="translation.html" title="TranslationExtension"
+             >previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Silex</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

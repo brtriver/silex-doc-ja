@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>イントロダクション &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
+    <link rel="next" title="使用方法" href="usage.html" />
+    <link rel="prev" title="Silex" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="使用方法"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Silex"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>イントロダクション<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Silex は PHP 5.3 以上で動作する PHPマイクロフレームワークです。 Symfony2 のコンポーネントと Pimple を利用して構築されており、 sinatra からもインスパイアされています。</p>
+<p>マイクロフレームワークを使うことでシンプルな1ファイル構成でアプリケーションを書くことができます。
+Silex には次のような目的があります:</p>
+<ul class="simple">
+<li><em>簡潔</em>: Silex は直感的であり使っていて楽しくなる簡潔なAPIが用意されています。</li>
+<li><em>高い拡張性</em>: Silex は Pimple というマイクロサービスコンテナーを利用した拡張機能を備えています。
+Pimple によって簡単にサードパーティーのライブラリを利用できます。</li>
+<li><em>テスト</em>: Silex は Symfony2 の リクエストとレスポンスを抽象化しているHttpKernelコンポーネントを利用しています。
+このおかげで、アプリケーションやフレームワーク自身をテストすることはとても簡単になっています。
+また、HTTPの仕様書を順守し適切な利用を促進します。</li>
+</ul>
+<p>一言で言えば、コントローラーを定義しそれらをルーティングにマップする作業のすべてを、たった1ステップで行うことができるのです。</p>
+<p><strong>使ってみましょう!</strong></p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/silex.phar&#39;</span><span class="p">;</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello </span><span class="si">$name</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>フレームワークを利用するために必要なことは <tt class="docutils literal"><span class="pre">silex.phar</span></tt> をインクルードするだけです。
+あとは、phar(PHP アーカイブ)ファイルが処理を行ってくれます。</p>
+<p>次に、``GET`` リクエストで <tt class="docutils literal"><span class="pre">/hello/{name}</span></tt> へのルーティングを定義します。
+ルーティングに一致するリクエストの場合は関数が実行されクライアントに返却される値がreturnで返されます。</p>
+<p>最後に、アプリケーションを実行(run)します。　本当に簡単でしょ!!</p>
+<p>(訳者注)　ブラウザからアクセスするときは <a class="reference external" href="http://example.com/hello/yourname">http://example.com/hello/yourname</a> というように作成したルーティング名でアクセスしてください</p>
+<p>Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 <cite>silex.phar</cite> _ ファイルをダウンロードすれば完了です!</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Silex</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">使用方法</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="使用方法"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Silex"
+             >previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

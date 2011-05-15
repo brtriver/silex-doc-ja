@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>サービス &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
+    <link rel="next" title="エクステンション (Extensions)" href="extensions.html" />
+    <link rel="prev" title="使用方法" href="usage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="extensions.html" title="エクステンション (Extensions)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="使用方法"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>サービス<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Silex はマイクロフレームワークであることはもちろんのこと、マイクロサービスコンテナーでもあります。
+Silex はたったの44行(コメント抜きの行数)で書かれた <a class="reference external" href="https://github.com/fabpot/Pimple">Pimple</a>
+を拡張してマイクロサービスコンテナとして動作するようになっています。</p>
+<div class="section" id="di-dependency-injection">
+<h2>DI (Dependency Injection)<a class="headerlink" href="#di-dependency-injection" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">もし　Dependency Injection について既に理解しているのであればこの節は読まなくても大丈夫です。</p>
+</div>
+<p>Dependency Injection は 外部のサービスやグローバル領域のから依存するものを作成する代わりにそれらをサービスに渡すというデザインパターンです。
+一般的にコードをカプセル化し、再利用性を高め、柔軟性がありテストを書き易くするために用いられます。</p>
+<p>ここにクラスのサンプルがあります。このクラスでは <tt class="docutils literal"><span class="pre">User</span></tt> オブジェクトを引数として必要としており、オブジェクトから取得できる属性をJSONフォーマットでファイルに書き出しています。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">class</span> <span class="nc">JsonUserPersister</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$basePath</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$basePath</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">basePath</span> <span class="o">=</span> <span class="nv">$basePath</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">persist</span><span class="p">(</span><span class="nx">User</span> <span class="nv">$user</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getAttributes</span><span class="p">();</span>
+        <span class="nv">$json</span> <span class="o">=</span> <span class="nx">json_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+        <span class="nv">$filename</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">basePath</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">id</span><span class="o">.</span><span class="s1">&#39;.json&#39;</span><span class="p">;</span>
+        <span class="nb">file_put_contents</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span> <span class="nv">$json</span><span class="p">,</span> <span class="nx">LOCK_EX</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>この簡単なサンプルでの依存関係の指定は <tt class="docutils literal"><span class="pre">basePath</span></tt> プロパティです。
+このプロパティはクラスのコンストラクターに渡されています。
+こうすることで、異なる basePath を持った複数の独立したインスタンスを作成することができるということです。
+もちろん依存関係の指定を単なる文字列にすべきではありません。なぜなら多くの場合は他のサービスを指定することがよくあるからです。</p>
+<div class="section" id="container">
+<h3>コンテナー (Container)<a class="headerlink" href="#container" title="Permalink to this headline">¶</a></h3>
+<p>DI や サービスコンテナーはサービスを生成したり保存しておく責任があります。
+そして再起的に必要とされているサービスの依存関係を生成しそれらを注入(inject)することができます。
+そしてこの作業は遅延読み込み(lazily)で行われます、つまり、そのサービスが本当に必要になったときにのみ生成されるということです。</p>
+<p>ほとんどのコンテナーは非常に複雑でXMLやYAMLファイルを使って設定が記述されています。</p>
+<p>しかし、 Pipmple は違うのです。</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Pimple<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Pimple は存在するサービスコンテナーの中でもおそらく最もシンプルなものです。
+配列アクセス(ArrayAccess) のインターフェースを実装したクロージャーを活用しています。</p>
+<p>新しい Pimple のインスタンスを作成するところから始めてみましょう &#8211;
+そして <tt class="docutils literal"><span class="pre">Silex\Application</span></tt> は <tt class="docutils literal"><span class="pre">Pimple</span></tt> を拡張したものなので、これからの説明はすべて Silex においても適用できます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$container</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pimple</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>もしくは</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="section" id="id3">
+<h3>パラメーター<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>コンテナー上に配列のキーを指定することで (通常は文字列で) パラメータをセットすることができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>配列のキーは何でもかまいません。習慣的にピリオドは名前空間のような目的で使うことができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;asset.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdn.mysite.com/&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>設定したパラメータの値は同じ構文で呼び出すことができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">echo</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>サービスの定義<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>サービスを定義することはパラメータを定義することとなんら違いはありません。
+コンテナーに配列のキーでクロージャーを設定するだけです。
+サービスを取得するときにクロージャーは実行されます。
+このようにしてサービスを遅延して作成することができます</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>そして、サービスを取得するためには次のようにします:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$service</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">$app['some_service']</span></tt> を呼び出せば、呼び出す度に新しいサービスのインスタンスが生成されます。</p>
+</div>
+<div class="section" id="shared-services">
+<h3>共有サービス (Shared services)<a class="headerlink" href="#shared-services" title="Permalink to this headline">¶</a></h3>
+<p>コード全体で共通のサービスのインスタンスを使いたいときもあるでしょう。
+そのようなために、 <em>shared</em> サービスを作ることができるようになっています</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返すということをやっています。</p>
+</div>
+<div class="section" id="id5">
+<h3>クロージャーからコンテナーへのアクセス<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>多くの場合、クロージャーの中からサービスコンテナーにアクセスしたい場合があるでしょう。
+たとえば、既存の依存しているサービスを取得したいような場合です。</p>
+<p>このためには、引数を使ってクロージャーにコンテナーを渡します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_other_service&#39;</span><span class="p">],</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service.config&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これがDIのサンプルになります。
+<tt class="docutils literal"><span class="pre">some_service</span></tt> は <tt class="docutils literal"><span class="pre">some_other_service</span></tt> に依存しており、 <tt class="docutils literal"><span class="pre">some_service.config</span></tt> を設定オプションとして利用することができます。
+<tt class="docutils literal"><span class="pre">some_service</span></tt> にアクセスが発生し生成されるときだけ依存関係があり、これらの定義を上書きするだけで依存関係を書き換えることができます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">この仕組みは共有サービスでも動作します。</p>
+</div>
+</div>
+<div class="section" id="protected-closures">
+<h3>保護されたクロージャー (Protected closures)<a class="headerlink" href="#protected-closures" title="Permalink to this headline">¶</a></h3>
+<p>コンテナーはサービスのための工場(factory)としてクロージャーがあると理解しているので。クロージャーを読みこむとにいつも実行します。
+Because the container sees closures as factories for
+services, it will always execute them when reading them.</p>
+<p>しかしながら、パラメータとしてクロージャーを保存したいときがあるでしょう。
+たとえば、クロージャーを取得しあなた自身が定義した引数で実行したいような場合です。</p>
+<p>こういった理由で Pimple は <tt class="docutils literal"><span class="pre">protect</span></tt> メソッドを使うことであなたが作成したクロージャーが実行されないようにいつも保護することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$a</span> <span class="o">+</span> <span class="nv">$b</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// クロージャーは実行されません</span>
+<span class="nv">$add</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">];</span>
+
+<span class="c1">// この時点でクロージャーが実行されます</span>
+<span class="k">echo</span> <span class="nv">$add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>保護されたクロージャーはコンテナーにアクセスすることがdけいないということに注意してください。</p>
+</div>
+</div>
+<div class="section" id="core-services">
+<h2>コアサービス (Core services)<a class="headerlink" href="#core-services" title="Permalink to this headline">¶</a></h2>
+<p>Silex は利用したり置き換えることができるサービスの範囲を定義しています。
+これらの大部分はさわりたいと思わないでしょう。</p>
+<ul>
+<li><p class="first"><strong>リクエスト (request)</strong>: 現在のリクエストオブジェクトを保持しており,
+このオブジェクトは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a>
+のインスタンスです。
+<tt class="docutils literal"><span class="pre">GET</span></tt> 、 <tt class="docutils literal"><span class="pre">POST</span></tt> やさらに多くのパラメーターにアクセスすることができます!</p>
+<p>利用例:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$id</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>これはリクエストが実行されているときにだけ利用可能です。
+コントローラー、　before、 afterフィルターそしてエラーハンドラーの内部からのみアクセスすることができます。</p>
+<ul>
+<li><p class="first"><strong>オートローダー (autoloader)</strong>: このサービスは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html">UniversalClassLoader</a>
+によって提供されています。
+接頭辞や名前空間を登録することができます。</p>
+<p>利用例 (Twigのクラスのオートロードの設定):</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerPrefix</span><span class="p">(</span><span class="s1">&#39;Twig_&#39;</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig.class_path&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>routes</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+。
+ルーティングの追加、修正、読み込みを行うことができます。</p>
+</li>
+<li><p class="first"><strong>controllers</strong>: 内部で利用されている <tt class="docutils literal"><span class="pre">Silex\ControllerCollection</span></tt> 。
+詳細については <em>Internals</em> の章を参照してください。</p>
+</li>
+<li><p class="first"><strong>dispatcher</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
+。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。</p>
+</li>
+<li><p class="first"><strong>resolver</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html">ControllerResolver</a>
+。　正しい引数でコントローラーが実行されるように注意を払ってくれています。</p>
+</li>
+<li><p class="first"><strong>kernel</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a>
+。　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。</p>
+</li>
+<li><p class="first"><strong>request_context</strong>: リクエストのコンテクストとは Router と UrlGenerator で利用されるリクエストを簡易化したものです。</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">これらすべての Silex のコアサービスは共有されています。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>コアのパラメーター<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>request.http_port</strong> (オプション): HTTPSでないURLのための標準のポートを上書きできます。
+このパラメータで現在利用しているポートを指定することができます。</p>
+<p>標準は 80 番です。</p>
+<p>このパラメーターは <tt class="docutils literal"><span class="pre">UrlGeneratorExtension</span></tt> で利用されます。</p>
+</li>
+<li><p class="first"><strong>request.https_port</strong> (オプション): HTTPSのURLのための標準のポートを上書きできます。
+もし現在のリクエストが HTTPS であれば、このパラメータで現在利用しているポートを指定することができます。</p>
+<p>標準は 443 番です。</p>
+<p>このパラメーターは <tt class="docutils literal"><span class="pre">UrlGeneratorExtension</span></tt> で利用されます。</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">サービス</a><ul>
+<li><a class="reference internal" href="#di-dependency-injection">DI (Dependency Injection)</a><ul>
+<li><a class="reference internal" href="#container">コンテナー (Container)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">Pimple</a><ul>
+<li><a class="reference internal" href="#id3">パラメーター</a></li>
+<li><a class="reference internal" href="#id4">サービスの定義</a></li>
+<li><a class="reference internal" href="#shared-services">共有サービス (Shared services)</a></li>
+<li><a class="reference internal" href="#id5">クロージャーからコンテナーへのアクセス</a></li>
+<li><a class="reference internal" href="#protected-closures">保護されたクロージャー (Protected closures)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#core-services">コアサービス (Core services)</a></li>
+<li><a class="reference internal" href="#id6">コアのパラメーター</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="previous chapter">使用方法</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="extensions.html"
+                        title="next chapter">エクステンション (Extensions)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/services.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="extensions.html" title="エクステンション (Extensions)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="usage.html" title="使用方法"
+             >previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

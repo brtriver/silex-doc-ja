@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>内部の仕組み &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
+    <link rel="next" title="プロジェクトへの貢献" href="contributing.html" />
+    <link rel="prev" title="テスト" href="testing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="contributing.html" title="プロジェクトへの貢献"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="testing.html" title="テスト"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>内部の仕組み<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>この章では Silex 内部でどのように処理しているかについて説明します。</p>
+<div class="section" id="silex">
+<h2>Silex<a class="headerlink" href="#silex" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="application">
+<h3>アプリケーション (Application)<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h3>
+<p>アプリケーションは Silex の中心となるインターフェースです。
+Symfony2 の <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernelInterface.html">HttpKernelInterface</a>,
+を実装しています。
+そのため、 <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a>
+を <tt class="docutils literal"><span class="pre">handle</span></tt> メソッドに渡すことで <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html">Response</a>
+が返されます.</p>
+<p>これは <tt class="docutils literal"><span class="pre">Pimple</span></tt> サービスコンテナを拡張して実現されています。
+そのため、内部から扱うのと同じぐらい外部からでも柔軟性をもって利用することができます。
+つまりどのサービスも置き換えることができ、それらを読み込むことができます。</p>
+<p>アプリケーションは Symfony2 HttpKernel イベントをフックするために <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
+を使っています。
+イベントディスパッチャーのおかげで <tt class="docutils literal"><span class="pre">Request</span></tt> を取得し文字列のレスポンスを <tt class="docutils literal"><span class="pre">Response</span></tt> オブジェクトに変換したり例外をハンドリングしたりすることができます。
+この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。</p>
+</div>
+<div class="section" id="controller">
+<h3>コントローラー (Controller)<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h3>
+<p>Symfony2 の <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/Route.html">ルーティング (Route)</a>
+は本当に強力な機能です。</p>
+<p>ルーティングに名前が付けることができ、そのルーティング名でURLを生成することができます。
+URL の可変部分を必須項目にすることもできます。
+すばらしいインターフェースを通してこれらの設定を行えるようにするために、(<tt class="docutils literal"><span class="pre">get</span></tt>, <tt class="docutils literal"><span class="pre">post</span></tt> メソッドなどから呼び出される) <tt class="docutils literal"><span class="pre">match</span></tt> メソッド  は <tt class="docutils literal"><span class="pre">Controller</span></tt> のインスタンスを返してくれます。
+そして、この <tt class="docutils literal"><span class="pre">Controller</span></tt> がルーティングを包み込んでいます。</p>
+</div>
+<div class="section" id="controllercollection">
+<h3>コントローラーコレクション (ControllerCollection)<a class="headerlink" href="#controllercollection" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">ルーティングコレクション (RouteCollection)</a>
+を見えるようにした目的の1つは変更できるようにするためでした。その結果、エクステンションで要素をルーティングコレクションに追加できるようになりました。
+この試みはルーティングが自分たちの名前を全くしらないということが本当のところです。
+名前は <tt class="docutils literal"><span class="pre">RouteCollection</span></tt> の前後関係においてのみ意味を持っていて、その名前は変えることができません。</p>
+<p>この試みを解決するために、私たちはルーティングのための中間の準備領域を用意することを思いつきました。
+<tt class="docutils literal"><span class="pre">ControllerCollection</span></tt> は <tt class="docutils literal"><span class="pre">flush</span></tt> が呼ばれるまでコントローラーを保持しています。
+そして <tt class="docutils literal"><span class="pre">flush</span></tt> が呼ばれた時点でルーティングを <tt class="docutils literal"><span class="pre">ルーティングコレクション</span> <span class="pre">(RouteCollection)</span></tt> に追加します。
+そしてコントローラーは凍結(freeze)されます。
+これが意味することは凍結されるとルーティング名を変更することはできず、もし変更しようとすると例外を投げるということです。</p>
+<p>あいにく flush 以外の良い方法が思いつきませんでした。なぜなら flush を呼ぶということに曖昧さがないからです。
+アプリケーションは flush を自動で呼び出しますが、リクエストが処理される前に <a href="#id2"><span class="problematic" id="id3">``</span></a>ControllerCollection``を読みたいのなら、あなた自身で flush を呼ぶ必要があります。</p>
+<p><tt class="docutils literal"><span class="pre">Application</span></tt> には <tt class="docutils literal"><span class="pre">ControllerCollection</span></tt> を flush するための <tt class="docutils literal"><span class="pre">flush</span></tt> というショートカットメソッドが用意されています。</p>
+</div>
+</div>
+<div class="section" id="symfony2">
+<h2>Symfony2<a class="headerlink" href="#symfony2" title="Permalink to this headline">¶</a></h2>
+<p>以下の Symfony2 コンポーネントが Silex　で利用されています:</p>
+<ul class="simple">
+<li><strong>ClassLoader</strong>: クラスの自動読み込みのため</li>
+<li><strong>HttpFoundation</strong>: <tt class="docutils literal"><span class="pre">Request</span></tt> と <tt class="docutils literal"><span class="pre">Response</span></tt> のため.</li>
+<li><strong>HttpKernel</strong>: なぜなら中枢部分が必要だから</li>
+<li><strong>Routing</strong>: 定義したルーティングと一致するかどうかを確認するため</li>
+<li><strong>EventDispatcher</strong>: HttpKernelにフックするため</li>
+</ul>
+<p>より多くの情報を知りたい場合は、 <a class="reference external" href="http://symfony.com/">Symfony のサイトをチェックしてみてください</a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">内部の仕組み</a><ul>
+<li><a class="reference internal" href="#silex">Silex</a><ul>
+<li><a class="reference internal" href="#application">アプリケーション (Application)</a></li>
+<li><a class="reference internal" href="#controller">コントローラー (Controller)</a></li>
+<li><a class="reference internal" href="#controllercollection">コントローラーコレクション (ControllerCollection)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#symfony2">Symfony2</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="testing.html"
+                        title="previous chapter">テスト</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="contributing.html"
+                        title="next chapter">プロジェクトへの貢献</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/internals.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="contributing.html" title="プロジェクトへの貢献"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="testing.html" title="テスト"
+             >previous</a> |</li>
+        <li><a href="index.html">Silex v0.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

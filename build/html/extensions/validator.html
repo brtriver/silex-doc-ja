@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ValidatorExtension &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Silex" href="index.html" />
+    <link rel="next" title="HttpCacheExtension" href="http_cache.html" />
+    <link rel="prev" title="UrlGeneratorExtension" href="url_generator.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="http_cache.html" title="HttpCacheExtension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="url_generator.html" title="UrlGeneratorExtension"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Silex</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="validatorextension">
+<h1>ValidatorExtension<a class="headerlink" href="#validatorextension" title="Permalink to this headline">¶</a></h1>
+<p><em>ValidatorExtension</em> はデータをバリデーションするためのサービスを提供します。
+<em>FormExtension</em> と一緒に利用するととても便利です。
+しかし、このエクステンションは単独で利用することも可能です。</p>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>validator.class_path</strong> (オプション): Symfony2 Validator コンポーネントへのパス</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>validator</strong>: <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Validator/Validator.html">Validator</a> のインスタンス。</p>
+</li>
+<li><p class="first"><strong>validator.mapping.class_metadata_factory</strong>: メタデータ読み込みのためのファクトリー。
+バリデーション制約情報をクラスから読み込むことができます。
+標準では StaticMethodLoader&#8211;ClassMetadataFactory 。</p>
+<p>これを利用することでデータクラスに静的な <tt class="docutils literal"><span class="pre">loadValidatorMetadata</span></tt> を定義できるということです。
+このメソッドは ClassMetadata を引数として取ります。
+そして ClassMetadata インスタンス上に制約を設定することができるようになります。</p>
+</li>
+<li><p class="first"><strong>validator.validator_factory</strong>: ConstraintValidators のためのファクトリー。
+標準は <tt class="docutils literal"><span class="pre">ConstraintValidatorFactory</span></tt> 。
+ほとんどが Validator の内部で利用されます。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Symfony2 Validator　バリデーターのコピーを <tt class="docutils literal"><span class="pre">vendor/symfony/src</span></tt> にあることを確認してください。
+Symfony2 全体を vendor ディレクトリにコピーするだけです。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\ValidatorExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;validator.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Validator エクステンションは <tt class="docutils literal"><span class="pre">validator</span></tt> サービスを提供しまうs。</p>
+<div class="section" id="id5">
+<h3>値のバリデーション<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>直接 <tt class="docutils literal"><span class="pre">validateValue</span></tt> バリデーターメソッドを使うことで値の検証が行えます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Validator\Constraints</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/validate-url&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$violations</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;validator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">validateValue</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">),</span> <span class="k">new</span> <span class="nx">Constraints\Url</span><span class="p">());</span>
+    <span class="k">return</span> <span class="nv">$violations</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>この使い方は他に比べて制限的です。</p>
+</div>
+<div class="section" id="id6">
+<h3>オブジェクトのプロパティのバリデーション<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>もしクラスにバリデーションを追加したいなら、 <em>Services</em> よりも下層に静的な <tt class="docutils literal"><span class="pre">loadValidatorMetadata</span></tt> メソッドを書くことで実装することができます。
+こうすることでオブジェクトのパラメーターに制約を定義することができます。
+また、 getter メソッドとしても動作します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Validator\Mapping\ClassMetadata</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Validator\Constraints</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Post</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$title</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$body</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="k">public</span> <span class="k">function</span> <span class="nf">loadValidatorMetadata</span><span class="p">(</span><span class="nx">ClassMetadata</span> <span class="nv">$metadata</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$metadata</span><span class="o">-&gt;</span><span class="na">addPropertyConstraint</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Constraints\NotNull</span><span class="p">());</span>
+        <span class="nv">$metadata</span><span class="o">-&gt;</span><span class="na">addPropertyConstraint</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Constraints\NotBlank</span><span class="p">());</span>
+        <span class="nv">$metadata</span><span class="o">-&gt;</span><span class="na">addPropertyConstraint</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Constraints\MinLength</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">)));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/posts/new&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$post</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Post</span><span class="p">();</span>
+    <span class="nv">$post</span><span class="o">-&gt;</span><span class="na">title</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">);</span>
+    <span class="nv">$post</span><span class="o">-&gt;</span><span class="na">body</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">);</span>
+
+    <span class="nv">$violations</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;validator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$violations</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>これらのバリデーションをあなた自身で表示するように操作しなければならならないでしょう。
+しかし、 <em>ValidatorExtension</em> を使っている <em>FormExtension</em> を使うことができます。</p>
+<p>詳細については、 <a class="reference external" href="http://symfony.com/doc/2.0/book/validation.html">Symfony2 Validation のドキュメント</a> を参照してください。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ValidatorExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a><ul>
+<li><a class="reference internal" href="#id5">値のバリデーション</a></li>
+<li><a class="reference internal" href="#id6">オブジェクトのプロパティのバリデーション</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="url_generator.html"
+                        title="previous chapter">UrlGeneratorExtension</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="http_cache.html"
+                        title="next chapter">HttpCacheExtension</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/validator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="http_cache.html" title="HttpCacheExtension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="url_generator.html" title="UrlGeneratorExtension"
+             >previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Silex</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

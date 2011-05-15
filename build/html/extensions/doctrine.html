@@ -1,0 +1,188 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>DoctrineExtension &mdash; Silex v0.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="Silex" href="index.html" />
+    <link rel="next" title="MonologExtension" href="monolog.html" />
+    <link rel="prev" title="Silex" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="monolog.html" title="MonologExtension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Silex"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Silex</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="doctrineextension">
+<h1>DoctrineExtension<a class="headerlink" href="#doctrineextension" title="Permalink to this headline">¶</a></h1>
+<p><em>DoctrineExtension</em> を使うことでデータベースへアクセスするための <a class="reference external" href="http://www.doctrine-project.org/projects/dbal">Doctrine DBAL</a> を利用することができます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Doctrine DBAL だけで ORM サービスは提供 <strong>されません</strong></p>
+</div>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>db.options</strong>: Doctrine DBAL のオプションを指定する配列</p>
+<p>以下のオプションが利用できます:</p>
+<ul class="simple">
+<li><strong>driver</strong>: 利用するデータベースドライバ。 標準では <tt class="docutils literal"><span class="pre">pdo_mysql</span></tt> です。
+次のどれかを指定できます: <tt class="docutils literal"><span class="pre">pdo_mysql</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_sqlite</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_pgsql</span></tt> 、
+<tt class="docutils literal"><span class="pre">pdo_oci</span></tt> 、 <tt class="docutils literal"><span class="pre">oci8</span></tt> 、 <tt class="docutils literal"><span class="pre">ibm_db2</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_ibm</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_sqlsrv</span></tt> .</li>
+<li><strong>dbname</strong>: 接続先のデータベース名。</li>
+<li><strong>host</strong>: 接続先のホスト名。 標準は localhost。</li>
+<li><strong>user</strong>: 接続先のデータベースのユーザー名。　標準は root。</li>
+<li><strong>password</strong>: 接続先のデータベースのパスワード。</li>
+<li><strong>path</strong>: <tt class="docutils literal"><span class="pre">pdo_sqlite</span></tt> だけに必要な項目で SQLite のデータベースのパスを指定。</li>
+</ul>
+<p>これらのオプションの詳細については <a class="reference external" href="http://www.doctrine-project.org/docs/dbal/2.0/en/reference/configuration.html">Doctrine DBAL 設定についてのドキュメント</a> を参照してください。</p>
+</li>
+<li><p class="first"><strong>db.dbal.class_path</strong> (オプション): Doctrine DBAL を配置したパス。</p>
+</li>
+<li><p class="first"><strong>db.common.class_path</strong> (オプション): Doctrine Common を配置したパス。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>サービス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>db</strong>: データベースコネクション、　``DoctrineDBALConnection`` のインスタンス。</li>
+<li><strong>db.config</strong>: Doctrine のための設定オブジェクト。　標準は空の <tt class="docutils literal"><span class="pre">Doctrine\DBAL\Configuration</span></tt>  。</li>
+<li><strong>db.event_manager</strong>: Doctrine のためのイベントマネージャー。</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><em>Doctrine DBAL</em> が <tt class="docutils literal"><span class="pre">vendor/doctrine-dbal</span></tt> に、そして <em>Doctrine Common</em> が <tt class="docutils literal"><span class="pre">vendor/doctrine-common</span></tt> にコピーされているかを確認してください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\DoctrineExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;db.options&#39;</span>            <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;driver&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;pdo_sqlite&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span>      <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/app.db&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;db.dbal.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-dbal/lib&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db.common.class_path&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-common/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>使い方<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>Doctrine のエクションテンションで <tt class="docutils literal"><span class="pre">db</span></tt> サービスを使うことができます。以下が使い方のサンプルです。:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/blog/show/{id}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM posts WHERE id = ?&quot;</span><span class="p">;</span>
+    <span class="nv">$post</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">fetchAssoc</span><span class="p">(</span><span class="nv">$sql</span><span class="p">,</span> <span class="k">array</span><span class="p">((</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$id</span><span class="p">));</span>
+
+    <span class="k">return</span>  <span class="s2">&quot;&lt;h1&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/h1&gt;&quot;</span><span class="o">.</span>
+            <span class="s2">&quot;&lt;p&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>より詳細については、 <a class="reference external" href="http://www.doctrine-project.org/docs/dbal/2.0/en/">Doctrine DBAL documentation</a>
+を見てください。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DoctrineExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id3">サービス</a></li>
+<li><a class="reference internal" href="#id4">登録</a></li>
+<li><a class="reference internal" href="#id5">使い方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Silex</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="monolog.html"
+                        title="next chapter">MonologExtension</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/doctrine.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="monolog.html" title="MonologExtension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Silex"
+             >previous</a> |</li>
+        <li><a href="../index.html">Silex v0.0.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Silex</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010 Fabien Potencier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
