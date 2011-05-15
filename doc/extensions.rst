@@ -37,7 +37,7 @@ Silex はエクステンションのためのインターフェースを提供�
   *理由: エクステンションは、自身が登録されるときにオートローダーを設定しようとします。
   もしこの時点でクラスのパスが渡されていなければオートローダーを登録することができないからです。*
 
-* エクステンションのサービスを上書き処理はエクステンションが登録された *後* にしなくてはなりません。
+* エクステンションのサービスを上書き処理はエクステンションが登録された **後** にしなくてはなりません。
 
   *理由: サービスがすでに存在していると、エクステンションはそれを上書きしようとするからです。*
 
@@ -59,81 +59,6 @@ Silex はエクステンションのためのインターフェースを提供�
 * :doc:`UrlGeneratorExtension <extensions/url_generator>`
 * :doc:`ValidatorExtension <extensions/validator>`
 * :doc:`HttpCacheExtension <extensions/http_cache>`
-
-==================
-
-*HttpCacheExtension* で Symfony2 のリバースプロキシーを利用することができます。
-
-パラメーター
--------------
-
-* **http_cache.cache_dir**: HTTP のキャッシュデータを保存するためのキャッシュディレクトリ
-
-* **http_cache.options** (オプション): `HttpCache
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
-  コンストラクターのためのオプションを配列
-
-サービス
---------
-
-* **http_cache**: `HttpCache
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_,
-  インスタンス
-
-登録
------------
-
-::
-
-    $app->register(new Silex\Extension\HttpCacheExtension(), array(
-        'cache_dir' => __DIR__.'/cache/',
-    ));
-
-使い方
-------
-
-Silex は レスポンス HTTP ヘッダーを設定することで Vanish のようなリバースプロキシーを利用することができます::
-
-    $app->get('/', function() {
-        return new Response('Foo', 200, array(
-            'Cache-Control' => 's-maxage=5',
-        ));
-    });
-
-このエクステンションを `http_cache` サービスをリクエストにハンドルし使うことで Silex アプリケーションで Symfony2 のリバースプロクシーを使うことができます::
-
-    $app['http_cache']->handle($request)->send();
-
-また、エクステンションは `ESI
-<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_ もサポートしています::
-
-    $app->get('/', function() {
-        return new Response(<<<EOF
-    <html>
-        <body>
-            Hello
-            <esi:include src="/included" />
-        </body>
-    </html>
-
-    EOF
-        , 200, array(
-            'Cache-Control' => 's-maxage=20',
-            'Surrogate-Control' => 'content="ESI/1.0"',
-        ));
-    });
-
-    $app->get('/included', function() {
-        return new Response('Foo', 200, array(
-            'Cache-Control' => 's-maxage=5',
-        ));
-    });
-
-    $app['http_cache']->handle($request)->send();
-
-より詳細については、 `Symfony2 HTTP キャッシュについてのドキュメント
-<http://symfony.com/doc/current/book/http_cache.html>`_ 
-を参照してください。
 
 エクステンションの作成
 ----------------------
@@ -186,7 +111,7 @@ $name を引数としてとり、 ``hello.default_name`` を返してくれま�
         return $app['hello']($name);
     });
 
-このサンプルでは ``name``　パラメーターの値をクエリーストリングから取得しています。
+このサンプルでは ``name`` パラメーターの値をクエリーストリングから取得しています。
 そのため ``/hello?name=Fabien`` のようなパスでリクエストします。
 
 クラスの読み込み (Class loading)

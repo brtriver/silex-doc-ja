@@ -16,8 +16,8 @@ DoctrineExtension
   以下のオプションが利用できます:
 
   * **driver**: 利用するデータベースドライバ。 標準では ``pdo_mysql`` です。
-    次のどれかを指定できます: ``pdo_mysql``、 ``pdo_sqlite``、 ``pdo_pgsql``、
-    ``pdo_oci``、 ``oci8``、 ``ibm_db2``、 ``pdo_ibm``、 ``pdo_sqlsrv``.
+    次のどれかを指定できます: ``pdo_mysql`` 、 ``pdo_sqlite`` 、 ``pdo_pgsql`` 、
+    ``pdo_oci`` 、 ``oci8`` 、 ``ibm_db2`` 、 ``pdo_ibm`` 、 ``pdo_sqlsrv`` .
 
   * **dbname**: 接続先のデータベース名。
 
@@ -38,16 +38,16 @@ DoctrineExtension
 サービス
 --------
 
-* **db**: データベースコネクション、　``Doctrine\DBAL\Connection``のインスタンス。
+* **db**: データベースコネクション、　``Doctrine\DBAL\Connection`` のインスタンス。
 
-* **db.config**: Doctrine のための設定オブジェクト。　標準は空の ``Doctrine\DBAL\Configuration`` 。
+* **db.config**: Doctrine のための設定オブジェクト。　標準は空の ``Doctrine\DBAL\Configuration``  。
 
 * **db.event_manager**: Doctrine のためのイベントマネージャー。
 
 登録
 -----------
 
-*Doctrine DBAL* が　``vendor/doctrine-dbal``　に、そして　*Doctrine Common*　が ``vendor/doctrine-common`` にコピーされているかを確認してください。
+*Doctrine DBAL* が ``vendor/doctrine-dbal`` に、そして *Doctrine Common* が ``vendor/doctrine-common`` にコピーされているかを確認してください。
 
 ::
 
@@ -73,6 +73,6 @@ Doctrine のエクションテンションで ``db`` サービスを使うこと
                 "<p>{$post['body']}</p>";
     });
 
-より詳細については、　`Doctrine DBAL documentation
+より詳細については、 `Doctrine DBAL documentation
 <http://www.doctrine-project.org/docs/dbal/2.0/en/>`_
 を見てください。

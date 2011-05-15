@@ -1,7 +1,7 @@
 HttpCacheExtension
 ==================
 
-*HttpCacheExtension* で Symfony2 のリバースプロクシー をサポートすることができます。
+*HttpCacheExtension* で Symfony2 のリバースプロキシー をサポートすることができます。
 
 パラメーター
 ------------
