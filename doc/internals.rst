@@ -57,9 +57,9 @@ URLの可変部分を必須項目にすることもできます。
 これが意味することは凍結されるとルーティング名を変更することはできず、もし変更しようとすると例外を投げるということです。
 
 あいにくflush以外の良い方法が思いつきませんでした。なぜならflushを呼ぶということに曖昧さがないからです。
-アプリケーションは flushを自動で呼び出しますが、リクエストが処理される前に``ControllerCollection``を読みたいのなら、あなた自身でflushを呼ぶ必要があります。
+アプリケーションは flushを自動で呼び出しますが、リクエストが処理される前に ``ControllerCollection``を読みたいのなら、あなた自身でflushを呼ぶ必要があります。
 
-``Application`` には ``ControllerCollection``を flush するための ``flush`` というショートカットメソッドが用意されています。
+``Application`` には ``ControllerCollection`` を flush するための ``flush`` というショートカットメソッドが用意されています。
 
 Symfony2
 --------

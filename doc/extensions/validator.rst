@@ -20,13 +20,13 @@ ValidatorExtension
   バリデーション制約情報をクラスから読み込むことができます。
   標準では StaticMethodLoader--ClassMetadataFactory 。
 
-  これを利用することでデータクラスに静的な　``loadValidatorMetadata``　を定義できるということです。
-  このメソッドは Classmetadata を引数として取ります。
+  これを利用することでデータクラスに静的な ``loadValidatorMetadata`` を定義できるということです。
+  このメソッドは ClassMetadata を引数として取ります。
   そして ClassMetadata インスタンス上に制約を設定することができるようになります。
 
 * **validator.validator_factory**: ConstraintValidators のためのファクトリー。
-    標準は ``ConstraintValidatorFactory`` 。
-    ほとんどが Validator の内部で利用されます。
+  標準は ``ConstraintValidatorFactory`` 。
+  ほとんどが Validator の内部で利用されます。
 
 登録
 -----------
