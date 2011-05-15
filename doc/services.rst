@@ -178,6 +178,9 @@ Silex は利用したり置き換えることができるサービスの範囲�
 
     $id = $app['request']->get('id');
 
+これはリクエストが実行されているときにだけ利用可能です。
+コントローラー、　before、 afterフィルターそしてエラーハンドラーの内部からのみアクセスすることができます。
+
 * **オートローダー (autoloader)**: このサービスは `UniversalClassLoader
   <http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html>`_
   によって提供されています。
