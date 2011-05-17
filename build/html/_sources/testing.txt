@@ -19,8 +19,8 @@ Silex は Symfony2 のさらにその上に構築されているフレームワ�
 <http://www.slideshare.net/avalanche123/clean-code-5609451>`_
 をチェックしてみてください。
 
-PHPUnit
--------
+PHPUnit TESTフレームワーク
+------------------------------------------
 
 `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
 はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。

@@ -70,8 +70,8 @@
 <h1>エクステンション (Extensions)<a class="headerlink" href="#extensions" title="Permalink to this headline">¶</a></h1>
 <p>Silex はエクステンションのためのインターフェースを提供しています。
 エクステンションはアプリケーション上にサービスとして定義します。</p>
-<div class="section" id="id1">
-<h2>エクステンションの読み込み<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="loading-extensions">
+<h2>エクステンションの読み込み (Loading extensions)<a class="headerlink" href="#loading-extensions" title="Permalink to this headline">¶</a></h2>
 <p>エクステンションを読み込んで使うためには、アプリケーションにそのエクステンションを登録しなければなりません</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
@@ -88,8 +88,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>規約<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h2>規約<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>エクステンションとやりとりするときにどのような順序でやりとりを行うかを知っておく必要があります。
 以下に説明するルールに従うだけです:</p>
 <ul>
@@ -107,8 +107,8 @@
 </ul>
 <p>あなたのオリジナルのエクステンションを作成するときはこの振る舞いに注意してください。</p>
 </div>
-<div class="section" id="id3">
-<h2>エクステンションの読み込み<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>エクステンションの読み込み<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>標準で用意されているエクステンションは以下の通りです。
 これらすべてのエクステンションの名前空間は <tt class="docutils literal"><span class="pre">Silex\Extension</span></tt> になります。</p>
 <ul class="simple">
@@ -122,8 +122,8 @@
 <li><a class="reference internal" href="extensions/http_cache.html"><em>HttpCacheExtension</em></a></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>エクステンションの作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>エクステンションの作成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>エクステンションは <tt class="docutils literal"><span class="pre">Silex\ExtensionInterface</span></tt> を実装しなければなりません。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ExtensionInterface</span>
 <span class="p">{</span>
@@ -257,10 +257,10 @@ $name を引数として取り、 <tt class="docutils literal"><span class="pre"
   <h3>このページのコンテンツ</h3>
   <ul>
 <li><a class="reference internal" href="#">エクステンション (Extensions)</a><ul>
-<li><a class="reference internal" href="#id1">エクステンションの読み込み</a></li>
-<li><a class="reference internal" href="#id2">規約</a></li>
-<li><a class="reference internal" href="#id3">エクステンションの読み込み</a></li>
-<li><a class="reference internal" href="#id4">エクステンションの作成</a><ul>
+<li><a class="reference internal" href="#loading-extensions">エクステンションの読み込み (Loading extensions)</a></li>
+<li><a class="reference internal" href="#id1">規約</a></li>
+<li><a class="reference internal" href="#id2">エクステンションの読み込み</a></li>
+<li><a class="reference internal" href="#id3">エクステンションの作成</a><ul>
 <li><a class="reference internal" href="#class-loading">クラスの読み込み (Class loading)</a></li>
 </ul>
 </li>

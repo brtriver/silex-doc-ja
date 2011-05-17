@@ -232,8 +232,8 @@ Webのドキュメントルートからの相対パスであなたのディレ�
 最初に一致したルーティングが利用されるからです。そのため、汎用的なルーティングは一番下に定義するようにしてください。</p>
 </div>
 </div>
-<div class="section" id="id3">
-<h3>ルーティング変数<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="route-variables">
+<h3>ルーティング変数 (Route variables)<a class="headerlink" href="#route-variables" title="Permalink to this headline">¶</a></h3>
 <p>前に説明したように、次のようにルーティングにおいて変数を定義することができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/blog/show/{id}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -253,8 +253,8 @@ Webのドキュメントルートからの相対パスであなたのディレ�
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h3>ルーティングで取得される変数の変換<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>ルーティングで取得される変数の変換<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>コントローラーにルーティングで取得した変数を注入する前に、変換処理を行うことができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/user/{id}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// ...</span>
@@ -286,8 +286,8 @@ Webのドキュメントルートからの相対パスであなたのディレ�
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h3>必須項目<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>必須項目<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>特定のパターンのみ一致させたい場合があるでしょう。そのときは正規表現を <tt class="docutils literal"><span class="pre">Controller</span></tt> オブジェクトの <tt class="docutils literal"><span class="pre">assert</span></tt> メソッドを呼ぶことで必須項目を定義することができます。
 そしてこの <tt class="docutils literal"><span class="pre">Controller</span></tt> オブジェクトはルーティングメソッドによって返されます。</p>
 <p>次のコードは <tt class="docutils literal"><span class="pre">\id+</span></tt> で数値に一致するようにしているので <tt class="docutils literal"><span class="pre">id</span></tt> 引数が数字であることがわかります:</p>
@@ -306,8 +306,8 @@ Webのドキュメントルートからの相対パスであなたのディレ�
 </pre></div>
 </div>
 </div>
-<div class="section" id="id6">
-<h3>標準の値<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>標準の値<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><tt class="docutils literal"><span class="pre">Controller</span></tt> オブジェクトの <tt class="docutils literal"><span class="pre">value</span></tt> メソッドを呼ぶことでどんなルーティングでも標準の値を定義することができます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/{pageName}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$pageName</span><span class="p">)</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -339,8 +339,8 @@ Webのドキュメントルートからの相対パスであなたのディレ�
 </div>
 </div>
 </div>
-<div class="section" id="id7">
-<h2>前処理と後処理<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="before-and-after-filters">
+<h2>前処理と後処理 (Before and after filters)<a class="headerlink" href="#before-and-after-filters" title="Permalink to this headline">¶</a></h2>
 <p>すべてのリクエストの前後でコードを走らせることが可能です。
 beforeフィルターとafterフィルターを通して処理されます。利用方法はメソッドにクロージャーを渡すだけです:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
@@ -353,8 +353,8 @@ beforeフィルターとafterフィルターを通して処理されます。利
 </pre></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h2>エラーハンドリング<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="error-handlers">
+<h2>エラーハンドリング (Error handlers)<a class="headerlink" href="#error-handlers" title="Permalink to this headline">¶</a></h2>
 <p>コードのどこかで例外が発生するとユーザーにエラーページのようなもので表示したいことがあるでしょう。
 これらエラーハンドラーがやることなのです。
 ログ処理のような処理を追加してエラーハンドリングを使うこともできます。</p>
@@ -391,8 +391,8 @@ beforeフィルターとafterフィルターを通して処理されます。利
 詳しくは <em>Extensions</em> の章を参照してください。</p>
 </div>
 </div>
-<div class="section" id="id9">
-<h2>リダイレクト<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="redirects">
+<h2>リダイレクト (Redirects)<a class="headerlink" href="#redirects" title="Permalink to this headline">¶</a></h2>
 <p>リダイレクト処理のレスポンスを返すことでどんなページにもリダイレクトすることができます。このリダイレクト処理は
 <tt class="docutils literal"><span class="pre">redirect</span></tt> メソッドを呼ぶことで作成することができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
@@ -402,11 +402,11 @@ beforeフィルターとafterフィルターを通して処理されます。利
 </div>
 <p>この例では <tt class="docutils literal"><span class="pre">/</span></tt> から <tt class="docutils literal"><span class="pre">/hello</span></tt> にリダイレクトしようとします。</p>
 </div>
-<div class="section" id="id10">
-<h2>セキュリティー<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>セキュリティー<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>アプリケーションをアタックなどの攻撃から防御する方法を確認しておきましょう。</p>
-<div class="section" id="id11">
-<h3>エスケープ処理<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="escaping">
+<h3>エスケープ処理 (Escaping)<a class="headerlink" href="#escaping" title="Permalink to this headline">¶</a></h3>
 <p>(ルーティングから取得される GET/POST の変数も含め)ユーザー入力した値はどんなものであれアプリケーションを通して出力するときは、正しくエスケープ処理を行う必要があります。
 そうすることでクロスサイトスクリプティング(XSS)を防ぐことができます。</p>
 <ul>
@@ -437,8 +437,8 @@ Silex ではこの関数へのショートカットとして <tt class="docutils
 </ul>
 </div>
 </div>
-<div class="section" id="id12">
-<h2>アプリケーションの再利用<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="reusing-applications">
+<h2>アプリケーションの再利用 (Reusing applications)<a class="headerlink" href="#reusing-applications" title="Permalink to this headline">¶</a></h2>
 <p>あなたが作成したアプリケーションをより再利用しやすくするためには、次のように <tt class="docutils literal"><span class="pre">run</span></tt> メソッドを呼ぶ代わりに <tt class="docutils literal"><span class="pre">$app</span></tt> 変数を返すようにします:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="c1">// blog.php</span>
 <span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/silex.phar&#39;</span><span class="p">;</span>
@@ -475,8 +475,8 @@ Silex ではこの関数へのショートカットとして <tt class="docutils
 </pre></div>
 </div>
 </div>
-<div class="section" id="id13">
-<h2>コンソール<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>コンソール<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>Silex には Silex を最新バージョンにアップデートするための軽量なコンソールが用意されています。</p>
 <p>あなたが利用している Silex のバージョンを知るためには、 <tt class="docutils literal"><span class="pre">silex.phar</span></tt> をコマンドラインから引数で <tt class="docutils literal"><span class="pre">version</span></tt> を指定して呼び出します:</p>
 <div class="highlight-text"><div class="highlight"><pre>$ php silex.phar version
@@ -599,22 +599,22 @@ Silex version 0a243d3 2011-04-17 14:49:31 +0200
 <li><a class="reference internal" href="#dynamic-routing">動的ルーティング (Dynamic routing)</a></li>
 <li><a class="reference internal" href="#post">POST ルーティングの例</a></li>
 <li><a class="reference internal" href="#id2">他のメソッド</a></li>
-<li><a class="reference internal" href="#id3">ルーティング変数</a></li>
-<li><a class="reference internal" href="#id4">ルーティングで取得される変数の変換</a></li>
-<li><a class="reference internal" href="#id5">必須項目</a></li>
-<li><a class="reference internal" href="#id6">標準の値</a></li>
+<li><a class="reference internal" href="#route-variables">ルーティング変数 (Route variables)</a></li>
+<li><a class="reference internal" href="#id3">ルーティングで取得される変数の変換</a></li>
+<li><a class="reference internal" href="#id4">必須項目</a></li>
+<li><a class="reference internal" href="#id5">標準の値</a></li>
 <li><a class="reference internal" href="#named-routes">名前ルーティング (Named routes)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id7">前処理と後処理</a></li>
-<li><a class="reference internal" href="#id8">エラーハンドリング</a></li>
-<li><a class="reference internal" href="#id9">リダイレクト</a></li>
-<li><a class="reference internal" href="#id10">セキュリティー</a><ul>
-<li><a class="reference internal" href="#id11">エスケープ処理</a></li>
+<li><a class="reference internal" href="#before-and-after-filters">前処理と後処理 (Before and after filters)</a></li>
+<li><a class="reference internal" href="#error-handlers">エラーハンドリング (Error handlers)</a></li>
+<li><a class="reference internal" href="#redirects">リダイレクト (Redirects)</a></li>
+<li><a class="reference internal" href="#id6">セキュリティー</a><ul>
+<li><a class="reference internal" href="#escaping">エスケープ処理 (Escaping)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id12">アプリケーションの再利用</a></li>
-<li><a class="reference internal" href="#id13">コンソール</a></li>
+<li><a class="reference internal" href="#reusing-applications">アプリケーションの再利用 (Reusing applications)</a></li>
+<li><a class="reference internal" href="#id7">コンソール</a></li>
 <li><a class="reference internal" href="#pitfalls">Pitfalls</a><ul>
 <li><a class="reference internal" href="#php">PHP の設定</a></li>
 <li><a class="reference internal" href="#phar-stub">Phar-Stub のバグ</a></li>

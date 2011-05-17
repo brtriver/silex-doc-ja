@@ -125,8 +125,8 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 </pre></div>
 </div>
-<div class="section" id="id3">
-<h3>パラメーター<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="parameters">
+<h3>パラメーター (Parameters)<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
 <p>コンテナー上に配列のキーを指定することで (通常は文字列で) パラメータをセットすることができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span><span class="p">;</span>
 </pre></div>
@@ -140,8 +140,8 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h3>サービスの定義<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="service-definitions">
+<h3>サービスの定義 (Service definitions)<a class="headerlink" href="#service-definitions" title="Permalink to this headline">¶</a></h3>
 <p>サービスを定義することはパラメータを定義することとなんら違いはありません。
 コンテナーに配列のキーでクロージャーを設定するだけです。
 サービスを取得するときにクロージャーは実行されます。
@@ -168,8 +168,8 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 </div>
 <p>最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返すということをやっています。</p>
 </div>
-<div class="section" id="id5">
-<h3>クロージャーからコンテナーへのアクセス<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>クロージャーからコンテナーへのアクセス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>多くの場合、クロージャーの中からサービスコンテナーにアクセスしたい場合があるでしょう。
 たとえば、既存の依存しているサービスを取得したいような場合です。</p>
 <p>このためには、引数を使ってクロージャーにコンテナーを渡します:</p>
@@ -258,8 +258,8 @@ services, it will always execute them when reading them.</p>
 <p class="last">これらすべての Silex のコアサービスは共有されています。</p>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>コアのパラメーター<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>コアのパラメーター<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first"><strong>request.http_port</strong> (オプション): HTTPSでないURLのための標準のポートを上書きできます。
 このパラメータで現在利用しているポートを指定することができます。</p>
@@ -327,15 +327,15 @@ services, it will always execute them when reading them.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#id2">Pimple</a><ul>
-<li><a class="reference internal" href="#id3">パラメーター</a></li>
-<li><a class="reference internal" href="#id4">サービスの定義</a></li>
+<li><a class="reference internal" href="#parameters">パラメーター (Parameters)</a></li>
+<li><a class="reference internal" href="#service-definitions">サービスの定義 (Service definitions)</a></li>
 <li><a class="reference internal" href="#shared-services">共有サービス (Shared services)</a></li>
-<li><a class="reference internal" href="#id5">クロージャーからコンテナーへのアクセス</a></li>
+<li><a class="reference internal" href="#id3">クロージャーからコンテナーへのアクセス</a></li>
 <li><a class="reference internal" href="#protected-closures">保護されたクロージャー (Protected closures)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#core-services">コアサービス (Core services)</a></li>
-<li><a class="reference internal" href="#id6">コアのパラメーター</a></li>
+<li><a class="reference internal" href="#id4">コアのパラメーター</a></li>
 </ul>
 </li>
 </ul>
