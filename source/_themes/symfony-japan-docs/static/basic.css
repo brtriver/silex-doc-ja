@@ -611,16 +611,13 @@ textarea:focus{
 
 #all {
 	width: 100%;
-	background: url(images/all_bg.png) repeat-x left top;
 }
 
 #content {
-	width: 950px;
-	margin: 0 auto;
+	margin: 20px 40px 0;
 }
 
 #content_wrapper {
-	background: url(images/all_bg_l.png) no-repeat -30px top;
 }
 
 
@@ -629,7 +626,6 @@ textarea:focus{
 #top_menu {
 	height: 50px;
 	text-align: right;
-	background: url(images/header_bg_top.png) no-repeat left top;
 }
 
 #top_menu_wrapper {
@@ -678,7 +674,6 @@ textarea:focus{
 #logo_top a {
 	width: 560px;
 	height: 90px;
-	background: url(images/logo_top.png) no-repeat left top;
 	position: absolute;
 	left: 14px;
 	top: 45px;
@@ -784,7 +779,6 @@ textarea:focus{
 #navbar {
 	width: 950px;
 	height: 48px;
-	background: url(images/navbar_bg_top.png) no-repeat left top;
 	position: relative;
 	overflow: hidden;
 }
@@ -925,8 +919,7 @@ textarea:focus{
 #footer {
 	width: 100%;
 	height: 140px;
-	1margin-top: 50px;
-	background: url(images/footer_bg.png) repeat-x left top;
+	margin-top: 50px;
 	overflow: hidden;
 	clear: both;
 }
@@ -935,14 +928,12 @@ textarea:focus{
 	width: 950px;
 	height: 140px;
 	margin: 0 auto;
-	background: url(images/footer_wrapper_bg.png) repeat-x left top;
 	position: relative;
 }
 
 #footer_left {
 	width: 94px;
 	height: 140px;
-	background: url(images/footer_bg_left.png) no-repeat left top;
 	position: absolute;
 	left: -94px;
 }
@@ -950,7 +941,6 @@ textarea:focus{
 #footer_right {
 	width: 94px;
 	height: 140px;
-	background: url(images/footer_bg_right.png) no-repeat left top;
 	position: absolute;
 	right: -94px;
 }
@@ -1019,7 +1009,7 @@ textarea:focus{
 }
 div.documentwrapper {
     float: left;
-    width: 710px;
+    width: 80%;
 }
 
 .highlight-yml pre {
@@ -1063,3 +1053,12 @@ div.caution {
     text-align: right;
 }
 
+#content .title {
+    background-color: transparent;
+    border-bottom: 1px solid #4183C4;
+    color: #4183C4;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 20px;
+    padding: 3px 0 7px 3px;
+}

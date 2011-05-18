@@ -41,18 +41,12 @@
 <div id="all">
   <div id="content">
     <div id="content_wrapper">
-      <div id="top_menu">
-        <div id="top_menu_wrapper">
-        </div>
-      </div>
-      <div id="header_top">
-        <h1 id="logo_top"><a href="http://docs.symfony.gr.jp/">Symfonyユーザー会ドキュメントポータル</a></h1>
-        <div id="header_top_left"></div>
-      </div>
+      <p class="title">Silex ユーザーガイド</title>
       <!-- end #header -->
       <div id="navbar">
         <ul>
-          <li><a href="index.html">トップページ (索引)</a></li>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
           <li><a href="extensions/index.html">エクステンション一覧</a></li>
           <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
           <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
@@ -94,7 +88,7 @@ Pimple によって簡単にサードパーティーのライブラリを利用�
 </div>
 <p>フレームワークを利用するために必要なことは <tt class="docutils literal"><span class="pre">silex.phar</span></tt> をインクルードするだけです。
 あとは、phar(PHP アーカイブ)ファイルが処理を行ってくれます。</p>
-<p>次に、``GET`` リクエストで <tt class="docutils literal"><span class="pre">/hello/{name}</span></tt> へのルーティングを定義します。
+<p>次に、<tt class="docutils literal"><span class="pre">GET</span></tt> リクエストで <tt class="docutils literal"><span class="pre">/hello/{name}</span></tt> へのルーティングを定義します。
 ルーティングに一致するリクエストの場合は関数が実行されクライアントに返却される値がreturnで返されます。</p>
 <p>最後に、アプリケーションを実行(run)します。　本当に簡単でしょ!!</p>
 <p>(訳者注)　ブラウザからアクセスするときは <a class="reference external" href="http://example.com/hello/yourname">http://example.com/hello/yourname</a> というように作成したルーティング名でアクセスしてください</p>
@@ -116,28 +110,6 @@ Pimple によって簡単にサードパーティーのライブラリを利用�
 <br />
 翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
 </div>
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'symfony-japan'; // required: replace example with your forum shortname
-
-    // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    // var disqus_identifier = 'unique_dynamic_id_1234';
-    // var disqus_url = 'http://example.com/permalink-to-page.html';
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
-
-
-  <!-- X:S ZenBackWidget --><script type="text/javascript">document.write(unescape("%3Cscript")+" src='http://widget.zenback.jp/?base_uri=http%3A//docs.symfony.gr.jp/symfony2/&nsid=96025530184256261%3A%3A96025556490958667&rand="+Math.ceil((new Date()*1)*Math.random())+"' type='text/javascript'"+unescape("%3E%3C/script%3E"));</script><!-- X:E ZenBackWidget -->
 
 
           </div>
@@ -190,20 +162,14 @@ Pimple によって簡単にサードパーティーのライブラリを利用�
         </div>
         <div id="f_navbar">
         <ul>
-            <li><a href="index.html">トップページ (索引)</a></li>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
             <li><a href="extensions/index.html">エクステンション一覧</a></li>
             <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
             <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
         </ul>
       </div>
       <!-- end #navbar -->
-        <div>
-          <p id="copy">
-            Copyright &copy; 2011 Symfony Japan. All rights reserved.
-            &nbsp;&nbsp;&nbsp;Bandwidth and hardware provided by <a href="http://www.asial.co.jp/">アシアル株式会社</a>
-            &nbsp;&nbsp;Powered by <a href="http://sphinx.pocoo.org/">Sphinx</a>
-          </p>
-        </div>
       </div>
       <!-- end #footer_content -->
         </div>
@@ -211,18 +177,5 @@ Pimple によって簡単にサードパーティーのライブラリを利用�
       </div>
       <!-- end #footer -->
     </div>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-16659283-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
   </body>
 </html>
