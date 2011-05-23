@@ -102,14 +102,14 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 <p>DI や サービスコンテナーはサービスを生成したり保存しておく責任があります。
 そして再起的に必要とされているサービスの依存関係を生成しそれらを注入(inject)することができます。
 そしてこの作業は遅延読み込み(lazily)で行われます、つまり、そのサービスが本当に必要になったときにのみ生成されるということです。</p>
-<p>ほとんどのコンテナーは非常に複雑でXMLやYAMLファイルを使って設定が記述されています。</p>
+<p>ほとんどのコンテナーは非常に複雑で XML や YAML ファイルを使って設定が記述されています。</p>
 <p>しかし、 Pipmple は違うのです。</p>
 </div>
 </div>
 <div class="section" id="id2">
 <h2>Pimple<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>Pimple は存在するサービスコンテナーの中でもおそらく最もシンプルなものです。
-配列アクセス(ArrayAccess) のインターフェースを実装したクロージャーを活用しています。</p>
+SPL の ArrayAccess インターフェースを実装し、クロージャーを活用しています。</p>
 <p>新しい Pimple のインスタンスを作成するところから始めてみましょう &#8211;
 そして <tt class="docutils literal"><span class="pre">Silex\Application</span></tt> は <tt class="docutils literal"><span class="pre">Pimple</span></tt> を拡張したものなので、これからの説明はすべて Silex においても適用できます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$container</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pimple</span><span class="p">();</span>
@@ -121,7 +121,7 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 </div>
 <div class="section" id="parameters">
 <h3>パラメーター (Parameters)<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
-<p>コンテナー上に配列のキーを指定することで (通常は文字列で) パラメータをセットすることができます:</p>
+<p>コンテナー上に配列のキーを指定することで (通常は文字列で) パラメーターをセットすることができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -129,14 +129,14 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;asset.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://cdn.mysite.com/&#39;</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>設定したパラメータの値は同じ構文で呼び出すことができます:</p>
+<p>設定したパラメーターの値は同じ構文で呼び出すことができます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">echo</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_parameter&#39;</span><span class="p">];</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="service-definitions">
 <h3>サービスの定義 (Service definitions)<a class="headerlink" href="#service-definitions" title="Permalink to this headline">¶</a></h3>
-<p>サービスを定義することはパラメータを定義することとなんら違いはありません。
+<p>サービスを定義することはパラメーターを定義することとなんら違いはありません。
 コンテナーに配列のキーでクロージャーを設定するだけです。
 サービスを取得するときにクロージャーは実行されます。
 このようにしてサービスを遅延して作成することができます</p>
@@ -145,22 +145,21 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>そして、サービスを取得するためには次のようにします:</p>
+<p>そして、サービスを取得するためには次のように書きます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$service</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">];</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">$app['some_service']</span></tt> を呼び出せば、呼び出す度に新しいサービスのインスタンスが生成されます。</p>
+<p><tt class="docutils literal"><span class="pre">$app['some_service']</span></tt> を呼び出せば、呼び出すたびに新しいサービスのインスタンスが生成されます。</p>
 </div>
 <div class="section" id="shared-services">
 <h3>共有サービス (Shared services)<a class="headerlink" href="#shared-services" title="Permalink to this headline">¶</a></h3>
-<p>コード全体で共通のサービスのインスタンスを使いたいときもあるでしょう。
-そのようなために、 <em>shared</em> サービスを作ることができるようになっています</p>
+<p>コード全体で共通のサービスのインスタンスを使いたいときもあるでしょう。これを実現できるようにするため、*shared* サービスを作ることができるようになっています</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;some_service&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Service</span><span class="p">();</span>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返すということをやっています。</p>
+<p>このコードは最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返します。</p>
 </div>
 <div class="section" id="id3">
 <h3>クロージャーからコンテナーへのアクセス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
@@ -172,7 +171,7 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>これがDIのサンプルになります。
+<p>これが DI のサンプルになります。
 <tt class="docutils literal"><span class="pre">some_service</span></tt> は <tt class="docutils literal"><span class="pre">some_other_service</span></tt> に依存しており、 <tt class="docutils literal"><span class="pre">some_service.config</span></tt> を設定オプションとして利用することができます。
 <tt class="docutils literal"><span class="pre">some_service</span></tt> にアクセスが発生し生成されるときだけ依存関係があり、これらの定義を上書きするだけで依存関係を書き換えることができます。</p>
 <div class="admonition note">
@@ -182,11 +181,9 @@ Silex はたったの44行(コメント抜きの行数)で書かれた <a class=
 </div>
 <div class="section" id="protected-closures">
 <h3>保護されたクロージャー (Protected closures)<a class="headerlink" href="#protected-closures" title="Permalink to this headline">¶</a></h3>
-<p>コンテナーはサービスのための工場(factory)としてクロージャーがあると理解しているので。クロージャーを読みこむとにいつも実行します。
-Because the container sees closures as factories for
-services, it will always execute them when reading them.</p>
-<p>しかしながら、パラメータとしてクロージャーを保存したいときがあるでしょう。
-たとえば、クロージャーを取得しあなた自身が定義した引数で実行したいような場合です。</p>
+<p>コンテナーはクロージャーをサービスのためのファクトリと見なすので、クロージャーを読み込むごとにこれらをつねに実行します。</p>
+<p>しかしながら、パラメーターとしてクロージャーを保存したいときがあるでしょう。
+たとえば、クロージャーを取得し、あなた自身が定義した引数で実行したいような場合です。</p>
 <p>こういった理由で Pimple は <tt class="docutils literal"><span class="pre">protect</span></tt> メソッドを使うことであなたが作成したクロージャーが実行されないようにいつも保護することができます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;closure_parameter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nv">$a</span> <span class="o">+</span> <span class="nv">$b</span><span class="p">;</span>
@@ -199,15 +196,15 @@ services, it will always execute them when reading them.</p>
 <span class="k">echo</span> <span class="nv">$add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>保護されたクロージャーはコンテナーにアクセスすることがdけいないということに注意してください。</p>
+<p>保護されたクロージャーはコンテナーにアクセスすることができないことにご注意ください。</p>
 </div>
 </div>
 <div class="section" id="core-services">
 <h2>コアサービス (Core services)<a class="headerlink" href="#core-services" title="Permalink to this headline">¶</a></h2>
 <p>Silex は利用したり置き換えることができるサービスの範囲を定義しています。
-これらの大部分はさわりたいと思わないでしょう。</p>
+みなさんはこれらの大部分を台無しにしたくないと思っていらっしゃることでしょう。</p>
 <ul>
-<li><p class="first"><strong>リクエスト (request)</strong>: 現在のリクエストオブジェクトを保持しており,
+<li><p class="first"><strong>request</strong>: 現在のリクエストオブジェクトを保持しており,
 このオブジェクトは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a>
 のインスタンスです。
 <tt class="docutils literal"><span class="pre">GET</span></tt> 、 <tt class="docutils literal"><span class="pre">POST</span></tt> やさらに多くのパラメーターにアクセスすることができます!</p>
@@ -218,12 +215,12 @@ services, it will always execute them when reading them.</p>
 </li>
 </ul>
 <p>これはリクエストが実行されているときにだけ利用可能です。
-コントローラー、　before、 afterフィルターそしてエラーハンドラーの内部からのみアクセスすることができます。</p>
+コントローラー、　before、 after フィルターそしてエラーハンドラーの内部からのみアクセスすることができます。</p>
 <ul>
-<li><p class="first"><strong>オートローダー (autoloader)</strong>: このサービスは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html">UniversalClassLoader</a>
+<li><p class="first"><strong>autoloader</strong>: このサービスは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html">UniversalClassLoader</a>
 によって提供されています。
 接頭辞や名前空間を登録することができます。</p>
-<p>利用例 (Twigのクラスのオートロードの設定):</p>
+<p>利用例 (Twig のクラスのオートロードの設定):</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerPrefix</span><span class="p">(</span><span class="s1">&#39;Twig_&#39;</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig.class_path&#39;</span><span class="p">]);</span>
 </pre></div>
 </div>
@@ -233,7 +230,7 @@ services, it will always execute them when reading them.</p>
 ルーティングの追加、修正、読み込みを行うことができます。</p>
 </li>
 <li><p class="first"><strong>controllers</strong>: 内部で利用されている <tt class="docutils literal"><span class="pre">Silex\ControllerCollection</span></tt> 。
-詳細については <em>Internals</em> の章を参照してください。</p>
+詳細については <em>Internals</em> の章をご参照ください。</p>
 </li>
 <li><p class="first"><strong>dispatcher</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
 。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。</p>
@@ -255,13 +252,13 @@ services, it will always execute them when reading them.</p>
 <div class="section" id="id4">
 <h2>コアのパラメーター<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>request.http_port</strong> (オプション): HTTPSでないURLのための標準のポートを上書きできます。
-このパラメータで現在利用しているポートを指定することができます。</p>
+<li><p class="first"><strong>request.http_port</strong> (オプション): HTTPS でない URL のための標準のポートを上書きできます。
+このパラメーターで現在利用しているポートを指定することができます。</p>
 <p>標準は 80 番です。</p>
 <p>このパラメーターは <tt class="docutils literal"><span class="pre">UrlGeneratorExtension</span></tt> で利用されます。</p>
 </li>
-<li><p class="first"><strong>request.https_port</strong> (オプション): HTTPSのURLのための標準のポートを上書きできます。
-もし現在のリクエストが HTTPS であれば、このパラメータで現在利用しているポートを指定することができます。</p>
+<li><p class="first"><strong>request.https_port</strong> (オプション): HTTPS の URL のための標準のポートを上書きできます。
+もし現在のリクエストが HTTPS であれば、このパラメーターで現在利用しているポートを指定することができます。</p>
 <p>標準は 443 番です。</p>
 <p>このパラメーターは <tt class="docutils literal"><span class="pre">UrlGeneratorExtension</span></tt> で利用されます。</p>
 </li>
