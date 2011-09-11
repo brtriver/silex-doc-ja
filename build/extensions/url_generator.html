@@ -1,0 +1,206 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>UrlGeneratorExtension | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="ValidatorExtension" href="validator.html" />
+    <link rel="prev" title="TwigExtension" href="twig.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="urlgeneratorextension">
+<h1>UrlGeneratorExtension<a class="headerlink" href="#urlgeneratorextension" title="Permalink to this headline">¶</a></h1>
+<p><em>UrlGeneratorExtension</em> は名前ルーティングのためにURLを生成するためのサービスです。</p>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>無し。</p>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>url_generator</strong>: <tt class="docutils literal"><span class="pre">routes</span></tt> サービスを通して提供されている</dt>
+<dd><p class="first last"><a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+を使う <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/Generator/UrlGenerator.html">UrlGenerator</a>
+のインスタンス。 <tt class="docutils literal"><span class="pre">generate</span></tt> メソッドが存在して、このメソッドは引数としてルーティング名と、ルーティングパラメータの配列を必要とします。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\UrlGeneratorExtension</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>UrlGenerator エクステンションは <tt class="docutils literal"><span class="pre">url_generator</span></tt> サービスを提供します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;welcome to the homepage&#39;</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;homepage&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello </span><span class="si">$name</span><span class="s2">!&quot;</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/navigation&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;a href=&quot;&#39;</span><span class="o">.</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;url_generator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">generate</span><span class="p">(</span><span class="s1">&#39;homepage&#39;</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;&quot;&gt;Home&lt;/a&gt;&#39;</span><span class="o">.</span>
+           <span class="s1">&#39; | &#39;</span><span class="o">.</span>
+           <span class="s1">&#39;&lt;a href=&quot;&#39;</span><span class="o">.</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;url_generator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">generate</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Igor&#39;</span><span class="p">))</span><span class="o">.</span><span class="s1">&#39;&quot;&gt;Hello Igor&lt;/a&gt;&#39;</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="twig.html">< TwigExtension</a>
+<a class="next" href="validator.html">ValidatorExtension ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/extensions/url_generator.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/extensions/url_generator.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/extensions/url_generator.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">UrlGeneratorExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="twig.html"
+                        title="previous chapter">TwigExtension</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="validator.html"
+                        title="next chapter">ValidatorExtension</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/url_generator.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">エクステンション一覧</a></li>
+            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

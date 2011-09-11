@@ -1,0 +1,221 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MonologExtension | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="SessionExtension" href="session.html" />
+    <link rel="prev" title="DoctrineExtension" href="doctrine.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="monologextension">
+<h1>MonologExtension<a class="headerlink" href="#monologextension" title="Permalink to this headline">¶</a></h1>
+<p><em>MonologExtension</em> を使うことで Jordi Boggiano さんの
+<a class="reference external" href="https://github.com/Seldaek/monolog">Monolog</a> ライブラリを通して標準のログ機能を提供します。</p>
+<p>リクエストやエラーを記録しアプリケーションにデバッグを記録するようになります。
+そのため <tt class="docutils literal"><span class="pre">var_dump</span></tt> をもう使う必要はなくなります。
+これからはさらに一歩進んで <tt class="docutils literal"><span class="pre">tail</span> <span class="pre">-f</span></tt> コマンドを使うことができるようになります。</p>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>monolog.logfile</strong>: ログファイルの場所。</li>
+<li><strong>monolog.class_path</strong> (オプション): Monolog ライブラリを設置したパス。</li>
+<li><strong>monolog.level</strong> (オプション): <tt class="docutils literal"><span class="pre">DEBUG</span></tt> に標準で記録するログのレベル。
+<tt class="docutils literal"><span class="pre">Logger::DEBUG</span></tt>, <tt class="docutils literal"><span class="pre">Logger::INFO</span></tt>, <tt class="docutils literal"><span class="pre">Logger::WARNING</span></tt>, <tt class="docutils literal"><span class="pre">Logger::ERROR</span></tt> のどれかを指定します。
+<tt class="docutils literal"><span class="pre">DEBUG</span></tt> はどんなものでも記録します。 <tt class="docutils literal"><span class="pre">INFO</span></tt> は <tt class="docutils literal"><span class="pre">DEBUG</span></tt> 意外のものを記録します。</li>
+<li><strong>monolog.name</strong> (オプション): Monolog チャンネルの名前。　標準は <tt class="docutils literal"><span class="pre">myapp</span></tt> 。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>monolog</strong>: monolog のログインスタンス。</p>
+<p>利用方法:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">addDebug</span><span class="p">(</span><span class="s1">&#39;Testing the Monolog logging.&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>monolog.configure</strong>: 引数としてロガーを取る保護されたクロージャー。標準の振る舞いを使いたくない場合は上書きすることができます。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">vendor/monolog</span></tt> ディレクトリに <em>Monolog</em> のコピーを置いていることを確認してください:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\MonologExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;monolog.logfile&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/development.log&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;monolog.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/monolog/src&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Monolog は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> ファイルの中にコンパイルされていません。自分自身でアプリケーションに Monolog のコピーを追加する必要があります。</p>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>MonologExtension は <tt class="docutils literal"><span class="pre">monolog</span></tt> サービスを提供します。
+このサービスはどんなエラーレベルも <tt class="docutils literal"><span class="pre">addDebug()</span></tt>,``addInfo()``, <tt class="docutils literal"><span class="pre">addWarning()</span></tt> そして <tt class="docutils literal"><span class="pre">addError()</span></tt> を通してログを追加することができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/user&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">addInfo</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s2">&quot;User &#39;%s&#39; registered.&quot;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>より詳しい情報については、    <a class="reference external" href="https://github.com/Seldaek/monolog">Monolog ドキュメント</a> を参照してください.</p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="doctrine.html">< DoctrineExtension</a>
+<a class="next" href="session.html">SessionExtension ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/extensions/monolog.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/extensions/monolog.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/extensions/monolog.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">MonologExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="doctrine.html"
+                        title="previous chapter">DoctrineExtension</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="session.html"
+                        title="next chapter">SessionExtension</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/monolog.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">エクステンション一覧</a></li>
+            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

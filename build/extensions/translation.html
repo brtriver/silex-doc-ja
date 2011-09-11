@@ -1,0 +1,268 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TranslationExtension | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="TwigExtension" href="twig.html" />
+    <link rel="prev" title="SessionExtension" href="session.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="translationextension">
+<h1>TranslationExtension<a class="headerlink" href="#translationextension" title="Permalink to this headline">¶</a></h1>
+<p><em>TranslationExtension</em> は複数の異なる言語にアプリケーションを翻訳するためのサービスを提供します。</p>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>translator.messages</strong>: メッセージとロケールのマッピングした配列。　このパラメーターは全ての言語の翻訳されたデータを含む。</li>
+<li><strong>locale</strong> (オプション): 翻訳のための使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は <tt class="docutils literal"><span class="pre">en</span></tt> です。</li>
+<li><strong>locale_fallback</strong> (オプション): 翻訳のための使用する代替のためのロケール。　現在のロケールが設定されていないときに利用されます。</li>
+<li><strong>translation.class_path</strong> (オプション): Symfony2 の Translation コンポーネントを配置したパス。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>translator</strong>: 翻訳のために利用される <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Translator.html">Translator</a>
+のインスタンス。</li>
+<li><strong>translator.loader</strong>: 翻訳の
+<a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/LoaderInterface.html">LoaderInterface</a>
+を実装したインスタンス、 標準は
+<a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/ArrayLoader.html">ArrayLoader</a> 。</li>
+<li><strong>translator.message_selector</strong>: <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/MessageSelector.html">MessageSelector</a> のインスタンス。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Symfony2 Translation コンポーネントのコピーがが <tt class="docutils literal"><span class="pre">vendor/symfony/src</span></tt> に配置されていることを確認してください。
+一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\TranslationExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;locale_fallback&#39;</span>           <span class="o">=&gt;</span> <span class="s1">&#39;en&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;translation.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Translation エクステンションは <tt class="docutils literal"><span class="pre">translator</span></tt> サービスを提供し、 <tt class="docutils literal"><span class="pre">translator.messages</span></tt> パラメーターを利用します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.messages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;en&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hello %name%&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Goodbye %name%&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;de&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hallo %name%&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Tschüss %name%&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Bonjour %name%&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Au revoir %name%&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$locale</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;locale&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;locale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$locale</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/{locale}/{message}/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">trans</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;%name%&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">/en/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></tt> を返す。</li>
+<li><tt class="docutils literal"><span class="pre">/de/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hallo</span> <span class="pre">igor</span></tt> を返す。</li>
+<li><tt class="docutils literal"><span class="pre">/fr/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Bonjour</span> <span class="pre">igor</span></tt> を返す。</li>
+<li><tt class="docutils literal"><span class="pre">/it/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></tt> を返す。 (代替設定のため).</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>レシピ<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="yaml">
+<h3>YAMLで言語ファイル<a class="headerlink" href="#yaml" title="Permalink to this headline">¶</a></h3>
+<p>PHPファイルで翻訳ファイルを用意することは不便でしょう。
+このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。</p>
+<p>まず最初に Symfony2 にある <tt class="docutils literal"><span class="pre">Config</span></tt> と <tt class="docutils literal"><span class="pre">Yaml</span></tt> コンポーネントが必要です。
+オートローダーでこれらのコンポーネントが登録されるようにします。
+そのために Symfony2 全体のリポジトリを <tt class="docutils literal"><span class="pre">vendor/symfony</span></tt> ディレクトリにクローンしてしまいます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerNamespace</span><span class="p">(</span><span class="s1">&#39;Symfony&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは <tt class="docutils literal"><span class="pre">locals/en.yml</span></tt> を使います。
+マッピングは以下のようなファイルで用意するだけです:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">hello</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Hello %name%</span>
+<span class="l-Scalar-Plain">goodbye</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Goodbye %name%</span>
+</pre></div>
+</div>
+<p>この作業をあなたが使いたい全ての言語ファイル分用意します。そして、　ファイルに言語をマッピングするために <tt class="docutils literal"><span class="pre">translator.messages</span></tt> を設定します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.messages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;en&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/en.yml&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;de&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/de.yml&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/fr.yml&#39;</span><span class="p">,</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>最後に <tt class="docutils literal"><span class="pre">ArrayLoader</span></tt> の代わりに <tt class="docutils literal"><span class="pre">YamlFileLoader</span></tt> を使うために <tt class="docutils literal"><span class="pre">translator.loader</span></tt> を上書きします。:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.loader&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Symfony\Component\Translation\Loader\YamlFileLoader</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>これで YAML ファイルから翻訳データを読み込むことができます。</p>
+</div>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="session.html">< SessionExtension</a>
+<a class="next" href="twig.html">TwigExtension ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/extensions/translation.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/extensions/translation.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/extensions/translation.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">TranslationExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a></li>
+<li><a class="reference internal" href="#id5">レシピ</a><ul>
+<li><a class="reference internal" href="#yaml">YAMLで言語ファイル</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="session.html"
+                        title="previous chapter">SessionExtension</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="twig.html"
+                        title="next chapter">TwigExtension</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/translation.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">エクステンション一覧</a></li>
+            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

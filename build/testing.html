@@ -1,0 +1,326 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>テスト | Japan Symfony Group</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
+    <link rel="next" title="内部の仕組み" href="internals.html" />
+    <link rel="prev" title="エクステンション (Extensions)" href="extensions.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="extensions/index.html">エクステンション一覧</a></li>
+          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>テスト<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Silex は Symfony2 のさらにその上に構築されているフレームワークです。
+つまり機能テストを書き易いということです。機能テストというのはあなたの書いたコードが正しく動いているかどうかを保証するために自動的にソフトウェアのテストを行う仕組みのことです。
+疑似ブラウザを使ったユーザーインターフェースを通してユーザーが行うであろう動き擬似的に再現することができます。</p>
+<div class="section" id="id2">
+<h2>なぜ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>ソフトウェアのテストに慣れてないのであれば、このようなテストがなぜ必要なのかと思われるかもしれません。
+アプリケーションに修正を加えるた場合は必ずテストを行わなければなりません。
+修正後にもすべてのページにおいて正しく動作することを確認しなければならないということです。
+機能テストを行うことで時間短縮にもなります。なぜなら、たった1つのコマンドであなたの代わりに数秒でテストすることができるからです。</p>
+<p>機能テスト、単体テストそしてテストの自動化についてもっと知りたい場合は、 <a class="reference external" href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a>
+のページと <a class="reference external" href="http://www.slideshare.net/avalanche123/clean-code-5609451">Bulat Shakirzyanov さんのクリーンなコードについてのスライド</a>
+をチェックしてみてください。</p>
+</div>
+<div class="section" id="phpunit-test">
+<h2>PHPUnit TESTフレームワーク<a class="headerlink" href="#phpunit-test" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a>
+はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。
+新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは <tt class="docutils literal"><span class="pre">PHPUnit_Framework_TestCase</span></tt> を拡張するようにします。
+そして、テストケースのメソッド名の先頭に <tt class="docutils literal"><span class="pre">test</span></tt> を付けるようにします:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ContactFormTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>テストケースにおいて、あなたがテスト時に期待する条件(アサーション)を書いておきます。
+今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$statusCode</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="nv">$pageContent</span> <span class="o">=</span> <span class="o">...</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="nv">$statusCode</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertContains</span><span class="p">(</span><span class="s1">&#39;Contact us&#39;</span><span class="p">,</span> <span class="nv">$pageContent</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertContains</span><span class="p">(</span><span class="s1">&#39;&lt;form&#39;</span><span class="p">,</span> <span class="nv">$pageContent</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>アサーションは複数用意されているので、一覧を PHPUnit のドキュメントにある <a class="reference external" href="http://www.phpunit.de/manual/current/ja/writing-tests-for-phpunit.html">PHPUnit 用のテストの書き方</a>
+の章でで確認することができます。</p>
+</div>
+<div class="section" id="web">
+<h2>Web テストケース<a class="headerlink" href="#web" title="Permalink to this headline">¶</a></h2>
+<p>Symfony2 は WebTestCase クラスという機能テストを書くために利用することができるクラスを提供してくれています。
+Silex のために用意したバージョンは <tt class="docutils literal"><span class="pre">Silex\WebTestCase</span></tt> であり、このクラスを拡張することでテストを書くことができます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Silex\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ContactFormTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+<span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>アプリケーションのテストを行えるようにするために、 aaaaa次のような <a class="reference internal" href="usage.html"><em>使用方法</em></a> にある &#8220;アプリケーションの再利用性&#8221; の部分に書かれているようにしましょう。</p>
+<p>WebTestCase のために、 <tt class="docutils literal"><span class="pre">createApplication</span></tt> メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
+次のようなコードになります:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">require</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/path/to/app.php&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>ここで決して <tt class="docutils literal"><span class="pre">require_once</span></tt> を <strong>使わない</strong> という点に注意してください。なぜなら、このメソッドは各テストの前に実行されるからです。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>標準で、アプリケーションはブラウザから使っているときと同じように動作します。
+しかし、エラーが発生したとき、HTMLでレンダリングされたページではなく直接エラーメッセージを簡単に取得することができます。
+次のコードのように <tt class="docutils literal"><span class="pre">createApplication()</span></tt> をアプリケーションの設定で調整しておけばより簡単です:</p>
+<div class="last highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">require</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/path/to/app.php&#39;</span><span class="p">;</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;exception_handler&#39;</span><span class="p">]);</span>
+
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>WebTestCase は　``createClient`` メソッドがあります。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下にどのように動作しているかみてみましょう:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$client</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">createClient</span><span class="p">();</span>
+    <span class="nv">$crawler</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertTrue</span><span class="p">(</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">getResponse</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isOk</span><span class="p">());</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$crawler</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="s1">&#39;h1:contains(&quot;Contact us&quot;)&#39;</span><span class="p">)));</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$crawler</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="s1">&#39;form&#39;</span><span class="p">)));</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>このコードに見慣れない用語がでてきます。 それは <tt class="docutils literal"><span class="pre">Client</span></tt> と <tt class="docutils literal"><span class="pre">Crawler</span></tt> です。</p>
+<p>また、 <tt class="docutils literal"><span class="pre">$this-&gt;app</span></tt> を通してアプリケーションにアクセスすることもできます。</p>
+</div>
+<div class="section" id="client">
+<h2>クライアント (Client)<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
+<p>クライアントはブラウザを表現したものです。　画面遷移した履歴やクッキーなどを保持しておくことができます。
+<tt class="docutils literal"><span class="pre">request</span></tt> メソッドを使うことでテストするアプリケーションへのアクセスするためのリクエストを作ることができます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference external" href="http://symfony.com/doc/current/book/testing.html#the-test-client">Symfony2 のドキュメントにあるテストの章のクライアント</a>
+の部分でもう少し詳しく知ることができます。</p>
+</div>
+</div>
+<div class="section" id="crawler">
+<h2>クローラー (Crawler)<a class="headerlink" href="#crawler" title="Permalink to this headline">¶</a></h2>
+<p>クローラーを使うことでページのコンテンツを調査することができます。CSS エクスプレッションを使ってコンテンツのフィルタリング処理をしたりなど色々できます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference external" href="http://symfony.com/doc/current/book/testing.html#the-test-client">Symfony2 のドキュメントにあるテストの章のクローラー</a>
+の部分でもう少し詳しく知ることができます。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>設定<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>PHPUnit を設定するためには <tt class="docutils literal"><span class="pre">phpunit.xml.dis</span></tt> ファイルを作成するという方法があります。
+<tt class="docutils literal"><span class="pre">tests</span></tt> フォルダーを作成し <tt class="docutils literal"><span class="pre">tests/YourApp/Tests/YourTest.php</span></tt> のようなファイルにテストを書きます。
+<tt class="docutils literal"><span class="pre">phpunit.xml.dist</span></tt> ファイルは次のような内容になります:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;phpunit</span> <span class="na">backupGlobals=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">backupStaticAttributes=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">colors=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertErrorsToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertNoticesToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">convertWarningsToExceptions=</span><span class="s">&quot;true&quot;</span>
+         <span class="na">processIsolation=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">stopOnFailure=</span><span class="s">&quot;false&quot;</span>
+         <span class="na">syntaxCheck=</span><span class="s">&quot;false&quot;</span>
+<span class="nt">&gt;</span>
+    <span class="nt">&lt;testsuites&gt;</span>
+        <span class="nt">&lt;testsuite</span> <span class="na">name=</span><span class="s">&quot;YourApp Test Suite&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;directory&gt;</span>./tests/<span class="nt">&lt;/directory&gt;</span>
+        <span class="nt">&lt;/testsuite&gt;</span>
+    <span class="nt">&lt;/testsuites&gt;</span>
+<span class="nt">&lt;/phpunit&gt;</span>
+</pre></div>
+</div>
+<p>ファイルの自動読み込みのためのブートストラップや、コードカバレッジのレポートのためのホワイトリストを設定することもできます。</p>
+<p>そして、 <tt class="docutils literal"><span class="pre">tests/YourApp/Tests/YourTest.php</span></tt> は次のようになります:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">YourApp\Tests</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Silex\WebTestCase</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">YourTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">require</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../../../app.php&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">testFooBar</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>これで、 <tt class="docutils literal"><span class="pre">phpunit</span></tt> をコマンドラインから実行することで、あなたが書いたテストケースが処理されます。</p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="extensions.html">< エクステンション (Extensions)</a>
+<a class="next" href="internals.html">内部の仕組み ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/testing.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/testing.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/testing.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">テスト</a><ul>
+<li><a class="reference internal" href="#id2">なぜ</a></li>
+<li><a class="reference internal" href="#phpunit-test">PHPUnit TESTフレームワーク</a></li>
+<li><a class="reference internal" href="#web">Web テストケース</a></li>
+<li><a class="reference internal" href="#client">クライアント (Client)</a></li>
+<li><a class="reference internal" href="#crawler">クローラー (Crawler)</a></li>
+<li><a class="reference internal" href="#id6">設定</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="extensions.html"
+                        title="previous chapter">エクステンション (Extensions)</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="internals.html"
+                        title="next chapter">内部の仕組み</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/testing.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="extensions/index.html">エクステンション一覧</a></li>
+            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

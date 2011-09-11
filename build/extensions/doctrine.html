@@ -1,0 +1,276 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>DoctrineExtension | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="MonologExtension" href="monolog.html" />
+    <link rel="prev" title="プロジェクトへの貢献" href="../contributing.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="doctrineextension">
+<h1>DoctrineExtension<a class="headerlink" href="#doctrineextension" title="Permalink to this headline">¶</a></h1>
+<p><em>DoctrineExtension</em> を使うことでデータベースへアクセスするための <a class="reference external" href="http://www.doctrine-project.org/projects/dbal">Doctrine DBAL</a> を利用することができます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Doctrine DBAL だけで ORM サービスは提供 <strong>されません</strong></p>
+</div>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><strong>db.options</strong>: Doctrine DBAL のオプションを指定する配列</p>
+<p>以下のオプションが利用できます:</p>
+<ul class="simple">
+<li><strong>driver</strong>: 利用するデータベースドライバ。 標準では <tt class="docutils literal"><span class="pre">pdo_mysql</span></tt> です。
+次のどれかを指定できます: <tt class="docutils literal"><span class="pre">pdo_mysql</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_sqlite</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_pgsql</span></tt> 、
+<tt class="docutils literal"><span class="pre">pdo_oci</span></tt> 、 <tt class="docutils literal"><span class="pre">oci8</span></tt> 、 <tt class="docutils literal"><span class="pre">ibm_db2</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_ibm</span></tt> 、 <tt class="docutils literal"><span class="pre">pdo_sqlsrv</span></tt> .</li>
+<li><strong>dbname</strong>: 接続先のデータベース名。</li>
+<li><strong>host</strong>: 接続先のホスト名。 標準は localhost。</li>
+<li><strong>user</strong>: 接続先のデータベースのユーザー名。　標準は root。</li>
+<li><strong>password</strong>: 接続先のデータベースのパスワード。</li>
+<li><strong>path</strong>: <tt class="docutils literal"><span class="pre">pdo_sqlite</span></tt> だけに必要な項目で SQLite のデータベースのパスを指定。</li>
+</ul>
+<p>これらのオプションの詳細については <a class="reference external" href="http://www.doctrine-project.org/docs/dbal/2.0/en/reference/configuration.html">Doctrine DBAL 設定についてのドキュメント</a> を参照してください。</p>
+</li>
+<li><p class="first"><strong>db.dbal.class_path</strong> (オプション): Doctrine DBAL を配置したパス。</p>
+</li>
+<li><p class="first"><strong>db.common.class_path</strong> (オプション): Doctrine Common を配置したパス。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>サービス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>db</strong>: データベースコネクション、　``DoctrineDBALConnection`` のインスタンス。</li>
+<li><strong>db.config</strong>: Doctrine のための設定オブジェクト。　標準は空の <tt class="docutils literal"><span class="pre">Doctrine\DBAL\Configuration</span></tt>  。</li>
+<li><strong>db.event_manager</strong>: Doctrine のためのイベントマネージャー。</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><em>Doctrine DBAL</em> が <tt class="docutils literal"><span class="pre">vendor/doctrine-dbal</span></tt> に、そして <em>Doctrine Common</em> が <tt class="docutils literal"><span class="pre">vendor/doctrine-common</span></tt> にコピーされているかを確認してください:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\DoctrineExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;db.options&#39;</span>            <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;driver&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;pdo_sqlite&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span>      <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/app.db&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;db.dbal.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-dbal/lib&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db.common.class_path&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-common/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>使い方<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>Doctrine のエクションテンションで <tt class="docutils literal"><span class="pre">db</span></tt> サービスを使うことができます。以下が使い方のサンプルです。:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/blog/show/{id}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM posts WHERE id = ?&quot;</span><span class="p">;</span>
+    <span class="nv">$post</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">fetchAssoc</span><span class="p">(</span><span class="nv">$sql</span><span class="p">,</span> <span class="k">array</span><span class="p">((</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$id</span><span class="p">));</span>
+
+    <span class="k">return</span>  <span class="s2">&quot;&lt;h1&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/h1&gt;&quot;</span><span class="o">.</span>
+            <span class="s2">&quot;&lt;p&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>複数のデータベースの利用<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>Doctrine エクステンションを使うと複数のデータベースへアクセスすることができます。
+データソースを指定するためにはエクステンションの登録から <strong>db.options</strong> を、 <strong>dbs.options</strong> という名前の配列で置き換える必要があります。</p>
+<p>dbs 配列の各キーはオプションの設定を含んでいなければなりません。</p>
+<p>複数のデータベース接続を登録するためには次のようにします:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Extension\DoctrineExtension</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;dbs.options&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+        <span class="s1">&#39;mysql_read&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;driver&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;pdo_mysql&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;host&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;mysql_read.someplace.tld&#39;</span>
+            <span class="s1">&#39;dbname&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;my_database&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;user&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;my_username&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;my_password&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;mysql_write&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;driver&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;pdo_mysql&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;host&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;mysql_write.someplace.tld&#39;</span>
+            <span class="s1">&#39;dbname&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;my_database&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;user&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;my_username&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;my_password&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;db.dbal.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-dbal/lib&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db.common.class_path&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/doctrine-common/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<p>標準では、最初に登録された接続がデフォルトになります。つまり1つしか接続先を登録していないときと同じようにアクセスされます。さきほど書いた設定では以下の2行は同意です:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;dbal&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">fetchAssoc</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM table&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;dbal.connection.sqlite&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">fetchAssoc</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM table&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>標準の接続先は <strong>default</strong> オプションを設定することによって洗濯されます。</p>
+<p>複数接続を使った例:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/blog/show/{id}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM posts WHERE id = ?&quot;</span><span class="p">;</span>
+    <span class="nv">$post</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;dbs&#39;</span><span class="p">][</span><span class="s1">&#39;mysql_read&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">fetchAssoc</span><span class="p">(</span><span class="nv">$mysqlQuery</span><span class="p">,</span> <span class="k">array</span><span class="p">((</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$id</span><span class="p">));</span>
+
+    <span class="nv">$mysqlUpdate</span> <span class="o">=</span> <span class="s2">&quot;UPDATE posts SET value = ? WHERE id = ?&quot;</span><span class="p">;</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;dbs&#39;</span><span class="p">][</span><span class="s1">&#39;mysql_write&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">execute</span><span class="p">(</span><span class="nv">$mysqlUpdate</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;newValue&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$id</span><span class="p">));</span>
+
+    <span class="k">return</span>  <span class="s2">&quot;&lt;h1&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/h1&gt;&quot;</span><span class="o">.</span>
+            <span class="s2">&quot;&lt;p&gt;</span><span class="si">{</span><span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&lt;/p&gt;&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>より詳細については、 <a class="reference external" href="http://www.doctrine-project.org/docs/dbal/2.0/en/">Doctrine DBAL documentation</a>
+を見てください。</p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="../contributing.html">< プロジェクトへの貢献</a>
+<a class="next" href="monolog.html">MonologExtension ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/extensions/doctrine.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/extensions/doctrine.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/extensions/doctrine.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">DoctrineExtension</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#id3">サービス</a></li>
+<li><a class="reference internal" href="#id4">登録</a></li>
+<li><a class="reference internal" href="#id5">使い方</a></li>
+<li><a class="reference internal" href="#id6">複数のデータベースの利用</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="../contributing.html"
+                        title="previous chapter">プロジェクトへの貢献</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="monolog.html"
+                        title="next chapter">MonologExtension</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/extensions/doctrine.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">エクステンション一覧</a></li>
+            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>
