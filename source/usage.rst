@@ -405,7 +405,7 @@ afterフィルターはリクエストとレスポンスにアクセスするこ
 
 .. tip::
 
-    **debug** が true にすることで詳細なえらメッセージが表示される標準のエラーメッセージを制御し、代わりにシンプルなエラーメッセージを表示してくれます。
+    **debug** を true にすることで、デフォルトエラーハンドラーが有効になり、スタックトレースを含む詳細なエラーメッセージを表示します。falseの際には、シンプルなエラーメッセージを表示します。
     エラーハンドラーは ``error()`` メソッドを通して登録することができますし、デバッグモードが有効のときは次のように書くことが出来ます::
 
         use Symfony\Component\HttpFoundation\Response;
@@ -418,7 +418,7 @@ afterフィルターはリクエストとレスポンスにアクセスするこ
             // logic to handle the error and return a Response
         });
 
-より早い段階でリクエストを破棄するために ``abotr`` を使うときにもエラーハンドラーは呼ばれます::
+より早い段階でリクエストを破棄するために ``abort`` を使うときにもエラーハンドラーは呼ばれます::
 
     $app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
