@@ -1,7 +1,7 @@
-UrlGeneratorExtension
+UrlGeneratorServiceProvider
 =====================
 
-*UrlGeneratorExtension* は名前ルーティングのためにURLを生成するためのサービスです。
+*UrlGeneratorServiceProvider* は名前ルーティングのためにURLを生成するためのサービスです。
 
 パラメーター
 ------------
@@ -22,12 +22,12 @@ UrlGeneratorExtension
 
 ::
 
-    $app->register(new Silex\Extension\UrlGeneratorExtension());
+    $app->register(new Silex\ServiceProvider\UrlGeneratorServiceProvider());
 
 使い方
 ------
 
-UrlGenerator エクステンションは ``url_generator`` サービスを提供します::
+UrlGenerator プロバイダーは ``url_generator`` サービスを提供します::
 
     $app->get('/', function () {
         return 'welcome to the homepage';

@@ -1,7 +1,7 @@
-TwigExtension
+TwigServiceProvider
 =============
 
-*TwigExtension* を利用すれば `Twig
+*TwigServiceProvider* を利用すれば `Twig
 <http://twig.sensiolabs.org/>`_ テンプレートエンジンを使うことができます。
 
 設定パラメータ
@@ -29,7 +29,7 @@ TwigExtension
 
 *Twig* のライブラリのコピーが ``vendor/twig`` にある場合の書き方です::
 
-    $app->register(new Silex\Extension\TwigExtension(), array(
+    $app->register(new Silex\ServiceProvider\TwigServiceProvider(), array(
         'twig.path'       => __DIR__.'/views',
         'twig.class_path' => __DIR__.'/vendor/twig/lib',
     ));
@@ -53,7 +53,7 @@ Twig extension は ``twig`` サービスを提供します::
 
 .. tip::
  
-    TwigExtensionは ``app`` というグローバルに登録されます。
+    TwigServiceProviderは ``app`` というグローバルに登録されます。
     そのため、 View からはどこからでもサービスにアクセスすることができます。
     たとえば、 ``$app['request']->getHost()`` にアクセスするためには、テンプレートは次のように書くだけです:
  

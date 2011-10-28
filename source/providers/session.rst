@@ -1,7 +1,7 @@
-SessionExtension
+SessionServiceProvider
 ================
 
-*SessionExtension* を使うことで永続的にリクエスト間でデータを保存するためのサービスを提供することができます。
+*SessionServiceProvider* を使うことで永続的にリクエスト間でデータを保存するためのサービスを提供することができます。
 
 パラメーター
 ------------
@@ -36,12 +36,12 @@ SessionExtension
 
 ::
 
-    $app->register(new Silex\Extension\SessionExtension());
+    $app->register(new Silex\ServiceProvider\SessionServiceProvider());
 
 使い方
 -------
 
-セッションのエクステンションは ``session`` サービスを提供します。以下にユーザーを認証しそのユーザーのためにセッションを作成するサンプルです::
+セッションのプロバイダーは ``session`` サービスを提供します。以下にユーザーを認証しそのユーザーのためにセッションを作成するサンプルです::
 
     use Symfony\Component\HttpFoundation\Response;
 

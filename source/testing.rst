@@ -92,6 +92,22 @@ WebTestCase のために、 ``createApplication`` メソッドを実装するこ
             return $app;
         }
 
+.. tip::
+
+    あなたのアプリケーションでセッションを使用していた際には、セッションを格納するのに
+    ``FilesystemSessionStorage`` を使用しなければなりません。::
+
+        // ...
+        use Symfony\Component\HttpFoundation\SessionStorage\FilesystemSessionStorage;
+        // ...
+
+        public function createApplication()
+        {
+            // ...
+            $this->app['session.storage'] = $this->app->share(function() {
+                return new FilesystemSessionStorage(sys_get_temp_dir());
+            });
+            // ...
 
 WebTestCase は　``createClient`` メソッドがあります。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下にどのように動作しているかみてみましょう::
 
