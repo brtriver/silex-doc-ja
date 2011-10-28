@@ -9,7 +9,7 @@ Silex は Symfony2 コンポーネントベースの PHP のマイクロフレ�
 
     intro
     usage
-    services
+    providers
     extensions
     testing
     internals
@@ -21,11 +21,11 @@ Silex は Symfony2 コンポーネントベースの PHP のマイクロフレ�
 .. toctree::
     :maxdepth: 1
 
-    extensions/doctrine
-    extensions/monolog
-    extensions/session
-    extensions/translation
-    extensions/twig
-    extensions/url_generator
-    extensions/validator
-    extensions/http_cache
+    providers/doctrine
+    providers/monolog
+    providers/session
+    providers/translation
+    providers/twig
+    providers/url_generator
+    providers/validator
+    providers/http_cache
