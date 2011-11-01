@@ -1,7 +1,7 @@
-TranslationExtension
+TranslationServiceProvider
 =====================
 
-*TranslationExtension* は複数の異なる言語にアプリケーションを翻訳するためのサービスを提供します。
+*TranslationServiceProvider* は複数の異なる言語にアプリケーションを翻訳するためのサービスを提供します。
 
 パラメーター
 ------------
@@ -37,7 +37,7 @@ TranslationExtension
 Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/src`` に配置されていることを確認してください。
 一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです::
 
-    $app->register(new Silex\Extension\TranslationExtension(), array(
+    $app->register(new Silex\ServiceProvider\TranslationServiceProvider(), array(
         'locale_fallback'           => 'en',
         'translation.class_path'    => __DIR__.'/vendor/symfony/src',
     ));
@@ -45,7 +45,7 @@ Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/sr
 使い方
 --------
 
-Translation エクステンションは ``translator`` サービスを提供し、 ``translator.messages`` パラメーターを利用します::
+Translation プロバイダーは ``translator`` サービスを提供し、 ``translator.messages`` パラメーターを利用します::
 
     $app['translator.messages'] = array(
         'en' => array(

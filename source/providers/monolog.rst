@@ -1,7 +1,7 @@
-MonologExtension
+MonologServiceProvider
 ================
 
-*MonologExtension* を使うことで Jordi Boggiano さんの
+*MonologServiceProvider* を使うことで Jordi Boggiano さんの
 `Monolog <https://github.com/Seldaek/monolog>`_ ライブラリを通して標準のログ機能を提供します。
 
 リクエストやエラーを記録しアプリケーションにデバッグを記録するようになります。
@@ -37,7 +37,7 @@ MonologExtension
 
 ``vendor/monolog`` ディレクトリに *Monolog* のコピーを置いていることを確認してください::
 
-    $app->register(new Silex\Extension\MonologExtension(), array(
+    $app->register(new Silex\ServiceProvider\MonologServiceProvider(), array(
         'monolog.logfile'       => __DIR__.'/development.log',
         'monolog.class_path'    => __DIR__.'/vendor/monolog/src',
     ));
@@ -49,7 +49,7 @@ MonologExtension
 Usage
 -----
 
-MonologExtension は ``monolog`` サービスを提供します。
+MonologServiceProvider は ``monolog`` サービスを提供します。
 このサービスはどんなエラーレベルも ``addDebug()``,``addInfo()``, ``addWarning()`` そして ``addError()`` を通してログを追加することができます::
 
     use Symfony\Component\HttpFoundation\Response;

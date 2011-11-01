@@ -1,7 +1,7 @@
-DoctrineExtension
+DoctrineServiceProvider
 =================
 
-*DoctrineExtension* を使うことでデータベースへアクセスするための `Doctrine DBAL
+*DoctrineServiceProvider* を使うことでデータベースへアクセスするための `Doctrine DBAL
 <http://www.doctrine-project.org/projects/dbal>`_ を利用することができます。
 
 .. note::
@@ -49,7 +49,7 @@ DoctrineExtension
 
 *Doctrine DBAL* が ``vendor/doctrine-dbal`` に、そして *Doctrine Common* が ``vendor/doctrine-common`` にコピーされているかを確認してください::
 
-    $app->register(new Silex\Extension\DoctrineExtension(), array(
+    $app->register(new Silex\ServiceProvider\DoctrineServiceProvider(), array(
         'db.options'            => array(
             'driver'    => 'pdo_sqlite',
             'path'      => __DIR__.'/app.db',
@@ -74,14 +74,14 @@ Doctrine のエクションテンションで ``db`` サービスを使うこと
 複数のデータベースの利用
 ------------------------
 
-Doctrine エクステンションを使うと複数のデータベースへアクセスすることができます。
-データソースを指定するためにはエクステンションの登録から **db.options** を、 **dbs.options** という名前の配列で置き換える必要があります。
+Doctrine プロバイダーを使うと複数のデータベースへアクセスすることができます。
+データソースを指定するためにはプロバイダーの登録から **db.options** を、 **dbs.options** という名前の配列で置き換える必要があります。
 
 dbs 配列の各キーはオプションの設定を含んでいなければなりません。
 
 複数のデータベース接続を登録するためには次のようにします::
 
-    $app->register(new Silex\Extension\DoctrineExtension(), array(
+    $app->register(new Silex\ServiceProvider\DoctrineServiceProvider(), array(
         'dbs.options' => array (
             'mysql_read' => array(
                 'driver'    => 'pdo_mysql',

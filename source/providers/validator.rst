@@ -1,9 +1,9 @@
-ValidatorExtension
+ValidatorServiceProvider
 =====================
 
-*ValidatorExtension* はデータをバリデーションするためのサービスを提供します。
-*FormExtension* と一緒に利用するととても便利です。
-しかし、このエクステンションは単独で利用することも可能です。
+*ValidatorServiceProvider* はデータをバリデーションするためのサービスを提供します。
+*FormServiceProvider* と一緒に利用するととても便利です。
+しかし、このプロバイダーは単独で利用することも可能です。
 
 パラメーター
 ------------
@@ -34,14 +34,14 @@ ValidatorExtension
 Symfony2 Validator　バリデーターのコピーを ``vendor/symfony/src`` にあることを確認してください。
 Symfony2 全体を vendor ディレクトリにコピーするだけです::
 
-    $app->register(new Silex\Extension\ValidatorExtension(), array(
+    $app->register(new Silex\ServiceProvider\ValidatorServiceProvider(), array(
         'validator.class_path'    => __DIR__.'/vendor/symfony/src',
     ));
 
 使い方
 -------
 
-Validator エクステンションは ``validator`` サービスを提供しまうs。
+Validator プロバイダーは ``validator`` サービスを提供しまうs。
 
 値のバリデーション
 ~~~~~~~~~~~~~~~~~~~
@@ -91,7 +91,7 @@ Validator エクステンションは ``validator`` サービスを提供しま�
     });
 
 これらのバリデーションをあなた自身で表示するように操作しなければならならないでしょう。
-しかし、 *ValidatorExtension* を使っている *FormExtension* を使うことができます。
+しかし、 *ValidatorServiceProvider* を使っている *FormServiceProvider* を使うことができます。
 
 詳細については、 `Symfony2 Validation のドキュメント
 <http://symfony.com/doc/2.0/book/validation.html>`_ を参照してください。
