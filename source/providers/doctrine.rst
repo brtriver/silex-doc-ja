@@ -49,7 +49,7 @@ DoctrineServiceProvider
 
 *Doctrine DBAL* が ``vendor/doctrine-dbal`` に、そして *Doctrine Common* が ``vendor/doctrine-common`` にコピーされているかを確認してください::
 
-    $app->register(new Silex\ServiceProvider\DoctrineServiceProvider(), array(
+    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'db.options'            => array(
             'driver'    => 'pdo_sqlite',
             'path'      => __DIR__.'/app.db',
@@ -81,7 +81,7 @@ dbs 配列の各キーはオプションの設定を含んでいなければな�
 
 複数のデータベース接続を登録するためには次のようにします::
 
-    $app->register(new Silex\ServiceProvider\DoctrineServiceProvider(), array(
+    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'dbs.options' => array (
             'mysql_read' => array(
                 'driver'    => 'pdo_mysql',

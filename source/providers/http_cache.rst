@@ -24,8 +24,8 @@ HttpCacheServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\HttpCacheServiceProvider(), array(
-        'cache_dir' => __DIR__.'/cache/',
+    $app->register(new Silex\Provider\HttpCacheServiceProvider(), array(
+        'http_cache.cache_dir' => __DIR__.'/cache/',
     ));
 
 使い方
