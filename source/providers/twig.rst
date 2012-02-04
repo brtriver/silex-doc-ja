@@ -29,7 +29,7 @@ TwigServiceProvider
 
 *Twig* のライブラリのコピーが ``vendor/twig`` にある場合の書き方です::
 
-    $app->register(new Silex\ServiceProvider\TwigServiceProvider(), array(
+    $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path'       => __DIR__.'/views',
         'twig.class_path' => __DIR__.'/vendor/twig/lib',
     ));

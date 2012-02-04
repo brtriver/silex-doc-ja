@@ -37,7 +37,7 @@ TranslationServiceProvider
 Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/src`` に配置されていることを確認してください。
 一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです::
 
-    $app->register(new Silex\ServiceProvider\TranslationServiceProvider(), array(
+    $app->register(new Silex\Provider\TranslationServiceProvider(), array(
         'locale_fallback'           => 'en',
         'translation.class_path'    => __DIR__.'/vendor/symfony/src',
     ));

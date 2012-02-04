@@ -36,7 +36,7 @@ SessionServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\SessionServiceProvider());
+    $app->register(new Silex\Provider\SessionServiceProvider());
 
 使い方
 -------

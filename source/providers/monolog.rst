@@ -37,7 +37,7 @@ MonologServiceProvider
 
 ``vendor/monolog`` ディレクトリに *Monolog* のコピーを置いていることを確認してください::
 
-    $app->register(new Silex\ServiceProvider\MonologServiceProvider(), array(
+    $app->register(new Silex\Provider\MonologServiceProvider(), array(
         'monolog.logfile'       => __DIR__.'/development.log',
         'monolog.class_path'    => __DIR__.'/vendor/monolog/src',
     ));

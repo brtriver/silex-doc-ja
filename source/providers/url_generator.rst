@@ -22,7 +22,7 @@ UrlGeneratorServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\UrlGeneratorServiceProvider());
+    $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 使い方
 ------
