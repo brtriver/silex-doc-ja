@@ -25,9 +25,7 @@ PHPUnit TESTフレームワーク
 `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
 はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。
 新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは ``PHPUnit_Framework_TestCase`` を拡張するようにします。
-そして、テストケースのメソッド名の先頭に ``test`` を付けるようにします。
-
-::
+そして、テストケースのメソッド名の先頭に ``test`` を付けるようにします::
 
     class ContactFormTest extends PHPUnit_Framework_TestCase
     {
@@ -38,9 +36,7 @@ PHPUnit TESTフレームワーク
     }
 
 テストケースにおいて、あなたがテスト時に期待する条件(アサーション)を書いておきます。
-今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています。
-
-::
+今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています::
 
         public function testInitialPage()
         {
@@ -69,7 +65,7 @@ Silex のために用意したバージョンは ``Silex\WebTestCase`` であり
         ...
     }
 
-アプリケーションのテストを行えるようにするために、次のような :doc:`usage` にある "アプリケーションの再利用性" の部分に書かれているようにしましょう。
+アプリケーションのテストを行えるようにするために、 aaaaa次のような :doc:`usage` にある "アプリケーションの再利用性" の部分に書かれているようにしましょう。
 
 WebTestCase のために、 ``createApplication`` メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
 次のようなコードになります::
@@ -80,7 +76,40 @@ WebTestCase のために、 ``createApplication`` メソッドを実装するこ
         }
 
 ここで決して ``require_once`` を **使わない** という点に注意してください。なぜなら、このメソッドは各テストの前に実行されるからです。
-こうすることでアプリケーションとやりとりすることができるようになります。以下でどのように動作しているかをみてみましょう::
+
+.. tip::
+
+    標準で、アプリケーションはブラウザから使っているときと同じように動作します。
+    しかし、エラーが発生したとき、HTMLでレンダリングされたページではなく直接エラーメッセージを簡単に取得することができます。
+    次のコードのように ``createApplication()`` をアプリケーションの設定で調整しておけばより簡単です::
+
+        public function createApplication()
+        {
+            $app = require __DIR__.'/path/to/app.php';
+            $app['debug'] = true;
+            unset($app['exception_handler']);
+
+            return $app;
+        }
+
+.. tip::
+
+    あなたのアプリケーションでセッションを使用していた際には、セッションを格納するのに
+    ``FilesystemSessionStorage`` を使用しなければなりません。::
+
+        // ...
+        use Symfony\Component\HttpFoundation\SessionStorage\FilesystemSessionStorage;
+        // ...
+
+        public function createApplication()
+        {
+            // ...
+            $this->app['session.storage'] = $this->app->share(function() {
+                return new FilesystemSessionStorage(sys_get_temp_dir());
+            });
+            // ...
+
+WebTestCase は　``createClient`` メソッドがあります。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下にどのように動作しているかみてみましょう::
 
         public function testInitialPage()
         {

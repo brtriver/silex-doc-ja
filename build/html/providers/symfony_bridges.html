@@ -1,0 +1,203 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SymfonyBridgesServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="TwigServiceProvider" href="twig.html" />
+    <link rel="prev" title="SwiftmailerServiceProvider" href="swiftmailer.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="symfonybridgesserviceprovider">
+<h1>SymfonyBridgesServiceProvider<a class="headerlink" href="#symfonybridgesserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>SymfonyBridgesServiceProvider</em> は、 Symfony2 コンポーネントとライブラリのさらなる統合を提供します。</p>
+<div class="section" id="id1">
+<h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>symfony_bridges.class_path</strong> (optional): Symfony2 Bridges
+へのパス。</li>
+</ul>
+</div>
+<div class="section" id="twig">
+<h2>Twig<a class="headerlink" href="#twig" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">SymfonyBridgesServiceProvider</span></tt> を有効にすると、 <tt class="docutils literal"><span class="pre">TwigServiceProvider</span></tt> は
+次の追加の機能を提供します。:</p>
+<ul class="simple">
+<li><strong>UrlGeneratorServiceProvider</strong>: <tt class="docutils literal"><span class="pre">UrlGeneratorServiceProvider</span></tt> を使用すれば、
+Twig の <tt class="docutils literal"><span class="pre">path</span></tt> や <tt class="docutils literal"><span class="pre">url</span></tt> ヘルパー使うことができます。
+詳細は、 <cite>Symfony2 Routing documentation &lt;http://symfony.com/doc/current/book/routing.html#generating-urls-from-a-template&gt;</cite>
+を参照してください。</li>
+<li><strong>TranslationServiceProvider</strong>: <tt class="docutils literal"><span class="pre">TranslationServiceProvider</span></tt> を使用すれば、
+Twig テンプレート内で、翻訳のためのヘルパーである
+<tt class="docutils literal"><span class="pre">trans</span></tt> や <tt class="docutils literal"><span class="pre">translation</span></tt> ヘルパーを使うことができます。
+詳細は、
+<cite>Symfony2 Translation documentation &lt;http://symfony.com/doc/current/book/translation.html#twig-templates&gt;</cite>
+を参照してください。</li>
+<li><strong>FormServiceProvider</strong>: <tt class="docutils literal"><span class="pre">FormServiceProvider</span></tt> を使用すれば、
+テンプレート内のフォーム作成のためのヘルパーの一式を使うことができます。
+詳細は、
+<cite>Symfony2 Forms reference &lt;http://symfony.com/doc/current/reference/forms/twig_reference.html&gt;</cite>
+を参照してください。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>登録<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Symfony2 Bridges のコピーを、次のいずれかにコピーしてください。
+<cite>Symfony2 &lt;https://github.com/symfony/symfony&gt;`_をクローンして ``vendor/symfony/src`</cite> もしくは
+<cite>TwigBridge &lt;https://github.com/symfony/TwigBridge&gt;`_をクローンして ``vendor/symfony/src/Symfony/Bridge/Twig`</cite>
+(後者の方がより小さいものとなります)</p>
+<p>その後、次のようにプロバイダーを登録してください。:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SymfonyBridgesServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;symfony_bridges.class_path&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="swiftmailer.html">< SwiftmailerServiceProvider</a>
+<a class="next" href="twig.html">TwigServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/symfony_bridges.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/symfony_bridges.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/symfony_bridges.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">SymfonyBridgesServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">パラメーター</a></li>
+<li><a class="reference internal" href="#twig">Twig</a></li>
+<li><a class="reference internal" href="#id2">登録</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="swiftmailer.html"
+                        title="previous chapter">SwiftmailerServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="twig.html"
+                        title="next chapter">TwigServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/symfony_bridges.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

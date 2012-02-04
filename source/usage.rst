@@ -44,6 +44,16 @@ Silex をインクルードするために必要なことは ``silex.phar`` フ�
 
         $app['debug'] = true;
 
+.. tip::
+
+    もしアプリケーションをプロキシサーバーを通して動作させたい場合は Silex が `X-Forwarded-For*` ヘッダーを信頼するようにしたいでしょう。
+    その場合は次のようにアプリケーションを実行させる必要があります::
+
+        use Symfony\Component\HttpFoundation\Request;
+
+        Request::trustProxyData();
+        $request = Request::createFromGlobals();
+        $app->run();
 
 ルーティング (Routing)
 -----------------------
@@ -152,7 +162,7 @@ POSTルーティングはリソースの生成を意味します。
 
 .. note::
 
-    ``mail()`` 関数を使用する代わりに、`SwiftmailerServiceProvider <providers/swiftmailer>` も使用できます。
+    ``mail()`` 関数を使用する代わりに、 :doc:`SwiftmailerServiceProvider <providers/swiftmailer>` も使用できます。
 
 タイプヒンティングのおかげで、 ``request`` は、 Silex によって自動的にクロージャに注入されています。
 リクエストは `Request
@@ -329,7 +339,7 @@ POSTルーティングはリソースの生成を意味します。
 ----------------------------------------------------------
 
 Silex では、すべてのリクエストの前後でコードを走らせることが可能です。
-before フィルターと after フィルターを通して処理されます。利用方法はメソッドにクロージャーを渡すだけです::
+``before`` フィルターと ``after`` フィルターを通して処理されます。利用方法はメソッドにクロージャーを渡すだけです::
 
     $app->before(function () {
         // set up
@@ -437,6 +447,39 @@ after フィルターはリクエストとレスポンスにアクセスする�
 
 この例では ``/`` から ``/hello`` にリダイレクトします。
 
+ストリーミング
+-------------------
+
+ストリーミングのレスポンスを作成することができます。 これは送信されるデータをバッファリングできないときに重要です。
+
+.. code-block:: php
+
+    $app->get('/images/{file}', function ($file) use ($app) {
+        if (!file_exists(__DIR__.'/images/'.$file)) {
+            return $app->abort(404, 'The image was not found.');
+        }
+
+        $stream = function () use ($file) {
+            readfile($file);
+        };
+
+        return $app->stream($stream, 200, array('Content-Type' => 'image/png'));
+    });
+
+大きいかたまりで送信したい場合は、 ``ob_fluch`` と ``flush`` を呼ばなければなりません。
+
+.. code-block:: php
+
+    $stream = function () {
+        $fh = fopen('http://www.example.com/', 'rb');
+        while (!feof($fh)) {
+          echo fread($fh, 1024);
+          ob_flush();
+          flush();
+        }
+        fclose($fh);
+    };
+
 セキュリティ
 --------------
 
@@ -510,9 +553,9 @@ PHP のバージョンによっては Phar の設定が制限されている場�
 
 .. code-block:: ini
 
+    detect_unicode = Off
     phar.readonly = Off
     phar.require_hash = Off
-    detect_unicode = Off
 
 もし Suhosin の PHP を使っている場合は、次の設定も行っておく必要があります:
 
@@ -536,7 +579,7 @@ Phar-Stub のバグ
 この問題の的確な原因はまだ断定されていません。
 
 ioncube ローダーのバグ
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 iconcube ローダーは、エンコードされた PHP ファイルをデコードすることができるエクステンションです。
 残念なことに(4.0.9 より前の)古いバージョンでは phar アーカイブでは動作しません。そのため 4.0.9 より新しいバージョンにアップグレードするか php.ini ファイルでコメントアウトするか削除し無効にしなければなりません:
 

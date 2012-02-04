@@ -10,12 +10,12 @@ Silex は Symfony2 コンポーネントベースの PHP のマイクロフレ�
     intro
     usage
     providers
-    extensions
     testing
+    cookbook
     internals
     contributing
 
-標準組み込み エクステンション
+標準組み込み プロバイダ
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
@@ -25,6 +25,8 @@ Silex は Symfony2 コンポーネントベースの PHP のマイクロフレ�
     providers/monolog
     providers/session
     providers/translation
+    providers/swiftmailer
+    providers/symfony_bridges
     providers/twig
     providers/url_generator
     providers/validator

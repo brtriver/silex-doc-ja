@@ -1,0 +1,224 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TwigServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="UrlGeneratorServiceProvider" href="url_generator.html" />
+    <link rel="prev" title="SymfonyBridgesServiceProvider" href="symfony_bridges.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="twigserviceprovider">
+<h1>TwigServiceProvider<a class="headerlink" href="#twigserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>TwigServiceProvider</em> を利用すれば <a class="reference external" href="http://twig.sensiolabs.org/">Twig</a> テンプレートエンジンを使うことができます。</p>
+<div class="section" id="id1">
+<h2>設定パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>twig.path</strong> (オプション): twig のテンプレートファイルが入っているディレクトリへのパスです(パスの配列でなければなりません)。</li>
+<li><strong>twig.templates</strong> (optional): テンプレートの名前とテンプレートのコンテンツの連想配列です。 テンプレートをインラインで定義したいときに利用できます。</li>
+<li><strong>twig.options</strong> (オプション): twig オプションの連想配列です。詳細な設定内容は twig のドキュメントを参照してください。</li>
+<li><strong>twig.class_path</strong> (オプション): twig のライブラリが入っているディレクトリへのパスです。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>twig</strong>: <tt class="docutils literal"><span class="pre">Twig_Environment</span></tt> のインスタンスです。twigと連携するのに使います。</li>
+<li><strong>twig.configure</strong>: Twig environment を引数に取る <tt class="xref doc docutils literal"><span class="pre">保護されたクロージャ</span></tt> です。カスタムグローバル変数を追加するのに使います。</li>
+<li><strong>twig.loader</strong>: <tt class="docutils literal"><span class="pre">twig.path</span></tt> と <tt class="docutils literal"><span class="pre">twig.templates</span></tt> の設定を利用したTwigテンプレートのローダー(loader)です。ローダー(loader)を完全に置き換えることもできます。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><em>Twig</em> のライブラリのコピーが <tt class="docutils literal"><span class="pre">vendor/twig</span></tt> にある場合の書き方です:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\TwigServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;twig.path&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;twig.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/twig/lib&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Twig は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> には含まれていません。開発者は自分で Twig ライブラリのコピーをアプリケーションに組み込む必要があります。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Twig extension は <tt class="docutils literal"><span class="pre">twig</span></tt> サービスを提供します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;hello.twig&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">views/hello.twig</span></tt> を使って描画します。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">TwigServiceProviderは <tt class="docutils literal"><span class="pre">app</span></tt> というグローバルに登録されます。
+そのため、 View からはどこからでもサービスにアクセスすることができます。
+たとえば、 <tt class="docutils literal"><span class="pre">$app['request']-&gt;getHost()</span></tt> にアクセスするためには、テンプレートは次のように書くだけです:</p>
+</div>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.request.host</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">render</span></tt> を使うことでテンプレートから異なるコントローラーの結果をレンダリングすることもできます:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="o">..</span> <span class="nx">code</span><span class="o">-</span><span class="nx">block</span><span class="o">::</span> <span class="na">jinja</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>{{ render(&#8216;/sidebar&#8217;) }}</p>
+<p>{# or if you are also using UrlGeneratorServiceProvider with the SymfonyBridgesServiceProvider #}
+{{ render(path(&#8216;sidebar&#8217;)) }}</p>
+</div></blockquote>
+<p>より詳しい情報については、 <a class="reference external" href="http://twig.sensiolabs.org">Twig ドキュメント</a> を参照してください.</p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="symfony_bridges.html">< SymfonyBridgesServiceProvider</a>
+<a class="next" href="url_generator.html">UrlGeneratorServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/twig.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/twig.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/twig.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">TwigServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">設定パラメータ</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="symfony_bridges.html"
+                        title="previous chapter">SymfonyBridgesServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="url_generator.html"
+                        title="next chapter">UrlGeneratorServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/twig.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

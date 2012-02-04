@@ -33,8 +33,8 @@
       });
       </script>
     <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
-    <link rel="next" title="内部の仕組み" href="internals.html" />
-    <link rel="prev" title="エクステンション (Extensions)" href="extensions.html" /> 
+    <link rel="next" title="クックブック" href="cookbook.html" />
+    <link rel="prev" title="プロバイダー (Providers)" href="providers.html" /> 
   </head>
   <body>
 
@@ -47,8 +47,8 @@
         <ul>
           <li><a href="/">Silex ユーザーガイド</a></li>
           <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
-          <li><a href="extensions/index.html">エクステンション一覧</a></li>
-          <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
           <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
         </ul>
       </div>
@@ -80,7 +80,7 @@
 <p><a class="reference external" href="https://github.com/sebastianbergmann/phpunit">PHPUnit</a>
 はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。
 新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは <tt class="docutils literal"><span class="pre">PHPUnit_Framework_TestCase</span></tt> を拡張するようにします。
-そして、テストケースのメソッド名の先頭に <tt class="docutils literal"><span class="pre">test</span></tt> を付けるようにします。</p>
+そして、テストケースのメソッド名の先頭に <tt class="docutils literal"><span class="pre">test</span></tt> を付けるようにします:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ContactFormTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
@@ -91,7 +91,7 @@
 </pre></div>
 </div>
 <p>テストケースにおいて、あなたがテスト時に期待する条件(アサーション)を書いておきます。
-今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています。</p>
+今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="nv">$statusCode</span> <span class="o">=</span> <span class="o">...</span>
@@ -118,7 +118,7 @@ Silex のために用意したバージョンは <tt class="docutils literal"><s
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>アプリケーションのテストを行えるようにするために、次のような <a class="reference internal" href="usage.html"><em>使用方法</em></a> にある &#8220;アプリケーションの再利用性&#8221; の部分に書かれているようにしましょう。</p>
+<p>アプリケーションのテストを行えるようにするために、 aaaaa次のような <a class="reference internal" href="usage.html"><em>使用方法</em></a> にある &#8220;アプリケーションの再利用性&#8221; の部分に書かれているようにしましょう。</p>
 <p>WebTestCase のために、 <tt class="docutils literal"><span class="pre">createApplication</span></tt> メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
 次のようなコードになります:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
@@ -127,8 +127,42 @@ Silex のために用意したバージョンは <tt class="docutils literal"><s
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>ここで決して <tt class="docutils literal"><span class="pre">require_once</span></tt> を <strong>使わない</strong> という点に注意してください。なぜなら、このメソッドは各テストの前に実行されるからです。
-こうすることでアプリケーションとやりとりすることができるようになります。以下でどのように動作しているかをみてみましょう:</p>
+<p>ここで決して <tt class="docutils literal"><span class="pre">require_once</span></tt> を <strong>使わない</strong> という点に注意してください。なぜなら、このメソッドは各テストの前に実行されるからです。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>標準で、アプリケーションはブラウザから使っているときと同じように動作します。
+しかし、エラーが発生したとき、HTMLでレンダリングされたページではなく直接エラーメッセージを簡単に取得することができます。
+次のコードのように <tt class="docutils literal"><span class="pre">createApplication()</span></tt> をアプリケーションの設定で調整しておけばより簡単です:</p>
+<div class="last highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$app</span> <span class="o">=</span> <span class="k">require</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/path/to/app.php&#39;</span><span class="p">;</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;exception_handler&#39;</span><span class="p">]);</span>
+
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>あなたのアプリケーションでセッションを使用していた際には、セッションを格納するのに
+<tt class="docutils literal"><span class="pre">FilesystemSessionStorage</span></tt> を使用しなければなりません。:</p>
+<div class="last highlight-php"><div class="highlight"><pre><span class="c1">// ...</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\SessionStorage\FilesystemSessionStorage</span><span class="p">;</span>
+<span class="c1">// ...</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">createApplication</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="p">[</span><span class="s1">&#39;session.storage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">FilesystemSessionStorage</span><span class="p">(</span><span class="nx">sys_get_temp_dir</span><span class="p">());</span>
+    <span class="p">});</span>
+    <span class="c1">// ...</span>
+</pre></div>
+</div>
+</div>
+<p>WebTestCase は　``createClient`` メソッドがあります。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下にどのように動作しているかみてみましょう:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">public</span> <span class="k">function</span> <span class="nf">testInitialPage</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="nv">$client</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">createClient</span><span class="p">();</span>
@@ -213,8 +247,8 @@ Silex のために用意したバージョンは <tt class="docutils literal"><s
 
 
 <div id="page_prev_next">
-<a class="prev" href="extensions.html">< エクステンション (Extensions)</a>
-<a class="next" href="internals.html">内部の仕組み ></a>
+<a class="prev" href="providers.html">< プロバイダー (Providers)</a>
+<a class="next" href="cookbook.html">クックブック ></a>
 </div>
 
 <div class="common_content_footer">
@@ -247,11 +281,11 @@ Silex のために用意したバージョンは <tt class="docutils literal"><s
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="extensions.html"
-                        title="previous chapter">エクステンション (Extensions)</a></p>
+  <p class="topless"><a href="providers.html"
+                        title="previous chapter">プロバイダー (Providers)</a></p>
   <h4>次のドキュメント</h4>
-  <p class="topless"><a href="internals.html"
-                        title="next chapter">内部の仕組み</a></p>
+  <p class="topless"><a href="cookbook.html"
+                        title="next chapter">クックブック</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/testing.txt"
@@ -293,8 +327,8 @@ Silex のために用意したバージョンは <tt class="docutils literal"><s
         <ul>
             <li><a href="/">Silex ユーザーガイド</a></li>
             <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
-            <li><a href="extensions/index.html">エクステンション一覧</a></li>
-            <li><a href="http://www.silex-project.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
             <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
         </ul>
       </div>

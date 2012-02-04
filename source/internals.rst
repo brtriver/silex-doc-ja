@@ -23,7 +23,8 @@ Symfony2 の `HttpKernelInterface
 そのため、内部から扱うのと同じぐらい外部からでも柔軟性をもって利用することができます。
 つまりどのサービスも置き換えることができ、それらを読み込むことができます。
 
-アプリケーションは Symfony2 HttpKernel イベントをフックするために `EventDispatcher
+アプリケーションは Symfony2 `HttpKernel
+<http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_ イベントをフックするために `EventDispatcher
 <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
 を使っています。
 イベントディスパッチャーのおかげで ``Request`` を取得し文字列のレスポンスを ``Response`` オブジェクトに変換したり例外をハンドリングしたりすることができます。

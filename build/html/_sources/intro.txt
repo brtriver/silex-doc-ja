@@ -23,8 +23,8 @@ Silex には次のような目的があります:
 
     $app = new Silex\Application();
 
-    $app->get('/hello/{name}', function ($name) {
-        return "Hello $name";
+    $app->get('/hello/{name}', function ($name) use ($app) {
+        return 'Hello '.$app->escape($name);
     });
 
     $app->run();
@@ -35,10 +35,9 @@ Silex には次のような目的があります:
 次に、\ ``GET`` リクエストで ``/hello/{name}`` へのルーティングを定義します。
 ルーティングに一致するリクエストの場合は関数が実行されクライアントに返却される値がreturnで返されます。
 
-最後に、アプリケーションを実行(run)します。　本当に簡単でしょ!!
-
-(訳者注)　ブラウザからアクセスするときは http://example.com/hello/yourname というように作成したルーティング名でアクセスしてください
+最後に、アプリケーションを実行(run)します。　結果を見るために ``hello/world`` へアクセスしてみましょう。
+本当に簡単でしょ!!
 
 Silex のインストールは Silex をダウンロードしてくるのと同じぐらい簡単です。 `silex.phar`_ ファイルをダウンロードすれば完了です!
 
-.. _silex.phar: http://silex-project.org/get/silex.phar
+.. _silex.phar: http://silex.sensiolabs.org/get/silex.phar
