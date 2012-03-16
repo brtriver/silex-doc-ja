@@ -66,20 +66,20 @@
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><strong>http_cache.cache_dir</strong>: HTTP キャッシュデータを保存するディレクトリ。</li>
-<li><strong>http_cache.options</strong> (オプション): <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
+<li><strong>http_cache.options</strong> (オプション): <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
 コンストラクタのためのオプションの配列。</li>
 </ul>
 </div>
 <div class="section" id="id2">
 <h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>http_cache</strong>: <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
+<li><strong>http_cache</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
 のインスタンス</li>
 </ul>
 </div>
 <div class="section" id="id4">
 <h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
 <span class="p">));</span>
 </pre></div>

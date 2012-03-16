@@ -66,8 +66,8 @@
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>session.storage.options</strong>: <tt class="docutils literal"><span class="pre">session.storage</span></tt> サービスのコンストラクタに渡すオプションの配列。</p>
-<p>標準の <tt class="docutils literal"><span class="pre">NativeSessionStorage</span></tt> の場合、使用可能なオプションは以下の通りです:</p>
+<li><p class="first"><strong>session.storage.save_path</strong> (オプション):  <tt class="docutils literal"><span class="pre">NativeFileSessionStorage</span></tt> のパスです。 標準は <a href="#id2"><span class="problematic" id="id3">``</span></a>sys_get_temp_dir()``　の値です。</p>
+<p>標準の <tt class="docutils literal"><span class="pre">NativeFileSessionStorage</span></tt> の場合、使用可能なオプションは以下の通りです:</p>
 <ul class="simple">
 <li><strong>name</strong>: Cookie の名前 (標準は _SESS)</li>
 <li><strong>id</strong>: セッション ID (標準は null)</li>
@@ -82,21 +82,21 @@
 </li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>サービス<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>session</strong>: Symfony2　の <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Session.html">Session</a> のインスタンス。</li>
-<li><strong>session.storage</strong>: セッションデータの永続化のために利用されるサービス。 標準は <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/SessionStorage/NativeSessionStorage.html">NativeSessionStorage</a></li>
+<li><strong>session</strong>: Symfony2　の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session.html">Session</a> のインスタンス。</li>
+<li><strong>session.storage</strong>: セッションデータの永続化のために利用されるサービス。 標準は <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeFileSessionStorage.html">NativeFileSessionStorage</a>.</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\SessionServiceProvider</span><span class="p">());</span>
+<div class="section" id="id5">
+<h2>登録<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SessionServiceProvider</span><span class="p">());</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>使い方<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <p>セッションのプロバイダーは <tt class="docutils literal"><span class="pre">session</span></tt> サービスを提供します。以下にユーザーを認証しそのユーザーのためにセッションを作成するサンプルです:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
 
@@ -153,9 +153,9 @@
   <ul>
 <li><a class="reference internal" href="#">SessionServiceProvider</a><ul>
 <li><a class="reference internal" href="#id1">パラメーター</a></li>
-<li><a class="reference internal" href="#id2">サービス</a></li>
-<li><a class="reference internal" href="#id3">登録</a></li>
-<li><a class="reference internal" href="#id4">使い方</a></li>
+<li><a class="reference internal" href="#id4">サービス</a></li>
+<li><a class="reference internal" href="#id5">登録</a></li>
+<li><a class="reference internal" href="#id6">使い方</a></li>
 </ul>
 </li>
 </ul>

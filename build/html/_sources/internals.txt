@@ -11,12 +11,12 @@ Silex
 
 アプリケーションは Silex の中心となるインターフェースです。
 Symfony2 の `HttpKernelInterface
-<http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernelInterface.html>`_,
+<http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernelInterface.html>`_,
 を実装しています。
 そのため、 `Request
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_
 を ``handle`` メソッドに渡すことで `Response
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html>`_
 が返されます.
 
 これは ``Pimple`` サービスコンテナを拡張して実現されています。
@@ -24,8 +24,8 @@ Symfony2 の `HttpKernelInterface
 つまりどのサービスも置き換えることができ、それらを読み込むことができます。
 
 アプリケーションは Symfony2 `HttpKernel
-<http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_ イベントをフックするために `EventDispatcher
-<http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
+<http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html>`_ イベントをフックするために `EventDispatcher
+<http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
 を使っています。
 イベントディスパッチャーのおかげで ``Request`` を取得し文字列のレスポンスを ``Response`` オブジェクトに変換したり例外をハンドリングしたりすることができます。
 この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。
@@ -34,7 +34,7 @@ Symfony2 の `HttpKernelInterface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony2 の `ルーティング (Route)
-<http://api.symfony.com/2.0/Symfony/Component/Routing/Route.html>`_
+<http://api.symfony.com/master/Symfony/Component/Routing/Route.html>`_
 は本当に強力な機能です。
 
 ルーティングに名前が付けることができ、そのルーティング名でURLを生成することができます。
@@ -46,7 +46,7 @@ URL の可変部分を必須項目にすることもできます。
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `ルーティングコレクション (RouteCollection)
-<http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
+<http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html>`_
 を見えるようにした目的の1つは変更できるようにするためでした。その結果、プロバイダーで要素をルーティングコレクションに追加できるようになりました。
 この試みはルーティングが自分たちの名前を全くしらないということが本当のところです。
 名前は ``RouteCollection`` の前後関係においてのみ意味を持っていて、その名前は変えることができません。

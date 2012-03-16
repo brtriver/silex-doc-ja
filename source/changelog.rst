@@ -3,6 +3,12 @@ Changelog
 
 このチェンジログはすべての後方互換性がない部分について説明しています:
 
+* **2012-03-11**: Added route middlewares
+
+* **2012-03-02**: Switched to use Composer for dependency management
+
+* **2012-02-27**: Updated to Symfony 2.1 session handling.
+
 * **2012-01-02**: Introduced support for streaming responses.
 
 * **2011-09-22**: ``ExtensionInterface`` has been renamed to

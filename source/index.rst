@@ -11,7 +11,7 @@ Silex は Symfony2 コンポーネントベースの PHP のマイクロフレ�
     usage
     providers
     testing
-    cookbook
+    cookbook/index
     internals
     contributing
 

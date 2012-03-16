@@ -6,9 +6,9 @@ SessionServiceProvider
 パラメーター
 ------------
 
-* **session.storage.options**: ``session.storage`` サービスのコンストラクタに渡すオプションの配列。
+* **session.storage.save_path** (オプション):  ``NativeFileSessionStorage`` のパスです。 標準は ``sys_get_temp_dir()``　の値です。
 
-  標準の ``NativeSessionStorage`` の場合、使用可能なオプションは以下の通りです:
+  標準の ``NativeFileSessionStorage`` の場合、使用可能なオプションは以下の通りです:
 
   * **name**: Cookie の名前 (標準は _SESS)
   * **id**: セッション ID (標準は null)
@@ -26,9 +26,9 @@ SessionServiceProvider
 --------
 
 * **session**: Symfony2　の `Session 
-  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Session.html>`_ のインスタンス。
+  <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session.html>`_ のインスタンス。
 
-* **session.storage**: セッションデータの永続化のために利用されるサービス。 標準は `NativeSessionStorage    <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/SessionStorage/NativeSessionStorage.html>`_
+* **session.storage**: セッションデータの永続化のために利用されるサービス。 標準は `NativeFileSessionStorage    <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeFileSessionStorage.html>`_.
 
 
 登録
@@ -36,7 +36,7 @@ SessionServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\SessionServiceProvider());
+    $app->register(new Silex\Provider\SessionServiceProvider());
 
 使い方
 -------

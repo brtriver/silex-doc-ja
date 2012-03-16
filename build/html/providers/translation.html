@@ -75,20 +75,20 @@
 <div class="section" id="id2">
 <h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>translator</strong>: 翻訳のために利用される <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Translator.html">Translator</a>
+<li><strong>translator</strong>: 翻訳のために利用される <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Translation/Translator.html">Translator</a>
 のインスタンス。</li>
 <li><strong>translator.loader</strong>: 翻訳の
-<a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/LoaderInterface.html">LoaderInterface</a>
+<a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Translation/Loader/LoaderInterface.html">LoaderInterface</a>
 を実装したインスタンス、 標準は
-<a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/ArrayLoader.html">ArrayLoader</a> 。</li>
-<li><strong>translator.message_selector</strong>: <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Translation/MessageSelector.html">MessageSelector</a> のインスタンス。</li>
+<a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Translation/Loader/ArrayLoader.html">ArrayLoader</a> 。</li>
+<li><strong>translator.message_selector</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Translation/MessageSelector.html">MessageSelector</a> のインスタンス。</li>
 </ul>
 </div>
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>Symfony2 Translation コンポーネントのコピーがが <tt class="docutils literal"><span class="pre">vendor/symfony/src</span></tt> に配置されていることを確認してください。
 一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;locale_fallback&#39;</span>           <span class="o">=&gt;</span> <span class="s1">&#39;en&#39;</span><span class="p">,</span>
     <span class="s1">&#39;translation.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
 <span class="p">));</span>

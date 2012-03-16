@@ -72,8 +72,8 @@
 <ul>
 <li><dl class="first docutils">
 <dt><strong>url_generator</strong>: <tt class="docutils literal"><span class="pre">routes</span></tt> サービスを通して提供されている</dt>
-<dd><p class="first last"><a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
-を使う <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/Generator/UrlGenerator.html">UrlGenerator</a>
+<dd><p class="first last"><a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+を使う <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Routing/Generator/UrlGenerator.html">UrlGenerator</a>
 のインスタンス。 <tt class="docutils literal"><span class="pre">generate</span></tt> メソッドが存在して、このメソッドは引数としてルーティング名と、ルーティングパラメータの配列を必要とします。</p>
 </dd>
 </dl>
@@ -82,7 +82,7 @@
 </div>
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\UrlGeneratorServiceProvider</span><span class="p">());</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\UrlGeneratorServiceProvider</span><span class="p">());</span>
 </pre></div>
 </div>
 </div>

@@ -210,9 +210,9 @@ Web のドキュメントルートからの相対パスであなたのディレ�
 <p class="last"><tt class="docutils literal"><span class="pre">mail()</span></tt> 関数を使用する代わりに、 <a class="reference internal" href="providers/swiftmailer.html"><em>SwiftmailerServiceProvider</em></a> も使用できます。</p>
 </div>
 <p>タイプヒンティングのおかげで、 <tt class="docutils literal"><span class="pre">request</span></tt> は、 Silex によって自動的にクロージャに注入されています。
-リクエストは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a> のインスタンスであり,
+リクエストは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html">Request</a> のインスタンスであり,
 リクエストの <tt class="docutils literal"><span class="pre">get</span></tt> メソッドを使うことで変数を取得することができます。</p>
-<p>文字列を返す代わりに <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html">Response</a> のインスタンスを返しています。
+<p>文字列を返す代わりに <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html">Response</a> のインスタンスを返しています。
 また、 HTTP のステータスコードを設定することもでき、今回の場合であれば <tt class="docutils literal"><span class="pre">201</span> <span class="pre">Created</span></tt> が設定されています。</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -317,13 +317,10 @@ Web のドキュメントルートからの相対パスであなたのディレ�
 そしてこの <tt class="docutils literal"><span class="pre">Controller</span></tt> オブジェクトはルーティングメソッドによって返されます。</p>
 <p>次のコードは <tt class="docutils literal"><span class="pre">\id+</span></tt> で数値に一致するようにしているので <tt class="docutils literal"><span class="pre">id</span></tt> 引数が数字になるようにチェックしています。</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>$app-&gt;get(&#8216;/blog/show/{id}&#8217;, function ($id) {</dt>
-<dd>...</dd>
-</dl>
-<p>})
--&gt;assert(&#8216;id&#8217;, &#8216;d+&#8217;);</p>
-</div></blockquote>
+<div>$app-&gt;get(&#8216;/blog/show/{id}&#8217;, function ($id) {
+...
+})
+-&gt;assert(&#8216;id&#8217;, &#8216;d+&#8217;);</div></blockquote>
 <p>チェーン(chain) で呼び出すこともできます:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/blog/show/{postId}/{commentId}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$postId</span><span class="p">,</span> <span class="nv">$commentId</span><span class="p">)</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -364,6 +361,51 @@ Web のドキュメントルートからの相対パスであなたのディレ�
 <p class="first admonition-title">Note</p>
 <p class="last">使おうとしているプロバイダーが <tt class="docutils literal"><span class="pre">RouteCollection</span></tt> を利用しているときのみ名前ルーティングは意味があります。</p>
 </div>
+</div>
+<div class="section" id="routes-middlewares">
+<h3>ルートミドルウェア (Routes middlewares)<a class="headerlink" href="#routes-middlewares" title="Permalink to this headline">¶</a></h3>
+<p>1つ以上のルートミドルウェアを定義することができます。 そしてこのミドルウェアをあなたのアプリケーションのルーティングに追加することができます。
+ルートミドルウェアは単なる &#8220;PHP callables&#8221; (たとえば クロージャー、 &#8220;ClassName::methodName&#8221; のような文字列だったり Silex のコールバック) です。
+これらはルーティングが一致したときに呼び出されます。
+ミドルウェアはルーティングのコールバックの前に呼び出されますが <tt class="docutils literal"><span class="pre">before</span></tt> フィルターより後です。
+これは <tt class="docutils literal"><span class="pre">before</span></tt> フィルターがより優先されるからです。 - 次のセクションの <tt class="docutils literal"><span class="pre">before</span></tt> フィルターについてを見てください。</p>
+<p>この仕組みは多くの場面で利用できます - たとえば、　&#8221;anonymous/logged user&#8221;　を制御する場合です:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$mustBeAnonymous</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">has</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">redirect</span><span class="p">(</span><span class="s1">&#39;/user/logout&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nv">$mustBeLogged</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">has</span><span class="p">(</span><span class="s1">&#39;userId&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">redirect</span><span class="p">(</span><span class="s1">&#39;/user/login&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/user/subscribe&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">middleware</span><span class="p">(</span><span class="nv">$mustBeAnonymous</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/user/login&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">middleware</span><span class="p">(</span><span class="nv">$mustBeAnonymous</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/user/my-profile&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="o">...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">middleware</span><span class="p">(</span><span class="nv">$mustBeLogged</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>複数個の <tt class="docutils literal"><span class="pre">middleware</span></tt> メソッドを1つのルーティングで呼ぶことができます。
+ミドルウェアはルーティングに追加された順番で呼び出されます。</p>
+<p>便利なことに、ルートミドルウェアはそのときのリクエストを引数として呼び出されます。</p>
+<p>もしルーティングミドルウェアが Symfony Http レスポンスを返せば、全体のレンダリングを省略します。
+そして次にミドルウェアが定義されていても呼び出しません。
+ルーティングのコールバックで、 <tt class="docutils literal"><span class="pre">redirect</span></tt> メソッドを使いリダイレクトのレスポンスを返すことで他のページにリダイレクトすることができます。</p>
+<p>ルートミドルウェアは Symfony Http レスポンスか null を返すことができます。
+戻り値がそれ以外の場合は RuntimeException が投げられます。</p>
 </div>
 </div>
 <div class="section" id="before-and-after-filters">
@@ -661,6 +703,7 @@ Silex version 0a243d3 2011-04-17 14:49:31 +0200
 <li><a class="reference internal" href="#id4">必須項目</a></li>
 <li><a class="reference internal" href="#id5">デフォルト値</a></li>
 <li><a class="reference internal" href="#named-routes">名前ルーティング (Named routes)</a></li>
+<li><a class="reference internal" href="#routes-middlewares">ルートミドルウェア (Routes middlewares)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#before-and-after-filters">前処理と後処理 (Before and after filters)</a></li>

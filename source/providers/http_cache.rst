@@ -9,14 +9,14 @@ HttpCacheServiceProvider
 * **http_cache.cache_dir**: HTTP キャッシュデータを保存するディレクトリ。
 
 * **http_cache.options** (オプション): `HttpCache
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
+  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
   コンストラクタのためのオプションの配列。
 
 サービス
 --------
 
 * **http_cache**: `HttpCache
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
+  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
   のインスタンス
 
 登録
@@ -24,7 +24,7 @@ HttpCacheServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\HttpCacheServiceProvider(), array(
+    $app->register(new Silex\Provider\HttpCacheServiceProvider(), array(
         'cache_dir' => __DIR__.'/cache/',
     ));
 

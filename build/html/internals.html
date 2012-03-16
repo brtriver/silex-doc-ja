@@ -34,7 +34,7 @@
       </script>
     <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
     <link rel="next" title="プロジェクトへの貢献" href="contributing.html" />
-    <link rel="prev" title="クックブック" href="cookbook.html" /> 
+    <link rel="prev" title="バリデーションのメッセージの国際化" href="cookbook/translating_validation_messages.html" /> 
   </head>
   <body>
 
@@ -68,22 +68,22 @@
 <div class="section" id="application">
 <h3>アプリケーション (Application)<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h3>
 <p>アプリケーションは Silex の中心となるインターフェースです。
-Symfony2 の <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernelInterface.html">HttpKernelInterface</a>,
+Symfony2 の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernelInterface.html">HttpKernelInterface</a>,
 を実装しています。
-そのため、 <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a>
-を <tt class="docutils literal"><span class="pre">handle</span></tt> メソッドに渡すことで <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html">Response</a>
+そのため、 <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html">Request</a>
+を <tt class="docutils literal"><span class="pre">handle</span></tt> メソッドに渡すことで <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html">Response</a>
 が返されます.</p>
 <p>これは <tt class="docutils literal"><span class="pre">Pimple</span></tt> サービスコンテナを拡張して実現されています。
 そのため、内部から扱うのと同じぐらい外部からでも柔軟性をもって利用することができます。
 つまりどのサービスも置き換えることができ、それらを読み込むことができます。</p>
-<p>アプリケーションは Symfony2 <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a> イベントをフックするために <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
+<p>アプリケーションは Symfony2 <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a> イベントをフックするために <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
 を使っています。
 イベントディスパッチャーのおかげで <tt class="docutils literal"><span class="pre">Request</span></tt> を取得し文字列のレスポンスを <tt class="docutils literal"><span class="pre">Response</span></tt> オブジェクトに変換したり例外をハンドリングしたりすることができます。
 この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。</p>
 </div>
 <div class="section" id="controller">
 <h3>コントローラー (Controller)<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h3>
-<p>Symfony2 の <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/Route.html">ルーティング (Route)</a>
+<p>Symfony2 の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Routing/Route.html">ルーティング (Route)</a>
 は本当に強力な機能です。</p>
 <p>ルーティングに名前が付けることができ、そのルーティング名でURLを生成することができます。
 URL の可変部分を必須項目にすることもできます。
@@ -92,7 +92,7 @@ URL の可変部分を必須項目にすることもできます。
 </div>
 <div class="section" id="controllercollection">
 <h3>コントローラーコレクション (ControllerCollection)<a class="headerlink" href="#controllercollection" title="Permalink to this headline">¶</a></h3>
-<p><a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">ルーティングコレクション (RouteCollection)</a>
+<p><a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">ルーティングコレクション (RouteCollection)</a>
 を見えるようにした目的の1つは変更できるようにするためでした。その結果、プロバイダーで要素をルーティングコレクションに追加できるようになりました。
 この試みはルーティングが自分たちの名前を全くしらないということが本当のところです。
 名前は <tt class="docutils literal"><span class="pre">RouteCollection</span></tt> の前後関係においてのみ意味を持っていて、その名前は変えることができません。</p>
@@ -122,7 +122,7 @@ URL の可変部分を必須項目にすることもできます。
 
 
 <div id="page_prev_next">
-<a class="prev" href="cookbook.html">< クックブック</a>
+<a class="prev" href="cookbook/translating_validation_messages.html">< バリデーションのメッセージの国際化</a>
 <a class="next" href="contributing.html">プロジェクトへの貢献 ></a>
 </div>
 
@@ -157,8 +157,8 @@ URL の可変部分を必須項目にすることもできます。
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="cookbook.html"
-                        title="previous chapter">クックブック</a></p>
+  <p class="topless"><a href="cookbook/translating_validation_messages.html"
+                        title="previous chapter">バリデーションのメッセージの国際化</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="contributing.html"
                         title="next chapter">プロジェクトへの貢献</a></p>

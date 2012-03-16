@@ -83,7 +83,7 @@
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><em>Twig</em> のライブラリのコピーが <tt class="docutils literal"><span class="pre">vendor/twig</span></tt> にある場合の書き方です:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\TwigServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TwigServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;twig.path&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
     <span class="s1">&#39;twig.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/twig/lib&#39;</span><span class="p">,</span>
 <span class="p">));</span>

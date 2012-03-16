@@ -18,18 +18,18 @@ TranslationServiceProvider
 --------
 
 * **translator**: 翻訳のために利用される `Translator
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/Translator.html>`_
+  <http://api.symfony.com/master/Symfony/Component/Translation/Translator.html>`_
   のインスタンス。
 
 * **translator.loader**: 翻訳の　
   `LoaderInterface 
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/LoaderInterface.html>`_
+  <http://api.symfony.com/master/Symfony/Component/Translation/Loader/LoaderInterface.html>`_
   を実装したインスタンス、 標準は  
   `ArrayLoader
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/Loader/ArrayLoader.html>`_ 。
+  <http://api.symfony.com/master/Symfony/Component/Translation/Loader/ArrayLoader.html>`_ 。
 
 * **translator.message_selector**: `MessageSelector
-  <http://api.symfony.com/2.0/Symfony/Component/Translation/MessageSelector.html>`_ のインスタンス。
+  <http://api.symfony.com/master/Symfony/Component/Translation/MessageSelector.html>`_ のインスタンス。
 
 登録
 -----------
@@ -37,7 +37,7 @@ TranslationServiceProvider
 Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/src`` に配置されていることを確認してください。
 一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです::
 
-    $app->register(new Silex\ServiceProvider\TranslationServiceProvider(), array(
+    $app->register(new Silex\Provider\TranslationServiceProvider(), array(
         'locale_fallback'           => 'en',
         'translation.class_path'    => __DIR__.'/vendor/symfony/src',
     ));

@@ -93,7 +93,7 @@
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>Symfony2 Validator　バリデーターのコピーを <tt class="docutils literal"><span class="pre">vendor/symfony/src</span></tt> にあることを確認してください。
 Symfony2 全体を vendor ディレクトリにコピーするだけです:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\ValidatorServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\ValidatorServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;validator.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
 <span class="p">));</span>
 </pre></div>

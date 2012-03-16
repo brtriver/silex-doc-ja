@@ -62,6 +62,16 @@
 * :doc:`ValidatorServiceProvider <providers/validator>`
 * :doc:`HttpCacheServiceProvider <providers/http_cache>`
 
+サードパーティーのプロバイダ
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+コミュニティで開発されているサービスプロバイダもあります。
+これらのサードパーティのプロバイダの一覧は `Silex` リポジトリの wiki
+<https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders>`_ にあります.
+
+あなたのプロバイダーもぜひ共有してみてください。
+
+
 プロバイダーの作成
 ----------------------
 

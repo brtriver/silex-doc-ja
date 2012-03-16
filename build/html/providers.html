@@ -119,9 +119,16 @@
 <li><a class="reference internal" href="providers/validator.html"><em>ValidatorServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/http_cache.html"><em>HttpCacheServiceProvider</em></a></li>
 </ul>
-</div>
 <div class="section" id="id3">
-<h2>プロバイダーの作成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h3>サードパーティーのプロバイダ<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>コミュニティで開発されているサービスプロバイダもあります。
+これらのサードパーティのプロバイダの一覧は <cite>Silex</cite> リポジトリの wiki
+&lt;<a class="reference external" href="https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders">https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders</a>&gt;`_ にあります.</p>
+<p>あなたのプロバイダーもぜひ共有してみてください。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>プロバイダーの作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>プロバイダーは <tt class="docutils literal"><span class="pre">Silex\ServiceProviderInterface</span></tt> を実装しなければなりません:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ServiceProviderInterface</span>
 <span class="p">{</span>
@@ -210,8 +217,8 @@
 </div>
 <div class="section" id="controllers-providers">
 <h2>コントロラープロバイダー(Controllers providers)<a class="headerlink" href="#controllers-providers" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>プロバイダーの読み込み<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>プロバイダーの読み込み<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>プロバイダーを読み込んで使うためには、パスで指定したコントローラーを &#8220;mount&#8221; する必要があります:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
@@ -220,8 +227,8 @@
 </div>
 <p>プロバイダーで定義されている全てのコントローラーは、 <cite>/blog</cite> パス以下で使用可能です。</p>
 </div>
-<div class="section" id="id5">
-<h3>プロバイダーの作成<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>プロバイダーの作成<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>プロバイダーは <tt class="docutils literal"><span class="pre">Silex\ControllerProviderInterface</span></tt> を実装しなければなりません:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ControllerProviderInterface</span>
 <span class="p">{</span>
@@ -302,14 +309,17 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#id1">規約</a></li>
-<li><a class="reference internal" href="#id2">プロバイダーのインクルード</a></li>
-<li><a class="reference internal" href="#id3">プロバイダーの作成</a><ul>
+<li><a class="reference internal" href="#id2">プロバイダーのインクルード</a><ul>
+<li><a class="reference internal" href="#id3">サードパーティーのプロバイダ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">プロバイダーの作成</a><ul>
 <li><a class="reference internal" href="#class-loading">クラスの読み込み (Class loading)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#controllers-providers">コントロラープロバイダー(Controllers providers)</a><ul>
-<li><a class="reference internal" href="#id4">プロバイダーの読み込み</a></li>
-<li><a class="reference internal" href="#id5">プロバイダーの作成</a></li>
+<li><a class="reference internal" href="#id5">プロバイダーの読み込み</a></li>
+<li><a class="reference internal" href="#id6">プロバイダーの作成</a></li>
 </ul>
 </li>
 </ul>

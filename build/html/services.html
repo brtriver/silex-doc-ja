@@ -203,7 +203,7 @@ SPL の ArrayAccess インターフェースを実装し、クロージャーを
 みなさんはこれらの大部分を台無しにしたくないと思っていらっしゃることでしょう。</p>
 <ul>
 <li><p class="first"><strong>request</strong>: 現在のリクエストオブジェクトを保持しており,
-このオブジェクトは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html">Request</a>
+このオブジェクトは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html">Request</a>
 のインスタンスです。
 <tt class="docutils literal"><span class="pre">GET</span></tt> 、 <tt class="docutils literal"><span class="pre">POST</span></tt> やさらに多くのパラメーターにアクセスすることができます!</p>
 <p>利用例:</p>
@@ -215,7 +215,7 @@ SPL の ArrayAccess インターフェースを実装し、クロージャーを
 <p>これはリクエストが実行されているときにだけ利用可能です。
 コントローラー、　before、 after フィルターそしてエラーハンドラーの内部からのみアクセスすることができます。</p>
 <ul>
-<li><p class="first"><strong>autoloader</strong>: このサービスは <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html">UniversalClassLoader</a>
+<li><p class="first"><strong>autoloader</strong>: このサービスは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/ClassLoader/UniversalClassLoader.html">UniversalClassLoader</a>
 によって提供されています。
 接頭辞や名前空間を登録することができます。</p>
 <p>利用例 (Twig のクラスのオートロードの設定):</p>
@@ -223,20 +223,20 @@ SPL の ArrayAccess インターフェースを実装し、クロージャーを
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>routes</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
+<li><p class="first"><strong>routes</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html">RouteCollection</a>
 。
 ルーティングの追加、修正、読み込みを行うことができます。</p>
 </li>
 <li><p class="first"><strong>controllers</strong>: 内部で利用されている <tt class="docutils literal"><span class="pre">Silex\ControllerCollection</span></tt> 。
 詳細については <em>Internals</em> の章をご参照ください。</p>
 </li>
-<li><p class="first"><strong>dispatcher</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
+<li><p class="first"><strong>dispatcher</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html">EventDispatcher</a>
 。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。</p>
 </li>
-<li><p class="first"><strong>resolver</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html">ControllerResolver</a>
+<li><p class="first"><strong>resolver</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html">ControllerResolver</a>
 。　正しい引数でコントローラーが実行されるように注意を払ってくれています。</p>
 </li>
-<li><p class="first"><strong>kernel</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a>
+<li><p class="first"><strong>kernel</strong>: 内部で利用されている <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html">HttpKernel</a>
 。　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。</p>
 </li>
 <li><p class="first"><strong>request_context</strong>: リクエストのコンテクストとは Router と UrlGenerator で利用されるリクエストを簡易化したものです。</p>
@@ -262,6 +262,9 @@ SPL の ArrayAccess インターフェースを実装し、クロージャーを
 もし現在のリクエストが HTTPS であれば、このパラメーターで現在利用しているポートを指定することができます。</p>
 <p>標準は 443 番です。</p>
 <p>このパラメーターは <tt class="docutils literal"><span class="pre">UrlGeneratorProvider</span></tt> で利用されます。</p>
+</li>
+<li><p class="first"><strong>request.default_locale</strong> (オプション): 標準で利用されるロケールです。</p>
+<p>標準は <tt class="docutils literal"><span class="pre">en</span></tt> です.</p>
 </li>
 <li><p class="first"><strong>debug</strong> (オプション): デバッグモードでアプリケーションを動作させるかどうかを返します</p>
 <p>標準は false です。</p>

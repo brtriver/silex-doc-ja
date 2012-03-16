@@ -166,11 +166,11 @@ POSTルーティングはリソースの生成を意味します。
 
 タイプヒンティングのおかげで、 ``request`` は、 Silex によって自動的にクロージャに注入されています。
 リクエストは `Request
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスであり,
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスであり,
 リクエストの ``get`` メソッドを使うことで変数を取得することができます。
 
 文字列を返す代わりに `Response
-<http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Response.html>`_ のインスタンスを返しています。
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html>`_ のインスタンスを返しています。
 また、 HTTP のステータスコードを設定することもでき、今回の場合であれば ``201 Created`` が設定されています。
 
 .. note::
@@ -282,12 +282,10 @@ POSTルーティングはリソースの生成を意味します。
 
 次のコードは ``\id+`` で数値に一致するようにしているので ``id`` 引数が数字になるようにチェックしています。
 
-
     $app->get('/blog/show/{id}', function ($id) {
-        ...
+    ...
     })
     ->assert('id', '\d+');
-
 
 チェーン(chain) で呼び出すこともできます::
 
@@ -334,6 +332,56 @@ POSTルーティングはリソースの生成を意味します。
 .. note::
 
     使おうとしているプロバイダーが ``RouteCollection`` を利用しているときのみ名前ルーティングは意味があります。
+
+ルートミドルウェア (Routes middlewares)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1つ以上のルートミドルウェアを定義することができます。 そしてこのミドルウェアをあなたのアプリケーションのルーティングに追加することができます。
+ルートミドルウェアは単なる "PHP callables" (たとえば クロージャー、 "ClassName::methodName" のような文字列だったり Silex のコールバック) です。
+これらはルーティングが一致したときに呼び出されます。
+ミドルウェアはルーティングのコールバックの前に呼び出されますが ``before`` フィルターより後です。
+これは ``before`` フィルターがより優先されるからです。 - 次のセクションの ``before`` フィルターについてを見てください。
+
+この仕組みは多くの場面で利用できます - たとえば、　"anonymous/logged user"　を制御する場合です::
+
+    $mustBeAnonymous = function (Request $request) use ($app) {
+        if ($app['session']->has('userId')) {
+            return $app->redirect('/user/logout');
+        }
+    };
+
+    $mustBeLogged = function (Request $request) use ($app) {
+        if (!$app['session']->has('userId')) {
+            return $app->redirect('/user/login');
+        }
+    };
+
+    $app->get('/user/subscribe', function () {
+        ...
+    })
+    ->middleware($mustBeAnonymous);
+
+    $app->get('/user/login', function () {
+        ...
+    })
+    ->middleware($mustBeAnonymous);
+
+    $app->get('/user/my-profile', function () {
+        ...
+    })
+    ->middleware($mustBeLogged);
+
+複数個の ``middleware`` メソッドを1つのルーティングで呼ぶことができます。
+ミドルウェアはルーティングに追加された順番で呼び出されます。
+
+便利なことに、ルートミドルウェアはそのときのリクエストを引数として呼び出されます。
+
+もしルーティングミドルウェアが Symfony Http レスポンスを返せば、全体のレンダリングを省略します。
+そして次にミドルウェアが定義されていても呼び出しません。
+ルーティングのコールバックで、 ``redirect`` メソッドを使いリダイレクトのレスポンスを返すことで他のページにリダイレクトすることができます。
+
+ルートミドルウェアは Symfony Http レスポンスか null を返すことができます。
+戻り値がそれ以外の場合は RuntimeException が投げられます。
 
 前処理と後処理 (Before and after filters)
 ----------------------------------------------------------

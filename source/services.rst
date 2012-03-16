@@ -160,7 +160,7 @@ Silex は利用したり置き換えることができるサービスの範囲�
 
 * **request**: 現在のリクエストオブジェクトを保持しており,
   このオブジェクトは `Request
-  <http://api.symfony.com/2.0/Symfony/Component/HttpFoundation/Request.html>`_
+  <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_
   のインスタンスです。
   ``GET`` 、 ``POST`` やさらに多くのパラメーターにアクセスすることができます!
 
@@ -172,7 +172,7 @@ Silex は利用したり置き換えることができるサービスの範囲�
 コントローラー、　before、 after フィルターそしてエラーハンドラーの内部からのみアクセスすることができます。
 
 * **autoloader**: このサービスは `UniversalClassLoader
-  <http://api.symfony.com/2.0/Symfony/Component/ClassLoader/UniversalClassLoader.html>`_
+  <http://api.symfony.com/master/Symfony/Component/ClassLoader/UniversalClassLoader.html>`_
   によって提供されています。
   接頭辞や名前空間を登録することができます。
 
@@ -181,7 +181,7 @@ Silex は利用したり置き換えることができるサービスの範囲�
     $app['autoloader']->registerPrefix('Twig_', $app['twig.class_path']);
 
 * **routes**: 内部で利用されている `RouteCollection
-  <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_
+  <http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html>`_
   。
   ルーティングの追加、修正、読み込みを行うことができます。
 
@@ -189,15 +189,15 @@ Silex は利用したり置き換えることができるサービスの範囲�
   詳細については *Internals* の章をご参照ください。
 
 * **dispatcher**: 内部で利用されている `EventDispatcher
-  <http://api.symfony.com/2.0/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
+  <http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
   。　Symfony2 におけるコアシステムであり Silex でもほんの少しだけ利用されています。
 
 * **resolver**: 内部で利用されている `ControllerResolver
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
+  <http://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
   。　正しい引数でコントローラーが実行されるように注意を払ってくれています。
 
 * **kernel**: 内部で利用されている `HttpKernel
-  <http://api.symfony.com/2.0/Symfony/Component/HttpKernel/HttpKernel.html>`_
+  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html>`_
   。　HttpKernel は Symfony2 の心臓部分であり、入力として Request を受け取り、出力として Response を返します。
 
 * **request_context**: リクエストのコンテクストとは Router と UrlGenerator で利用されるリクエストを簡易化したものです。
@@ -225,6 +225,10 @@ Silex は利用したり置き換えることができるサービスの範囲�
   標準は 443 番です。
 
   このパラメーターは ``UrlGeneratorProvider`` で利用されます。
+
+* **request.default_locale** (オプション): 標準で利用されるロケールです。
+
+  標準は ``en`` です.
 
 * **debug** (オプション): デバッグモードでアプリケーションを動作させるかどうかを返します
 

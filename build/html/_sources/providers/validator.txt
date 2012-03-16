@@ -34,7 +34,7 @@ ValidatorServiceProvider
 Symfony2 Validator　バリデーターのコピーを ``vendor/symfony/src`` にあることを確認してください。
 Symfony2 全体を vendor ディレクトリにコピーするだけです::
 
-    $app->register(new Silex\ServiceProvider\ValidatorServiceProvider(), array(
+    $app->register(new Silex\Provider\ValidatorServiceProvider(), array(
         'validator.class_path'    => __DIR__.'/vendor/symfony/src',
     ));
 

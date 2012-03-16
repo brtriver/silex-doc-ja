@@ -131,7 +131,7 @@
 データソースを指定するためにはプロバイダーの登録から <strong>db.options</strong> を、 <strong>dbs.options</strong> という名前の配列で置き換える必要があります。</p>
 <p>dbs 配列の各キーはオプションの設定を含んでいなければなりません。</p>
 <p>複数のデータベース接続を登録するためには次のようにします:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\ServiceProvider\DoctrineServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\DoctrineServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;dbs.options&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
         <span class="s1">&#39;mysql_read&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
             <span class="s1">&#39;driver&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;pdo_mysql&#39;</span><span class="p">,</span>

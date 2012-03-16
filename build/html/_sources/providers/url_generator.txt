@@ -12,9 +12,9 @@ UrlGeneratorServiceProvider
 --------
 
 * **url_generator**: ``routes`` サービスを通して提供されている 
-    `RouteCollection <http://api.symfony.com/2.0/Symfony/Component/Routing/RouteCollection.html>`_ 
+    `RouteCollection <http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html>`_ 
     を使う `UrlGenerator
-    <http://api.symfony.com/2.0/Symfony/Component/Routing/Generator/UrlGenerator.html>`_
+    <http://api.symfony.com/master/Symfony/Component/Routing/Generator/UrlGenerator.html>`_
     のインスタンス。 ``generate`` メソッドが存在して、このメソッドは引数としてルーティング名と、ルーティングパラメータの配列を必要とします。
 
 登録
@@ -22,7 +22,7 @@ UrlGeneratorServiceProvider
 
 ::
 
-    $app->register(new Silex\ServiceProvider\UrlGeneratorServiceProvider());
+    $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 使い方
 ------
