@@ -1,0 +1,66 @@
+複数のモノログの使用
+==============================
+
+あなたのシステムの異なるパーツに使用するために、分割された複数の `Monolog` インスタンスを生成し、ログの場所や詳細についての、よい粒度のコントロールを与えるような別々の設定を施したい場合があります。
+
+各々が違うチャネルを持ったハンドラーの束(bundled handler)を用いて、このような複数のmonologインスタンスに対する設定をすぐに行う例を示します。
+
+.. code-block:: php
+
+    $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
+        $log = new $app['monolog.logger.class']($name);
+        $log->pushHandler($app['monolog.handler']);
+
+        return $log;
+    });
+
+    foreach (array('auth', 'payments', 'stats') as $channel) {
+        $app['monolog.'.$channel] = $app->share(function ($app) use ($channel) {
+            return $app['monolog.factory']($channel);
+        });
+    }
+
+アプリケーションが大きくなってきたり、別々の場所にログを取る必要がある際には、
+サービスごとに設定しましょう。
+
+.. code-block:: php
+
+    use Monolog\Handler\StreamHandler;
+
+    $app['monolog.payments'] = $app->share(function ($app) {
+        $log = new $app['monolog.logger.class']('payments');
+        $handler = new StreamHandler($app['monolog.payments.logfile'], $app['monolog.payment.level']);
+        $log->pushHandler($handler);
+
+        return $log;
+    });
+
+または、ファクトリーをもっと複雑にして、
+コンテナー内のチェネル名を使ってハンドラー配列をチェックし、カスタム設定を適用するかデフォルト設定を適用するかを決定するような仕様にすることもできます。
+
+.. code-block:: php
+
+    use Monolog\Handler\StreamHandler;
+    use Monolog\Logger;
+
+    $app['monolog.factory'] = $app->protect(function ($name) use ($app) {
+        $log = new $app['monolog.logger.class']($name);
+
+        $handlers = isset($app['monolog.'.$name.'.handlers'])
+            ? $app['monolog.'.$name.'.handlers']
+            : array($app['monolog.handler']);
+
+        foreach ($handlers as $handler) {
+            $log->pushHandler($handler);
+        }
+
+        return $log;
+    });
+
+    $app['monolog.payments.handlers'] = $app->share(function ($app) {
+        return array(
+            new StreamHandler(__DIR__.'/../payments.log', Logger::DEBUG),
+        );
+    });
+
+

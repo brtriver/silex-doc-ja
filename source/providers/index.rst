@@ -1,5 +1,5 @@
-Silex プロバイダー
-=========================
+組み込みのプロバイダー
+===========================
 
 .. toctree::
     :maxdepth: 1
@@ -7,10 +7,15 @@ Silex プロバイダー
     doctrine
     monolog
     session
-    translation
     swiftmailer
-    symfony_bridges
+    translation
     twig
     url_generator
     validator
+    form
     http_cache
+    http_fragment
+    security
+    remember_me
+    serializer
+    service_controller

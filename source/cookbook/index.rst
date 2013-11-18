@@ -1,5 +1,5 @@
-Cookbook
-========
+クックブック
+===============
 
 cookbook セクションは特定の問題を解決するためのレシピが掲載されています。
 
@@ -10,14 +10,30 @@ cookbook セクションは特定の問題を解決するためのレシピが�
     json_request_body
     translating_validation_messages
     session_storage
+    form_no_csrf
+    validator_yaml
+    sub_requests
+    error_handler
+    multiple_loggers
+    assets
 
-Recipes
+レシピ
 -------
 
-* :doc:`Accepting a JSON request body <json_request_body>` A common need when
-  building a restful API is the ability to accept a JSON encoded entity from
-  the request body.
+* :doc:`JSON リクエストの受け入れ <json_request_body>`
 
-* :doc:`Translating Validation Messages<translating_validation_messages>`.
+* :doc:`バリデーションメッセージの翻訳 <translating_validation_messages>`
 
-* :doc:`How to use PdoSessionStorage to store sessions in the database <session_storage>`.
+* :doc:`PdoSessionStorageを使ったデータベース上でのセッションの保存 <session_storage>`
+
+* :doc:`フォームエクステンションを使用した。フォームでのCSRF保護の無効化 <form_no_csrf>`
+
+* :doc:`YAMLを使用してバリデーションを設定 <validator_yaml>`
+
+* :doc:`サブリクエストの作成 <sub_requests>`
+
+* :doc:`エラーを例外に変換する方法 <error_handler>`
+
+* :doc:`複数のモノログの使用 <multiple_loggers>`
+
+* :doc:`テンプレートでのアセット管理 <assets>`
