@@ -1016,8 +1016,12 @@ div.documentwrapper {
     background-color: #000;
 }
 
-
-
+.highlight-json pre {
+    background-color: #000;
+    width: 97%;
+    margin-left: 0;
+    padding: 5px 5px 5px 15px;
+}
 
 .common_content_footer {
     margin-top: 20px;

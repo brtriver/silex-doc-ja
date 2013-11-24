@@ -8,13 +8,13 @@ ValidatorServiceProvider
 パラメーター
 ------------
 
-* **validator.class_path** (オプション): Symfony2 Validator コンポーネントへのパス
+無し
 
 サービス
 --------
 
 * **validator**: `Validator
-  <http://api.symfony.com/2.0/Symfony/Component/Validator/Validator.html>`_ のインスタンス。
+  <http://api.symfony.com/master/Symfony/Component/Validator/Validator.html>`_ のインスタンス。
 
 * **validator.mapping.class_metadata_factory**: メタデータ読み込みのためのファクトリー。
   バリデーション制約情報をクラスから読み込むことができます。
@@ -31,67 +31,187 @@ ValidatorServiceProvider
 登録
 -----------
 
-Symfony2 Validator　バリデーターのコピーを ``vendor/symfony/src`` にあることを確認してください。
-Symfony2 全体を vendor ディレクトリにコピーするだけです::
+.. code-block:: php
 
-    $app->register(new Silex\Provider\ValidatorServiceProvider(), array(
-        'validator.class_path'    => __DIR__.'/vendor/symfony/src',
-    ));
+    $app->register(new Silex\Provider\ValidatorServiceProvider());
+
+.. note::
+
+    Symfony Validator Componentは"fat" Silexに付属し、標準サイズのSilexには付属しません。
+    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+
+    .. code-block:: json
+
+        "require": {
+            "symfony/validator": "~2.3"
+        }
 
 使い方
 -------
 
-Validator プロバイダーは ``validator`` サービスを提供しまうs。
+Validator プロバイダーは ``validator`` サービスを提供します。
 
 値のバリデーション
 ~~~~~~~~~~~~~~~~~~~
 
-直接 ``validateValue`` バリデーターメソッドを使うことで値の検証が行えます::
+直接 ``validateValue`` バリデーターメソッドを使うことで値の検証が行えます。 ::
 
-    use Symfony\Component\Validator\Constraints;
+    use Symfony\Component\Validator\Constraints as Assert;
 
-    $app->get('/validate-url', function () use ($app) {
-        $violations = $app['validator']->validateValue($app['request']->get('url'), new Constraints\Url());
-        return $violations;
+    $app->get('/validate/{email}', function ($email) use ($app) {
+        $errors = $app['validator']->validateValue($email, new Assert\Email());
+
+        if (count($errors) > 0) {
+            return (string) $errors;
+        } else {
+            return 'The email is valid';
+        }
     });
 
-
-この使い方は他に比べて制限的です。
-
-オブジェクトのプロパティのバリデーション
+連想配列のバリデーション
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-もしクラスにバリデーションを追加したいなら、 *Services* よりも下層に静的な ``loadValidatorMetadata`` メソッドを書くことで実装することができます。
-こうすることでオブジェクトのパラメーターに制約を定義することができます。
-また、 getter メソッドとしても動作します::
+連想配列のバリデーションは複数の制約を持つ値のバリデーションに似ています。 ::
+
+    use Symfony\Component\Validator\Constraints as Assert;
+
+    class Book
+    
+        public $title;
+        public $author;
+    }
+
+    class Author
+    {
+        public $first_name;
+        public $last_name;
+    }
+
+    $book = array(
+        'title' => 'My Book',
+        'author' => array(
+            'first_name' => 'Fabien',
+            'last_name'  => 'Potencier',
+        ),
+    );
+
+    $constraint = new Assert\Collection(array(
+        'title' => new Assert\Length(array('min' => 10)),
+        'author' => new Assert\Collection(array(
+            'first_name' => array(new Assert\NotBlank(), new Assert\Length(array('min' => 10))),
+            'last_name'  => new Assert\Length(array('min' => 10)),
+        )),
+    ));
+    $errors = $app['validator']->validateValue($book, $constraint);
+
+    if (count($errors) > 0) {
+        foreach ($errors as $error) {
+            echo $error->getPropertyPath().' '.$error->getMessage()."\n";
+        }
+    } else {
+        echo 'The book is valid';
+    }
+
+オブジェクトのバリデーション
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+もしクラスにバリデーションを追加したいなら、クラスのプロパティやゲッターに対する制約を定義し、 ``validate`` メソッドをコールできます。 ::
+
+    use Symfony\Component\Validator\Constraints as Assert;
+
+    $author = new Author();
+    $author->first_name = 'Fabien';
+    $author->last_name = 'Potencier';
+
+    $book = new Book();
+    $book->title = 'My Book';
+    $book->author = $author;
+
+    $metadata = $app['validator.mapping.class_metadata_factory']->getMetadataFor('Author');
+    $metadata->addPropertyConstraint('first_name', new Assert\NotBlank());
+    $metadata->addPropertyConstraint('first_name', new Assert\Length(array('min' => 10)));
+    $metadata->addPropertyConstraint('last_name', new Assert\Length(array('min' => 10)));
+
+    $metadata = $app['validator.mapping.class_metadata_factory']->getMetadataFor('Book');
+    $metadata->addPropertyConstraint('title', new Assert\Length(array('min' => 10)));
+    $metadata->addPropertyConstraint('author', new Assert\Valid());
+
+    $errors = $app['validator']->validate($book);
+
+    if (count($errors) > 0) {
+        foreach ($errors as $error) {
+            echo $error->getPropertyPath().' '.$error->getMessage()."\n";
+        }
+    } else {
+        echo 'The author is valid';
+    }
+
+クラスに対する制約を静的な ``loadValidatorMetadata`` メソッドとしてあなたのクラスに追加することで宣言することも出来ます。 ::
 
     use Symfony\Component\Validator\Mapping\ClassMetadata;
-    use Symfony\Component\Validator\Constraints;
+    use Symfony\Component\Validator\Constraints as Assert;
 
-    class Post
+    class Book
     {
         public $title;
-        public $body;
+        public $author;
 
         static public function loadValidatorMetadata(ClassMetadata $metadata)
         {
-            $metadata->addPropertyConstraint('title', new Constraints\NotNull());
-            $metadata->addPropertyConstraint('title', new Constraints\NotBlank());
-            $metadata->addPropertyConstraint('body', new Constraints\MinLength(array('limit' => 10)));
+            $metadata->addPropertyConstraint('title', new Assert\Length(array('min' => 10)));
+            $metadata->addPropertyConstraint('author', new Assert\Valid());
         }
     }
 
-    $app->post('/posts/new', function () use ($app) {
-        $post = new Post();
-        $post->title = $app['request']->get('title');
-        $post->body = $app['request']->get('body');
+    class Author
+    {
+        public $first_name;
+        public $last_name;
 
-        $violations = $app['validator']->validate($post);
-        return $violations;
+        static public function loadValidatorMetadata(ClassMetadata $metadata)
+        {
+            $metadata->addPropertyConstraint('first_name', new Assert\NotBlank());
+            $metadata->addPropertyConstraint('first_name', new Assert\Length(array('min' => 10)));
+            $metadata->addPropertyConstraint('last_name', new Assert\Length(array('min' => 10)));
+        }
+    }
+
+    $app->get('/validate/{email}', function ($email) use ($app) {
+        $author = new Author();
+        $author->first_name = 'Fabien';
+        $author->last_name = 'Potencier';
+
+        $book = new Book();
+        $book->title = 'My Book';
+        $book->author = $author;
+
+        $errors = $app['validator']->validate($book);
+
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                echo $error->getPropertyPath().' '.$error->getMessage()."\n";
+            }
+        } else {
+            echo 'The author is valid';
+        }
     });
 
-これらのバリデーションをあなた自身で表示するように操作しなければならならないでしょう。
-しかし、 *ValidatorServiceProvider* を使っている *FormServiceProvider* を使うことができます。
+.. note::
+
+    ゲッターへ制約を与えるには ``addGetterConstraint()`` を使ってください。クラス自身に制約を与えるには ``addConstraint()`` を使ってください。
+
+翻訳
+~~~~~~
+
+エラーメッセージを翻訳可能にするためには、translator providerを使い、 ``validators`` にメッセージを登録してください。 ::
+
+    $app['translator.domains'] = array(
+        'validators' => array(
+            'fr' => array(
+                'This value should be a valid number.' => 'Cette valeur doit être un nombre.',
+            ),
+        ),
+    );
 
 詳細については、 `Symfony2 Validation のドキュメント
 <http://symfony.com/doc/2.0/book/validation.html>`_ を参照してください。

@@ -1,75 +1,104 @@
-使用方法
-=========
+使用方法 (Usage)
+====================
 
 この章では Silex の使い方について説明します。
 
-Bootstrap
----------
+インストール (Installation)
+----------------------------------
 
-Silex をインクルードするために必要なことは ``silex.phar`` ファイルを require し、 ``Silex\Application`` のインスタンスを作成するだけです。
-あなたのコントローラーを定義したあとに、 ``run`` メソッドをアプリケーション上で呼んでください。
+早くSilexを始めたい場合はSilexをアーカイブとして `download`_ して展開してください。そうすると以下の様なディレクトリ構造が得られるはずです。
 
-::
+.. code-block:: text
 
-    require_once __DIR__.'/silex.phar';
+    ├── composer.json
+    ├── composer.lock
+    ├── vendor
+    │   └── ...
+    └── web
+        └── index.php
 
-    $app = new Silex\Application();
+Silexをもっと柔軟に使いたい場合は、Composerを用います。
+まず以下の様な ``composer.json`` を作ってください。
 
-    // コントローラーの処理内容を定義する
+.. code-block:: json
 
-    $app->run();
+    {
+        "require": {
+            "silex/silex": "~1.1"
+        }
+    }
 
-もうひとつあなたがやらなければならないことは、サーバーの設定を行うことです。
-もし Apache を使っていて ``.htaccess`` を利用することができるのならば次のように設定してください。
+その後に、Composerを実行すればSilexと、それに関する全ての依存パッケージがインストールされます。
 
-.. code-block:: apache
+.. code-block:: bash
 
-    <IfModule mod_rewrite.c>
-        Options -MultiViews
-
-        RewriteEngine On
-        #RewriteBase /path/to/app
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule ^ index.php [L]
-    </IfModule>
-
-.. note::
-
-    もし、 Silex を配置するディレクトリが Web のドキュメントルートでない場合は、 ``RewriteBase`` のコメントを外し
-    Web のドキュメントルートからの相対パスであなたのディレクトリ構造に合わせたパスを指定するようにしてください。
+    $ curl -s http://getcomposer.org/installer | php
+    $ php composer.phar install
 
 .. tip::
 
-    ウェブサイトを開発中のときは、デバッグしやすくするためにデバッグモードを有効にすることもできます::
+    デフォルトでは、SilexはSymfonyの安定版のコンポーネントに依存しています。
+    それらのmasterバージョンを使用したい場合は、 ``composer.json`` に、
+    ``"minimum-stability": "dev"`` と付け加えてください。
+
+アップグレード (Upgrading)
+-------------------------------
+
+Silexを最新版にアップグレードするには、以下の ``update`` コマンドを実行してください。
+
+.. code-block:: bash
+
+    $ php composer.phar update
+
+
+ブートストラップ (Bootstrap)
+-------------------------------
+
+Silexを使うのに必要なのは ``vendor/autoload.php`` をrequireし、 ``Silex\Application`` のインスタンスを生成することだけです。
+コントローラ定義の後に、 ``run`` メソッドをアプリケーション上で呼んでください。 ::
+
+    // web/index.php
+
+    require_once __DIR__.'/../vendor/autoload.php';
+
+    $app = new Silex\Application();
+
+    // 定義をここに書きます。
+
+    $app->run();
+
+その後にWebサーバーの設定が必要となります。（詳しくは、 :doc:`Webサーバーの章 <web_servers>` を見てください。).
+
+.. tip::
+
+    ウェブサイトを開発中のときは、デバッグしやすくするためにデバッグモードを有効にすることもできます。 ::
 
         $app['debug'] = true;
 
 .. tip::
 
-    もしアプリケーションをプロキシサーバーを通して動作させたい場合は Silex が `X-Forwarded-For*` ヘッダーを信頼するようにしたいでしょう。
-    その場合は次のようにアプリケーションを実行させる必要があります::
+    もしアプリケーションを$ipというアドレスを持つプロキシサーバーを通して動作させたい場合は Silex が `X-Forwarded-For` ヘッダーを信頼するようにしたいでしょう。
+    その場合は次のようにアプリケーションを実行させる必要があります。 ::
 
         use Symfony\Component\HttpFoundation\Request;
 
-        Request::trustProxyData();
-        $request = Request::createFromGlobals();
+        Request::setTrustedProxies(array($ip));
         $app->run();
 
 ルーティング (Routing)
------------------------
+-------------------------------
 
-Silex ではルーティングと、そのルーティングに一致したときに実行されるコントローラーを定義します
+Silex ではルーティングと、そのルーティングに一致したときに実行されるコントローラーを定義します。
 
-ルーティングのパターンは次のような構成になっています:
+ルーティングのパターンは次のような構成になっています。
 
-* *パターン (Pattern)*: ルーティングパターンでリソースへのパスを定義します。
-  パターンは可変部分を含むことができ、可変部分において正規表現を使った必須項目を設定することができます。
+* *パターン (Pattern)*: ルーティングパターンであり、リソースへのパスを定義します。
+  パターンは可変部分を含むことができ、正規表現を使った必須項目を設定することもできます。
 
-* *メソッド (Method)*: 以下の HTTP メソッド のどれかを指定します: ``GET``, ``POST``, ``PUT``
-  ``DELETE`` です。これはリソースとの相互作用を表しています。 
+* *メソッド (Method)*: HTTPメソッド( ``GET``, ``POST``, ``PUT`` ``DELETE`` )のうち、どれかを指定します。  これはリソースとの相互作用を表しています。 
   一般的には、 ``GET`` と ``POST`` だけが利用されますが、他のメソッドも使うことが可能です。
 
-コントローラーはクロージャーを次のように使うことで定義できます::
+コントローラーはクロージャーを次のように使うことで定義できます。 ::
 
     function () {
         // do something
@@ -89,10 +118,10 @@ Silex ではルーティングと、そのルーティングに一致したと�
 クラスメソッドを利用してコントローラを定義する方法もあります。
 ``ClassName::methodName`` でのスタティックな呼び出し構文も利用可能です。
 
-GET ルーティングの例
-~~~~~~~~~~~~~~~~~~~~~~
+GET ルーティングの例 (Example GET route)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ここに ``GET`` ルーティングを定義した例があります::
+ここに ``GET`` ルーティングを定義した例があります。 ::
 
     $blogPosts = array(
         1 => array(
@@ -119,11 +148,11 @@ GET ルーティングの例
 ``use`` を使うことでクロージャー内で渡した変数を使うことができるようになります。
 
 動的ルーティング (Dynamic routing)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-さて、ブログの個々の記事を閲覧するためのもう1つ別のコントローラーを用意してみましょう::
+さて、ブログの個々の記事を閲覧するためのもう1つ別のコントローラーを用意してみましょう。 ::
 
-    $app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
+    $app->get('/blog/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
             $app->abort(404, "Post $id does not exist.");
         }
@@ -134,24 +163,24 @@ GET ルーティングの例
                 "<p>{$post['body']}</p>";
     });
 
+
 ルーティングはクロージャーに渡される ``{id}`` という変数を定義しています。 
 
-POST された値がなかったとき、より早い段階でリクエストを停止するために ``abort()`` を使います。実際には例外を投げていますが、どのように扱っているかは後ほど説明します。
+なお、タイプヒンティングのおかげで、 ``Application`` は、 Silex によって自動的にクロージャに注入されています。
 
-POST ルーティングの例
-~~~~~~~~~~~~~~~~~~~~~~~
+POST された値がなかったとき、より早い段階でリクエストを停止するために ``abort()`` を使います。実際には例外を投げていますが、どのように扱うかは後ほど説明します。
+
+POST ルーティングの例 (Example POST route)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 POSTルーティングはリソースの生成を意味します。
-この例となるのがフィードバック形式です。
-ここでは ``mail`` 関数を使ってメールを送信してみます。
-
-::
+この例となるのがフィードバック用のフォームです。
+ここでは ``mail`` 関数を使ってメールを送信してみます。 ::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
 
     $app->post('/feedback', function (Request $request) {
-
         $message = $request->get('message');
         mail('feedback@yoursite.com', '[YourSite] Feedback', $message);
 
@@ -166,7 +195,9 @@ POSTルーティングはリソースの生成を意味します。
 
 タイプヒンティングのおかげで、 ``request`` は、 Silex によって自動的にクロージャに注入されています。
 リクエストは `Request
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスであり,
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスです。このことによって、HTTPステータスコードを設定することが可能になります。今回の例では``201　Created`` に設定されます。
+
+
 リクエストの ``get`` メソッドを使うことで変数を取得することができます。
 
 文字列を返す代わりに `Response
@@ -175,58 +206,83 @@ POSTルーティングはリソースの生成を意味します。
 
 .. note::
 
-    Silexは、常に ``Response`` を内部で使用し、 文字列を ``200 OK`` の HTTP のステータスコードと一緒にレスポンスに変換します。 
+    Silexは、常に ``Response`` を内部で使用し、 文字列を ``200 OK`` の HTTP のステータスコードと一緒にレスポンスオブジェクトに変換します。 
 
-他のメソッド 
-~~~~~~~~~~~~~
+他のメソッド (Other methods)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ほとんどの HTTP メソッドのためのコントローラーを作ることが可能です。 ただ次の中のメソッドから1つを利用すれば良いだけです::
-``get``, ``post``, ``put``, ``delete``. 
+アプリケーションの中で、 ``get``, ``post``, ``put``, ``delete`` といったメソッドを呼び出せば、ほとんどの HTTP メソッドのためのコントローラーを作ることが可能です。 ::
+
+    $app->put('/blog/{id}', function ($id) {
+        ...
+    });
+
+    $app->delete('/blog/{id}', function ($id) {
+        ...
+    });
+
+.. tip::
+    
+    ほとんどのウェブブラウザのフォームは、その他のHTTPメソッドを直接サポートしていません。GETやPOST以外のメソッドを使いたい場合は、 ``_method`` という名前を持つ特別なフォームフィールドを使うことができます。このフォームフィールドを使うときには、フォームの ``method`` 属性をPOSTに設定する必要があります。 ::
+
+        <form action="/my/target/route/" method="post">
+            ...
+            <input type="hidden" id="_method" name="_method" value="PUT" />
+        </form>
+
+    Symfonyコンポーネント2.2以上を使用している場合は、明示的にメソッドのオーバーライドを可能にする必要があります。 ::
+
+        use Symfony\Component\HttpFoundation\Request;
+
+        Request::enableHttpMethodParameterOverride();
+        $app->run();
+
 また、 ``match`` メソッドを利用することもでき、この場合はすべてのメソッドに一致します。
-
-::
+この性質は、 ``method`` メソッドを用いることで制限することができます。 ::
 
     $app->match('/blog', function () {
         ...
     });
-
-``method`` メソッドを使うことで許可するメソッドを制限することができます::
 
     $app->match('/blog', function () {
         ...
     })
     ->method('PATCH');
 
+    $app->match('/blog', function () {
+        ...
+    })
+    ->method('PUT|POST');
+
 .. note::
 
     ルーティングがどのような順番で定義されたかはとても重要です。
-    最初に一致したルーティングが利用されるからです。そのため、汎用的なルーティングは一番下に定義するようにしてください。
+    最初に一致したルーティングが利用されるからです。そのため、より汎用的なルーティングはより下の方に定義するようにしてください。
 
 ルーティング変数 (Route variables)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-前に説明したように、次のようにルーティングにおいて変数を定義することができます::
+前に説明したように、次のようにルーティングにおいて変数を定義することができます.
+ ::
 
-    $app->get('/blog/show/{id}', function ($id) {
+    $app->get('/blog/{id}', function ($id) {
         ...
     });
 
-2つ以上の変数部分を定義することもできますし、変数部分の名前がクロージャーの引数に一致渡すようにしてください。
+ルーティングの変数部分の名前がクロージャーの引数に一致するようにすれば、2つ以上の変数部分を定義することが可能です。 ::
 
-::
-
-    $app->get('/blog/show/{postId}/{commentId}', function ($postId, $commentId) {
+    $app->get('/blog/{postId}/{commentId}', function ($postId, $commentId) {
         ...
     });
 
-説明していませんでしたが、次のように引数の順番を入れ替えることだってできます。::
+説明していませんでしたが、次のように引数の順番を入れ替えることだってできます。 ::
 
-    $app->get('/blog/show/{postId}/{commentId}', function ($commentId, $postId) {
+    $app->get('/blog/{postId}/{commentId}', function ($commentId, $postId) {
         ...
     });
 
-現在のリクエストとアプリケーションオブジェクトを次のように利用することもできます::
+現在のリクエストとアプリケーションオブジェクトを次のように利用することもできます。 ::
 
     $app->get('/blog/show/{id}', function (Application $app, Request $request, $id) {
         ...
@@ -234,23 +290,22 @@ POSTルーティングはリソースの生成を意味します。
 
 .. note::
 
-    アプリケーションとリクエストオブジェクトについてですが、 Silex は変数名ではなく、タイプヒンティングに基づいて注入します::
+    アプリケーションとリクエストオブジェクトについてですが、 Silex は変数名ではなく、タイプヒンティングに基づいて注入します。 ::
 
-        $app->get('/blog/show/{id}', function (Application $foo, Request $bar, $id) {
+        $app->get('/blog/{id}', function (Application $foo, Request $bar, $id) {
             ...
         });
 
+ルーティングで取得される変数の変換　(Route variables converters)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ルーティングで取得される変数の変換
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-コントローラーにルーティングで取得した変数を注入する前に、変換処理を行うことができます::
+コントローラーにルーティングで取得した変数を注入する前に、変換処理をはさむことができます。 ::
 
     $app->get('/user/{id}', function ($id) {
         // ...
     })->convert('id', function ($id) { return (int) $id; });
 
-たとえば、ルーティングで取得した変数をオブジェクトに変換し異なるコントローラー間で再利用性を高めたい場合などに便利です::
+たとえば、ルーティングで取得した変数をオブジェクトに変換し、異なるコントローラー間で再利用性を高めたい場合などに便利です。 ::
 
     $userProvider = function ($id) {
         return new User($id);
@@ -264,7 +319,7 @@ POSTルーティングはリソースの生成を意味します。
         // ...
     })->convert('user', $userProvider);
 
-変換処理のコールバックは ``Request`` を第2引数として受け取ることができます::
+変換処理のコールバックは ``Request`` を第2引数として受け取ることができます。 ::
 
     $callback = function ($post, Request $request) {
         return new Post($request->attributes->get('slug'));
@@ -274,33 +329,64 @@ POSTルーティングはリソースの生成を意味します。
         // ...
     })->convert('post', $callback);
 
-必須項目
-~~~~~~~~~~~~
+変換処理はサービスとしても定義できます。例として、以下の様なDoctrine ObjectManagerによるユーザーコンバーターが挙げられます。 ::
 
-特定のパターンのみ一致させたい場合があるでしょう。そのときは正規表現を ``Controller`` オブジェクトの ``assert`` メソッドを呼ぶことで必須項目を定義することができます。
-そしてこの ``Controller`` オブジェクトはルーティングメソッドによって返されます。
+    use Doctrine\Common\Persistence\ObjectManager
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-次のコードは ``\id+`` で数値に一致するようにしているので ``id`` 引数が数字になるようにチェックしています。
+    class UserConverter
+    {
+        private $om;
 
-    $app->get('/blog/show/{id}', function ($id) {
-    ...
+        public function __construct(ObjectManager $om)
+        {
+            $this->om = $om;
+        }
+
+        public function convert($id)
+        {
+            if (null === $user = $this->om->find('User', (int) $id)) {
+                throw new NotFoundHttpException(sprintf('User %d does not exist', $id));
+            }
+
+            return $user;
+        }
+    }
+
+このサービスはアプリケーションで登録されることはなく、コンバートメソッドはコンバーターとして使われます。 ::
+
+    $app['converter.user'] = $app->share(function () {
+        return new UserConverter();
+    });
+
+    $app->get('/user/{user}', function (User $user) {
+        // ...
+    })->convert('user', 'converter.user:convert');
+
+必須項目 (Requirements)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+特定のパターンのみ一致させたい場合があるでしょう。そのときはルーティングメソッドによって返される ``Controller`` オブジェクトの ``assert`` メソッドを呼ぶことで正規表現による必須項目を定義することができます。
+
+次の例では ``id`` という引数が数値になるように ``\d+`` でチェックしています。 ::
+
+    $app->get('/blog/{id}', function ($id) {
+        ...
     })
     ->assert('id', '\d+');
 
-チェーン(chain) で呼び出すこともできます::
+チェーン(chain)で呼び出すこともできます。 ::
 
-    $app->get('/blog/show/{postId}/{commentId}', function ($postId, $commentId) {
+    $app->get('/blog/{postId}/{commentId}', function ($postId, $commentId) {
         ...
     })
     ->assert('postId', '\d+')
     ->assert('commentId', '\d+');
 
-デフォルト値
-~~~~~~~~~~~~~~
+デフォルト値 (Default values)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Controller`` オブジェクトの ``value`` メソッドを呼ぶことで、どんなルーティングの値でもデフォルト値を定義することができます。
-
-::
+``Controller`` オブジェクトの ``value`` メソッドを呼ぶことで、どんなルーティングの値でもデフォルト値を定義することができます。 ::
 
     $app->get('/{pageName}', function ($pageName) {
         ...
@@ -309,21 +395,19 @@ POSTルーティングはリソースの生成を意味します。
 
 この例では、 ``/`` をルーティングに一致させています。そしてその際は、 ``pageName`` 変数は ``index`` になります。
 
-名前ルーティング (Named routes)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+名前付きルーティング (Named routes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-プロバイダーの中には名前ルーティングを使うことができるものがあります (``UrlGeneratorProvider`` など)。
+プロバイダーの中には名前付きルーティングを使うことができるものがあります (``UrlGeneratorProvider`` など)。
 デフォルトでは、 Silex はあなたの代わりにルーティング名を生成してくれます。しかし、これらは利用されません。
-ルーティングメソッドによって返される ``Controller`` オブジェクトの ``bind`` メソッドを呼び出すことでルーティングに名前を付けることができます。
-
-::
+ルーティングメソッドによって返される ``Controller`` オブジェクトの ``bind`` メソッドを呼び出すことでルーティングに名前を付けることができます。 ::
 
     $app->get('/', function () {
         ...
     })
     ->bind('homepage');
 
-    $app->get('/blog/show/{id}', function ($id) {
+    $app->get('/blog/{id}', function ($id) {
         ...
     })
     ->bind('blog_post');
@@ -333,107 +417,76 @@ POSTルーティングはリソースの生成を意味します。
 
     使おうとしているプロバイダーが ``RouteCollection`` を利用しているときのみ名前ルーティングは意味があります。
 
-ルートミドルウェア (Routes middlewares)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+クラス内コントローラ (Controllers in classes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1つ以上のルートミドルウェアを定義することができます。 そしてこのミドルウェアをあなたのアプリケーションのルーティングに追加することができます。
-ルートミドルウェアは単なる "PHP callables" (たとえば クロージャー、 "ClassName::methodName" のような文字列だったり Silex のコールバック) です。
-これらはルーティングが一致したときに呼び出されます。
-ミドルウェアはルーティングのコールバックの前に呼び出されますが ``before`` フィルターより後です。
-これは ``before`` フィルターがより優先されるからです。 - 次のセクションの ``before`` フィルターについてを見てください。
+無名関数を使いたくない場合、コントローラをメソッドとして定義することが出来ます。
+これは ``ControllerClass::methodName`` という文法によって実現されます。このときコントローラオブジェクトの生成を遅延させることが可能です。 ::
 
-この仕組みは多くの場面で利用できます - たとえば、　"anonymous/logged user"　を制御する場合です::
+    $app->get('/', 'Igorw\\Foo::bar');
 
-    $mustBeAnonymous = function (Request $request) use ($app) {
-        if ($app['session']->has('userId')) {
-            return $app->redirect('/user/logout');
+    use Silex\Application;
+    use Symfony\Component\HttpFoundation\Request;
+
+    namespace Igorw
+    {
+        class Foo
+        {
+            public function bar(Request $request, Application $app)
+            {
+                ...
+            }
         }
-    };
+    }
 
-    $mustBeLogged = function (Request $request) use ($app) {
-        if (!$app['session']->has('userId')) {
-            return $app->redirect('/user/login');
-        }
-    };
+この例は レスポンスを得るために、 ``Igorw\Foo`` というクラスを要求に応じて読み込み、インスタンスを生成した後に、 ``bar`` メソッドを呼び出します。このとき、 ``$request`` と ``$app`` をクロージャに注入するために ``Request`` と ``Silex\Application`` というタイプヒンティングが使用可能です。
 
-    $app->get('/user/subscribe', function () {
-        ...
-    })
-    ->middleware($mustBeAnonymous);
+こうすることで、Silexとあなたのコントローラの分離度が強まるため、 :doc:`コントローラをサービスとして定義することが出来ます。 <providers/service_controller>`.
 
-    $app->get('/user/login', function () {
-        ...
-    })
-    ->middleware($mustBeAnonymous);
+全体の設定 (Global Configuration)
+----------------------------------------------
 
-    $app->get('/user/my-profile', function () {
-        ...
-    })
-    ->middleware($mustBeLogged);
+あるコントローラの設定を全てのコントローラに対して適用したい場合（例えば、コンバーター、ミドルウェア、必須項目、デフォルト値など）、 全てのコントローラを保持する ``$app['controllers']`` に対して設定を行うことができます。 ::
 
-複数個の ``middleware`` メソッドを1つのルーティングで呼ぶことができます。
-ミドルウェアはルーティングに追加された順番で呼び出されます。
+    $app['controllers']
+        ->value('id', '1')
+        ->assert('id', '\d+')
+        ->requireHttps()
+        ->method('get')
+        ->convert('id', function () { /* ... */ })
+        ->before(function () { /* ... */ })
+    ;
 
-便利なことに、ルートミドルウェアはそのときのリクエストを引数として呼び出されます。
-
-もしルーティングミドルウェアが Symfony Http レスポンスを返せば、全体のレンダリングを省略します。
-そして次にミドルウェアが定義されていても呼び出しません。
-ルーティングのコールバックで、 ``redirect`` メソッドを使いリダイレクトのレスポンスを返すことで他のページにリダイレクトすることができます。
-
-ルートミドルウェアは Symfony Http レスポンスか null を返すことができます。
-戻り値がそれ以外の場合は RuntimeException が投げられます。
-
-前処理と後処理 (Before and after filters)
-----------------------------------------------------------
-
-Silex では、すべてのリクエストの前後でコードを走らせることが可能です。
-``before`` フィルターと ``after`` フィルターを通して処理されます。利用方法はメソッドにクロージャーを渡すだけです::
-
-    $app->before(function () {
-        // set up
-    });
-
-    $app->after(function () {
-        // tear down
-    });
-
-before フィルターは現在のリクエストにアクセスすることができます。そしてレスポンスを返却することでレンダリング全体のショートカットができます::
-
-    $app->before(function (Request $request) {
-        // redirect the user to the login screen if access to the Resource is protected
-        if (...) {
-            return new RedirectResponse('/login');
-        }
-    });
-
-after フィルターはリクエストとレスポンスにアクセスすることができます::
-
-    $app->after(function (Request $request, Response $response) {
-        // tweak the Response
-    });
+これらの設定は全ての登録済みコントローラに適用され、また新しいコントローラのデフォルト設定にもなります。
 
 .. note::
 
-    フィルターは "マスター" のリクエストのときだけ機能します。
+    全体の設定は、オリジナルの全体への設定を持つコントローラプロバイダーには適用されません。
+    詳しくは、 :doc:`コントローラの組織化<organizing_controllers>` を読んでください。
+
+.. warning::
+
+    コンバーターは **全ての** 登録済みコントローラに対して実行されます。
 
 エラーハンドリング (Error handlers)
 ---------------------------------------------------
 
 コードのどこかで例外が発生した際に、ユーザーにエラーページのようなものを表示したいことがあるでしょう。
 これらエラーハンドラーがやることなのです。
-ログ処理のような処理を追加してエラーハンドリングを使うこともできます。
+ログ処理のような処理を追加してエラーハンドリングを使うことができます。
 
-エラーハンドラーを登録するために、 ``Exception`` を引数に持ち、レスポンスを返してくれる ``error`` メソッドにクロージャーを渡します::
+エラーハンドラーを登録するために、 ``Exception`` を引数に持ち、レスポンスを返してくれる ``error`` メソッドにクロージャーを渡します。 ::
 
     use Symfony\Component\HttpFoundation\Response;
 
-    $app->error(function (\Exception $e, $code) use ($app) {
-        return new Response('We are sorry, but something went terribly wrong.', $code);
+    $app->error(function (\Exception $e, $code) {
+        return new Response('We are sorry, but something went terribly wrong.');
     });
 
-``$code`` 引数を使うことで特定のエラーだけを確認することもできます。そしてエラーの種類で処理を変えることができます::
+``$code`` 引数を使うことで詳細なエラーを確認することができます。そしてエラーの種類で処理を変えることができます。 ::
 
     use Symfony\Component\HttpFoundation\Response;
+
     $app->error(function (\Exception $e, $code) {
         switch ($code) {
             case 404:
@@ -443,23 +496,35 @@ after フィルターはリクエストとレスポンスにアクセスする�
                 $message = 'We are sorry, but something went terribly wrong.';
         }
 
-        return new Response($message, $code);
+        return new Response($message);
     });
-
-ログ処理を行いたいなら、このためにエラーハンドラーを分けて使うことができます。
-レスポンスのエラーハンドラーの前にエラーを登録しなければならないということだけに注意してください。
-なぜならレスポンスが返されてしまうと、次のようなハンドラーは無視されてしまうからです。
 
 .. note::
 
-    Silex はエラーのログ処理を行うための `Monolog <https://github.com/Seldaek/monolog>`_
+    Silexはレスポンスのステータスコードが例外に沿うような適切な物にセットされることを保証するので、例外が生じた場合、レスポンスでのステータスコードの設定が働きません。ステータスコードをオーバーライドしたい場合は（適切な理由が無い限りそうすべきではありませんが）、 ``X-Status-Code`` ヘッダをセットしてください。 ::
+
+        return new Response('Error', 404 /* 無視されます */, array('X-Status-Code' => 200));
+
+クロージャの引数に対し詳細なタイプヒンティングをセットすることで、エラーハンドラの適用範囲を特定の例外クラスに対してのみに制限することができます。 ::
+
+    $app->error(function (\LogicException $e, $code) {
+        // このハンドラーは\LogicExceptionと、そのサブクラスのみを扱います。
+    });
+
+ログ処理を行いたいなら、このためにエラーハンドラーを分けて使うことができます。
+レスポンスのエラーハンドラーの前にロギング処理を登録しなければならないということに注意してください。
+なぜならレスポンスが返されてしまうと、後続のハンドラーは無視されてしまうからです。
+
+.. note::
+
+    Silex にはエラーのログ処理を行うための `Monolog <https://github.com/Seldaek/monolog>`_
     プロバイダーも付いてきます。
     詳しくは *Providers* の章を参照してください。
 
 .. tip::
 
     Silex には、デフォルトのエラーハンドラーが付いており、 **debug** を true にすることで、スタックトレースを含む詳細なエラーメッセージを表示します。 false の際には、シンプルなエラーメッセージを表示します。
-    ``error()`` メソッドを通して登録したエラーハンドラーは常に優先されますが、デバッグモードが有効の際に表示する便利なエラーも次のようにすれば大丈夫です::
+    ``error()`` メソッドを通して登録したエラーハンドラーは常に優先されますが、デバッグモードが有効の際に表示する便利なエラーも次のようにすれば大丈夫です。 ::
 
         use Symfony\Component\HttpFoundation\Response;
 
@@ -468,12 +533,12 @@ after フィルターはリクエストとレスポンスにアクセスする�
                 return;
             }
 
-            // logic to handle the error and return a Response
+            // エラーのハンドリングと、レスポンスを返す処理
         });
 
-より早い段階でリクエストを破棄するために ``abort`` を使うときにもエラーハンドラーは呼ばれます::
+より早い段階でリクエストを破棄するために ``abort`` を使うときにもエラーハンドラーは呼ばれます。 ::
 
-    $app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
+    $app->get('/blog/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
             $app->abort(404, "Post $id does not exist.");
         }
@@ -484,23 +549,58 @@ after フィルターはリクエストとレスポンスにアクセスする�
 リダイレクト (Redirects)
 ---------------------------
 
-リダイレクト処理のレスポンスを返すことでどんなページにもリダイレクトすることができます。このリダイレクト処理のレスポンスは
-``redirect`` メソッドで作成することができます::
+リダイレクトレスポンスを返すことでどんなページにもリダイレクトすることができます。このリダイレクト処理のレスポンスは ``redirect`` メソッドで作成することができます。 ::
 
-    use Silex\Application;
-
-    $app->get('/', function (Silex\Application $app) {
+    $app->get('/', function () use ($app) {
         return $app->redirect('/hello');
     });
 
 この例では ``/`` から ``/hello`` にリダイレクトします。
 
-ストリーミング
--------------------
+フォワード (Forwards)
+---------------------------
 
-ストリーミングのレスポンスを作成することができます。 これは送信されるデータをバッファリングできないときに重要です。
+(リダイレクト時に発生するような)ブラウザの往復無しで、他のコントローラにレンダリングを移譲したい場合、内部的なサブリクエストを用いることが出来ます。 ::
 
-.. code-block:: php
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+    $app->get('/', function () use ($app) {
+        // /helloへのリダイレクト
+        $subRequest = Request::create('/hello', 'GET');
+
+        return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+    });
+
+.. tip::
+    ``UrlGeneratorProvider`` を使っている場合、URIを生成することが出来ます。 ::
+
+        $request = Request::create($app['url_generator']->generate('hello'), 'GET');
+
+他にも心に留めておく必要があることはいくつかあります。ほとんどの場合、現在のマスタリクエストに対し、複数のサブリクエストを発行したいでしょう。例えば、クッキー、サーバ情報、セッションなどです。それらについては :doc:`サブリクエストの作り方 <cookbook/sub_requests>` を読んでください。
+
+JSON
+----
+
+JSONデータを返したければ、 ``json`` ヘルパーメソッドを使うことが出来ます。
+ヘルパーメソッドに対し、単にデータ、ステータスコード、ヘッダを渡せばレスポンスのためのJSONが生成されます。 ::
+
+    $app->get('/users/{id}', function ($id) use ($app) {
+        $user = getUser($id);
+
+        if (!$user) {
+            $error = array('message' => 'The user was not found.');
+            return $app->json($error, 404);
+        }
+
+        return $app->json($user);
+    });
+
+
+ストリーミング (Streaming)
+-------------------------------
+
+ストリーミングのレスポンスを作成することができます。 これは送信されるデータをバッファリングできないときに重要です。 ::
 
     $app->get('/images/{file}', function ($file) use ($app) {
         if (!file_exists(__DIR__.'/images/'.$file)) {
@@ -514,9 +614,7 @@ after フィルターはリクエストとレスポンスにアクセスする�
         return $app->stream($stream, 200, array('Content-Type' => 'image/png'));
     });
 
-大きいかたまりで送信したい場合は、 ``ob_fluch`` と ``flush`` を呼ばなければなりません。
-
-.. code-block:: php
+大きいかたまり(チャンク)で送信したい場合は、 ``ob_fluch`` と ``flush`` を全てのチャンクの後で呼んでください。 ::
 
     $stream = function () {
         $fh = fopen('http://www.example.com/', 'rb');
@@ -528,19 +626,85 @@ after フィルターはリクエストとレスポンスにアクセスする�
         fclose($fh);
     };
 
-セキュリティ
---------------
+ファイル送信 (Sending a file)
+------------------------------------
+
+もしファイルを返したければ、 ``sendFile`` というヘルパーメソッドが使えます。これによって、公に利用可能でないかもしれないファイルを返すことが容易になります。単にファイルパスとステータスコードとヘッダとコンテンツの位置をヘルパーメソッドに渡すと、 ``BinaryFileResponse`` に基づいたレスポンスが生成されます。 ::
+
+    $app->get('/files/{path}', function ($path) use ($app) {
+        if (!file_exists('/base/path/' . $path)) {
+            $app->abort(404);
+        }
+
+        return $app->sendFile('/base/path/' . $path);
+    });
+
+値を返す前に、レスポンスを更にカスタマイズするには、　`Symfony\Component\HttpFoundation\BinaryFileResponse
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/BinaryFileResponse.html>`_ のAPIドキュメントを調べてみてください。 ::
+
+    return $app
+        ->sendFile('/base/path/' . $path)
+        ->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'pic.jpg')
+    ;
+
+.. note::
+
+    この機能を使用するためにはHttpFoundation 2.2以上が必要です。
+
+トレイト (Traits)
+------------------------
+
+Silexではショートカットメソッドを定義するトレイトを使用可能です。
+
+.. caution::
+
+    この機能を使用するためには、PHP 5.4以上が必要です。
+
+ほとんど全ての標準で組み込まれているサービスプロバイダーは、いくつかの対応するトレイトを持っています。それらを使うためには、使いたいトレイトを含んだ独自のアプリケーションクラスを定義してください。 ::
+
+    use Silex\Application;
+
+    class MyApplication extends Application
+    {
+        use Application\TwigTrait;
+        use Application\SecurityTrait;
+        use Application\FormTrait;
+        use Application\UrlGeneratorTrait;
+        use Application\SwiftmailerTrait;
+        use Application\MonologTrait;
+        use Application\TranslationTrait;
+    }
+
+ルーティングクラスを定義し、対応するトレイトを使用することも可能です。 ::
+
+    use Silex\Route;
+
+    class MyRoute extends Route
+    {
+        use Route\SecurityTrait;
+    }
+
+新しく定義したルーティングクラスを使うためには ``$app['route_class']``
+をオーバーライドしてください。 ::
+
+    $app['route_class'] = 'MyRoute';
+
+追加されるメソッドについて学ぶには、それぞれのプロバイダについての章を読んでください。
+
+
+セキュリティ (Security)
+-------------------------------
 
 アプリケーションを攻撃から防御する方法を確認しておきましょう。
 
 エスケープ処理 (Escaping)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ルーティング変数や、リクエストから受け取るされる GET/POST の変数など、ユーザーが入力した値は全て、正しくエスケープ処理を行う必要があります。
+ルーティング変数や、リクエストから受け取るされる GET/POST の変数など、ユーザーが入力した値を出力するときはいつでも、正しくエスケープ処理を行う必要があります。
 そうすることでクロスサイトスクリプティング(XSS)を防ぐことができます。
 
 * **HTML のエスケープ処理**: HTML のエスケープ処理のために PHP は ``htmlspecialchars`` 関数 を用意してくれています。
-  Silex ではこの関数へのショートカットとして ``escape`` メソッドを次のように使うことができます::
+  Silex ではこの関数へのショートカットとして ``escape`` メソッドを次のように使うことができます。 ::
 
       $app->get('/name', function (Silex\Application $app) {
           $name = $app['request']->get('name');
@@ -549,120 +713,11 @@ after フィルターはリクエストとレスポンスにアクセスする�
 
   もし Twig テンプレートを使うのであれば、 Twig が用意してくれているエスケープのための記述を使ったり、自動エスケープ機能を使うべきです。
 
-* **JSON のエスケープ処理**: もし JSON フォーマットのデータをアプリケーションをで提供するなら、 PHP の ``json_encode`` 関数を使います::
-
-      use Symfony\Component\HttpFoundation\Response;
+* **JSON のエスケープ処理**: もし JSON フォーマットのデータをアプリケーションをで提供するなら、 Silexの ``json`` 関数を使うべきです。 ::
 
       $app->get('/name.json', function (Silex\Application $app) {
           $name = $app['request']->get('name');
-          return new Response(
-              json_encode(array('name' => $name)),
-              200,
-              array('Content-Type' => 'application/json')
-          );
+          return $app->json(array('name' => $name));
       });
 
-コンソール
-----------
-
-Silex には Silex を最新バージョンにアップデートするための軽量なコンソールが用意されています。
-
-あなたが利用している Silex のバージョンを知るためには、コマンドラインから ``silex.phar`` を呼び出して、引数に ``version`` を指定してください:
-
-.. code-block:: text
-
-    $ php silex.phar version
-    Silex version 0a243d3 2011-04-17 14:49:31 +0200
-
-最新バージョンかどうかを確認するためには、 ``check`` コマンドを実行します:
-
-.. code-block:: text
-
-    $ php silex.phar check
-
-``silex.phar`` を最新バージョンに更新するためには、 ``update`` コマンドを実行します:
-
-.. code-block::text
-
-    $ php silex.phar update
-
-これで自動的に新しい ``silex.phar`` を ``silex.sensiolabs.org`` からダウンロードして既存のものと置き換えてくれます。
-
-Pitfalls
---------
-
-Silex が思ったように動かないときがあるかもしれません。そういったときのためにここによくある動かない原因についてまとめておきましょう。
-
-PHP の設定
-~~~~~~~~~~~~~~~~~
-
-PHP のバージョンによっては Phar の設定が制限されている場合があります。
-その場合は、次のように設定することで解決するかもしれません。
-
-.. code-block:: ini
-
-    detect_unicode = Off
-    phar.readonly = Off
-    phar.require_hash = Off
-
-もし Suhosin の PHP を使っている場合は、次の設定も行っておく必要があります:
-
-.. code-block:: ini
-
-    suhosin.executor.include.whitelist = phar
-
-.. note::
-
-    Ubuntu の Suhosin が入った PHP を使う場合はこの変更が必要です。 
-
-Phar-Stub のバグ
-~~~~~~~~~~~~~~~~~~~~~
-
-インストールされている PHP のバージョンによっては Phar をインクルードしようとすると ``PharException`` が発生する場合があります。
-そして ``Silex\Application`` が見つからないとも言われることもあります。
-この場合は回避策として次のように書くことです::
-
-    require_once 'phar://'.__DIR__.'/silex.phar/autoload.php';
-
-この問題の的確な原因はまだ断定されていません。
-
-ioncube ローダーのバグ
-~~~~~~~~~~~~~~~~~~~~~~~~
-iconcube ローダーは、エンコードされた PHP ファイルをデコードすることができるエクステンションです。
-残念なことに(4.0.9 より前の)古いバージョンでは phar アーカイブでは動作しません。そのため 4.0.9 より新しいバージョンにアップグレードするか php.ini ファイルでコメントアウトするか削除し無効にしなければなりません:
-
-.. code-block:: ini
-
-    zend_extension = /usr/lib/php5/20090626+lfs/ioncube_loader_lin_5.3.so
-
-
-
-IIS での設定
------------------
-
-もし Windows から IIS を利用している場合は、次の簡単な ``web.config`` ファイルを使うことができます:
-
-.. code-block:: xml
-
-    <?xml version="1.0"?>
-    <configuration>
-        <system.webServer>
-            <defaultDocument>
-                <files>
-                    <clear />
-                    <add value="index.php" />
-                </files>
-            </defaultDocument>
-            <rewrite>
-                <rules>
-                    <rule name="Silex Front Controller" stopProcessing="true">
-                        <match url="^(.*)$" ignoreCase="false" />
-                        <conditions logicalGrouping="MatchAll">
-                            <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
-                        </conditions>
-                        <action type="Rewrite" url="index.php" appendQueryString="true" />
-                    </rule>
-                </rules>
-            </rewrite>
-        </system.webServer>
-    </configuration>
+.. _download: http://silex.sensiolabs.org/download
