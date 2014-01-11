@@ -11,7 +11,7 @@ TwigServiceProvider
 
 * **twig.templates** (オプション): テンプレートの名前とテンプレートのコンテンツの連想配列です。 テンプレートをインラインで定義したいときに利用できます。
 
-* **twig.options** (オプション): twig オプションの連想配列です。詳細な設定内容は `twig のドキュメント <http://twig.sensiolabs.org/doc/api.html#environment-options>`_ を参照してください。
+* **twig.options** (オプション): twig オプションの連想配列です。詳細な設定内容は `twig の公式ドキュメント <http://twig.sensiolabs.org/doc/api.html#environment-options>`_ を参照してください。
 
 * **twig.form.templates** (オプション): フォームのレンダリングに使うテンプレートの配列  ( ``FormServiceProvider`` が有効なときのみ、使用可能です)。
 

@@ -50,18 +50,27 @@ Silex は標準で HTTP キャッシュヘッダーを返すように設定す�
 
 .. tip::
 
-    Silexに$ipというアドレスからのリバースプロクシからの ``X-Forwarded-For*`` ヘッダを信用させたい場合、以下のようにアプリケーションを起動してください。 ::
+    Silexに$ipというアドレスからのリバースプロクシからの ``X-Forwarded-For*`` ヘッダを信用させたい場合、 `Trusting Proxies <http://symfony.com/doc/current/components/http_foundation/trusting_proxies.html>`_ に記述されているような形式でホワイトリストを作成する必要があります。
 
+        Varnishを同一マシン上で起動させている場合の例
+        
+    .. code-block:: php
+     
         use Symfony\Component\HttpFoundation\Request;
-
-        Request::setTrustedProxies(array($ip));
+        
+        Request::setTrustedProxies(array('127.0.0.1', '::1'));
         $app->run();
+ 
+このプロバイダーは ``http_cache`` サービスを用いることで、Symfony2リバースプロクシをSilexアプリケーション上で使用可能にします。Symfony2リバースプロクシは他のプロクシと同じように動作するのでホワイトリストにしたいと思うでしょう。
 
-このプロバイダー使い Silex のアプリケーションはリクエストを操作するために `http_cache` サービスを追加することで Symfony2 のリバースプロクシーを使うことができるようになります。 ::
-
+.. code-block:: php
+ 
+    use Symfony\Component\HttpFoundation\Request;
+     
+    Request::setTrustedProxies(array('127.0.0.1'));
     $app['http_cache']->run();
-
-このプロバイダー ESI もサポートしています。 ::
+ 
+このプロバイダーはESIもサポートしています。::
 
     $app->get('/', function() {
         $response = new Response(<<<EOF
@@ -91,7 +100,7 @@ Silex は標準で HTTP キャッシュヘッダーを返すように設定す�
 
     $app['http_cache']->run();
 
-ESIをを使わない場合、パフォーマンスを少し上げるために無効にすることが出来ます。 ::
+ESIを使わない場合、パフォーマンスを少し上げるために無効にすることが出来ます。 ::
 
     $app->register(new Silex\Provider\HttpCacheServiceProvider(), array(
        'http_cache.cache_dir' => __DIR__.'/cache/',
