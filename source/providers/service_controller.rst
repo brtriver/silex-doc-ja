@@ -101,7 +101,7 @@ Silexのアプリケーションが大きくると、コントローラのグル
         }
     }
 
-最後に、あなたのコントローラをアプリケーション中のサービスとしてルーティング付きで定義してください。ルーティング定義の際の文法は ``サービス名：:メソッド名`` です。
+最後に、あなたのコントローラをアプリケーション中のサービスとしてルーティング付きで定義してください。ルーティング定義の際の文法は ``サービス名：メソッド名`` です。
 
 .. code-block:: php
 
@@ -109,4 +109,4 @@ Silexのアプリケーションが大きくると、コントローラのグル
         return new PostController($app['posts.repository']);
     });
 
-    $app->get('/posts.json', "posts.controller::indexJsonAction");
+    $app->get('/posts.json', "posts.controller:indexJsonAction");
