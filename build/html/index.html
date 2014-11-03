@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -29,11 +29,12 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="#" />
-    <link rel="next" title="イントロダクション" href="intro.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="#" />
+    <link rel="next" title="イントロダクション (Introduction)" href="intro.html" /> 
   </head>
   <body>
 
@@ -61,42 +62,32 @@
             
   <div class="section" id="silex">
 <h1>Silex ドキュメント (日本語)<a class="headerlink" href="#silex" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="silex-symfony2-php">
-<h2>Silex は Symfony2 コンポーネントベースの PHP のマイクロフレームワークです。<a class="headerlink" href="#silex-symfony2-php" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">イントロダクション</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">使用方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">イントロダクション (Introduction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">使用方法 (Usage)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">ミドルウェア (Middlewares)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organizing_controllers.html">コントローラーの組織化 (Organizing Controllers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">サービス</a></li>
 <li class="toctree-l1"><a class="reference internal" href="providers.html">プロバイダー (Providers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html">テスト</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">テスト (Testing)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">クックブック</a></li>
 <li class="toctree-l1"><a class="reference internal" href="internals.html">内部の仕組み</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">プロジェクトへの貢献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#id4">ターゲットブランチ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html#id5">ドキュメントの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="providers/index.html">組み込みのプロバイダー</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web_servers.html">ウェブサーバーの設定</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">チェンジログ</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="id1">
-<h2>標準組み込み プロバイダ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="providers/doctrine.html">DoctrineServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/monolog.html">MonologServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/session.html">SessionServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/translation.html">TranslationServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/swiftmailer.html">SwiftmailerServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/symfony_bridges.html">SymfonyBridgesServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/twig.html">TwigServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/url_generator.html">UrlGeneratorServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/validator.html">ValidatorServiceProvider</a></li>
-<li class="toctree-l1"><a class="reference internal" href="providers/http_cache.html">HttpCacheServiceProvider</a></li>
-</ul>
-</div>
-</div>
+<p>commit: cd044b6f26dd7c0b7b535664d3557ba651e0fe3f
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/index.rst">https://github.com/silexphp/Silex/blob/master/doc/index.rst</a></p>
 </div>
 
 
 <div id="page_prev_next">
-<a class="next" href="intro.html">イントロダクション ></a>
+<a class="next" href="intro.html">イントロダクション (Introduction) ></a>
 </div>
 
 <div class="common_content_footer">
@@ -115,22 +106,9 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3>このページのコンテンツ</h3>
-  <ul>
-<li><a class="reference internal" href="#">Silex ドキュメント (日本語)</a><ul>
-<li><a class="reference internal" href="#silex-symfony2-php">Silex は Symfony2 コンポーネントベースの PHP のマイクロフレームワークです。</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#id1">標準組み込み プロバイダ</a><ul>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="intro.html"
-                        title="next chapter">イントロダクション</a></p>
+                        title="next chapter">イントロダクション (Introduction)</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"

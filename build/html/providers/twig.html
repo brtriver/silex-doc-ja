@@ -29,12 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
     <link rel="next" title="UrlGeneratorServiceProvider" href="url_generator.html" />
-    <link rel="prev" title="SymfonyBridgesServiceProvider" href="symfony_bridges.html" /> 
+    <link rel="prev" title="TranslationServiceProvider" href="translation.html" /> 
   </head>
   <body>
 
@@ -66,37 +68,57 @@
 <div class="section" id="id1">
 <h2>設定パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>twig.path</strong> (オプション): twig のテンプレートファイルが入っているディレクトリへのパスです(パスの配列でなければなりません)。</li>
-<li><strong>twig.templates</strong> (optional): テンプレートの名前とテンプレートのコンテンツの連想配列です。 テンプレートをインラインで定義したいときに利用できます。</li>
-<li><strong>twig.options</strong> (オプション): twig オプションの連想配列です。詳細な設定内容は twig のドキュメントを参照してください。</li>
-<li><strong>twig.class_path</strong> (オプション): twig のライブラリが入っているディレクトリへのパスです。</li>
-</ul>
-</div>
-<div class="section" id="id2">
-<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><strong>twig</strong>: <tt class="docutils literal"><span class="pre">Twig_Environment</span></tt> のインスタンスです。twigと連携するのに使います。</li>
-<li><strong>twig.configure</strong>: Twig environment を引数に取る <tt class="xref doc docutils literal"><span class="pre">保護されたクロージャ</span></tt> です。カスタムグローバル変数を追加するのに使います。</li>
-<li><strong>twig.loader</strong>: <tt class="docutils literal"><span class="pre">twig.path</span></tt> と <tt class="docutils literal"><span class="pre">twig.templates</span></tt> の設定を利用したTwigテンプレートのローダー(loader)です。ローダー(loader)を完全に置き換えることもできます。</li>
+<li><strong>twig.path</strong> (オプション): twig のテンプレートファイルが入っているディレクトリへのパスです(パスの配列を指定することもできます)。</li>
+<li><strong>twig.templates</strong> (オプション): テンプレートの名前とテンプレートのコンテンツの連想配列です。 テンプレートをインラインで定義したいときに利用できます。</li>
+<li><strong>twig.options</strong> (オプション): twig オプションの連想配列です。詳細な設定内容は <a class="reference external" href="http://twig.sensiolabs.org/doc/api.html#environment-options">twig の公式ドキュメント</a> を参照してください。</li>
+<li><strong>twig.form.templates</strong> (オプション): フォームのレンダリングに使うテンプレートの配列  ( <code class="docutils literal"><span class="pre">FormServiceProvider</span></code> が有効なときのみ、使用可能です)。</li>
 </ul>
 </div>
 <div class="section" id="id3">
-<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p><em>Twig</em> のライブラリのコピーが <tt class="docutils literal"><span class="pre">vendor/twig</span></tt> にある場合の書き方です:</p>
+<h2>サービス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>twig</strong>: <code class="docutils literal"><span class="pre">Twig_Environment</span></code> のインスタンスです。twigと連携するのに使います。</li>
+<li><strong>twig.loader</strong>: <code class="docutils literal"><span class="pre">twig.path</span></code> と <code class="docutils literal"><span class="pre">twig.templates</span></code> の設定を利用したTwigテンプレートのローダー(loader)です。ローダー(loader)を完全に置き換えることもできます。</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TwigServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;twig.path&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;twig.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/twig/lib&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;twig.path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/views&#39;</span><span class="p">,</span>
 <span class="p">));</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Twig は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> には含まれていません。開発者は自分で Twig ライブラリのコピーをアプリケーションに組み込む必要があります。</p>
+<p>Twigは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;twig/twig&quot;: &quot;&gt;=1.8,&lt;2.0-dev&quot;
+}
+</pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>Twig extension は <tt class="docutils literal"><span class="pre">twig</span></tt> サービスを提供します:</p>
+</div>
+<div class="section" id="symfony2">
+<h2>Symfony2コンポーネントとの連携<a class="headerlink" href="#symfony2" title="Permalink to this headline">¶</a></h2>
+<p>SymfonyはTwig bridgeを提供します。これによって、いくつかのSymfony2コンポーネントとTwigの連携が可能になります。依存関係を <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに記述してください。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/twig-bridge&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>こうすることで <code class="docutils literal"><span class="pre">TwigServiceProvider</span></code> は追加で以下の機能を提供するようになります。</p>
+<ul class="simple">
+<li><strong>UrlGeneratorServiceProvider</strong>: <code class="docutils literal"><span class="pre">UrlGeneratorServiceProvider</span></code> を使っているのなら、 <code class="docutils literal"><span class="pre">path()</span></code> や <code class="docutils literal"><span class="pre">url()</span></code> 関数にアクセスできるようになります。詳しくは <a class="reference external" href="http://symfony.com/doc/current/book/routing.html#generating-urls-from-a-template">Symfony2 Routing ドキュメント</a> を読んでください。</li>
+<li><strong>TranslationServiceProvider</strong>: <code class="docutils literal"><span class="pre">TranslationServiceProvider</span></code> を使っているのなら、翻訳のために Twigテンプレートの中で <code class="docutils literal"><span class="pre">trans()</span></code> と
+<code class="docutils literal"><span class="pre">transchoice()</span></code> 関数が使えるようになります。詳しくは <a class="reference external" href="http://symfony.com/doc/current/book/translation.html#twig-templates">Symfony2 Translation ドキュメント</a> を読んでください。</li>
+<li><strong>FormServiceProvider</strong>: <code class="docutils literal"><span class="pre">FormServiceProvider</span></code> を使っているのなら、テンプレート中のフォームに対するヘルパーセットが使えるようになります。詳しくは <a class="reference external" href="http://symfony.com/doc/current/reference/forms/twig_reference.html">Symfony2 Forms リファレンス</a> を読んでください。</li>
+<li><strong>SecurityServiceProvider</strong>: <code class="docutils literal"><span class="pre">SecurityServiceProvider</span></code> を使っているのなら、 <code class="docutils literal"><span class="pre">is_granted()</span></code> 関数がテンプレート中で使えるようになります。詳しくは <a class="reference external" href="http://symfony.com/doc/current/book/security.html#access-control-in-templates">Symfony2 Security ドキュメント</a> を読んでください。</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>使い方<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>Twig extension は <code class="docutils literal"><span class="pre">twig</span></code> サービスを提供します。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/hello/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;hello.twig&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
@@ -104,32 +126,67 @@
 <span class="p">});</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">views/hello.twig</span></tt> を使って描画します。</p>
-<div class="admonition tip">
-<p class="first admonition-title">Tip</p>
-<p class="last">TwigServiceProviderは <tt class="docutils literal"><span class="pre">app</span></tt> というグローバルに登録されます。
-そのため、 View からはどこからでもサービスにアクセスすることができます。
-たとえば、 <tt class="docutils literal"><span class="pre">$app['request']-&gt;getHost()</span></tt> にアクセスするためには、テンプレートは次のように書くだけです:</p>
-</div>
+<p><code class="docutils literal"><span class="pre">views/hello.twig</span></code> を使って描画します。</p>
+<p>どのTwigテンプレートでも、 <code class="docutils literal"><span class="pre">app</span></code> という変数がアプリケーションオブジェクトを参照します。
+そのため、 View からはどんなサービスにもアクセスすることができます。
+例えば、 <code class="docutils literal"><span class="pre">$app['request']-&gt;getHost()</span></code> にアクセスするためには、テンプレートに次のように書くだけです。</p>
 <div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.request.host</span> <span class="cp">}}</span><span class="x"></span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">render</span></tt> を使うことでテンプレートから異なるコントローラーの結果をレンダリングすることもできます:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="o">..</span> <span class="nx">code</span><span class="o">-</span><span class="nx">block</span><span class="o">::</span> <span class="na">jinja</span>
+<p><code class="docutils literal"><span class="pre">render</span></code> を使うことでテンプレートから異なるコントローラーの結果をレンダリングすることもできます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="nv">app.request.baseUrl</span> <span class="o">~</span> <span class="s1">&#39;/sidebar&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="c">{# UrlGeneratorServiceProviderとSymfonyBridgesServiceProviderを使っていれば次のようにも書けます #}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="nv">url</span><span class="o">(</span><span class="s1">&#39;sidebar&#39;</span><span class="o">))</span> <span class="cp">}}</span><span class="x"></span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>{{ render(&#8216;/sidebar&#8217;) }}</p>
-<p>{# or if you are also using UrlGeneratorServiceProvider with the SymfonyBridgesServiceProvider #}
-{{ render(path(&#8216;sidebar&#8217;)) }}</p>
-</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ドキュメントルートのサブディレクトリにデプロイされたときでも正常に動作するように
+<code class="docutils literal"><span class="pre">app.request.baseUrl</span></code> をrender関数を呼ぶ際に使用すべきです。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>トレイト<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\TwigTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>render</strong>: ビューを与えられたパラメータと共にレンダリングし、レスポンスオブジェクトを返します。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">]);</span>
+
+<span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">();</span>
+<span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">],</span> <span class="nv">$response</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-php"><div class="highlight"><pre><span class="c1">// stream a view</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\StreamedResponse</span><span class="p">;</span>
+
+<span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.html&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Fabien&#39;</span><span class="p">],</span> <span class="k">new</span> <span class="nx">StreamedResponse</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>カスタマイズ<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>使用する前であれば、 <code class="docutils literal"><span class="pre">twig</span></code> サービスを拡張することでTwigの環境をカスタマイズできます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addGlobal</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">);</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">\Twig_Filter_Function</span><span class="p">(</span><span class="s1">&#39;levenshtein&#39;</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
 <p>より詳しい情報については、 <a class="reference external" href="http://twig.sensiolabs.org">Twig ドキュメント</a> を参照してください.</p>
+<p>commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/twig.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/twig.rst</a></p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="symfony_bridges.html">< SymfonyBridgesServiceProvider</a>
+<a class="prev" href="translation.html">< TranslationServiceProvider</a>
 <a class="next" href="url_generator.html">UrlGeneratorServiceProvider ></a>
 </div>
 
@@ -153,16 +210,19 @@
   <ul>
 <li><a class="reference internal" href="#">TwigServiceProvider</a><ul>
 <li><a class="reference internal" href="#id1">設定パラメータ</a></li>
-<li><a class="reference internal" href="#id2">サービス</a></li>
-<li><a class="reference internal" href="#id3">登録</a></li>
-<li><a class="reference internal" href="#id4">使い方</a></li>
+<li><a class="reference internal" href="#id3">サービス</a></li>
+<li><a class="reference internal" href="#id4">登録</a></li>
+<li><a class="reference internal" href="#symfony2">Symfony2コンポーネントとの連携</a></li>
+<li><a class="reference internal" href="#id5">使い方</a></li>
+<li><a class="reference internal" href="#id6">トレイト</a></li>
+<li><a class="reference internal" href="#id7">カスタマイズ</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="symfony_bridges.html"
-                        title="previous chapter">SymfonyBridgesServiceProvider</a></p>
+  <p class="topless"><a href="translation.html"
+                        title="previous chapter">TranslationServiceProvider</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="url_generator.html"
                         title="next chapter">UrlGeneratorServiceProvider</a></p>

@@ -29,11 +29,13 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="next" title="TranslationServiceProvider" href="translation.html" />
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="SwiftmailerServiceProvider" href="swiftmailer.html" />
     <link rel="prev" title="MonologServiceProvider" href="monolog.html" /> 
   </head>
   <body>
@@ -62,42 +64,49 @@
             
   <div class="section" id="sessionserviceprovider">
 <h1>SessionServiceProvider<a class="headerlink" href="#sessionserviceprovider" title="Permalink to this headline">¶</a></h1>
-<p><em>SessionServiceProvider</em> を使うことで永続的にリクエスト間でデータを保存するためのサービスを提供することができます。</p>
+<p><em>SessionServiceProvider</em> を使うことで永続的にリクエスト間でデータを保存するためのサービスを使用することができるようになります。</p>
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>session.storage.save_path</strong> (オプション):  <tt class="docutils literal"><span class="pre">NativeFileSessionStorage</span></tt> のパスです。 標準は <a href="#id2"><span class="problematic" id="id3">``</span></a>sys_get_temp_dir()``　の値です。</p>
-<p>標準の <tt class="docutils literal"><span class="pre">NativeFileSessionStorage</span></tt> の場合、使用可能なオプションは以下の通りです:</p>
+<li><p class="first"><strong>session.storage.save_path</strong> (オプション): <code class="docutils literal"><span class="pre">NativeFileSessionStorage</span></code> へのパスです。 標準は <code class="docutils literal"><span class="pre">sys_get_temp_dir()</span></code> の値です。</p>
+</li>
+<li><p class="first"><strong>session.storage.options</strong>: <code class="docutils literal"><span class="pre">session.storage</span></code> サービスのコンストラクタに渡されたオプションの配列です。</p>
+<p>標準の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html">NativeFileSessionStorage</a> の場合の便利なオプションは以下の通りです。</p>
 <ul class="simple">
 <li><strong>name</strong>: Cookie の名前 (標準は _SESS)</li>
 <li><strong>id</strong>: セッション ID (標準は null)</li>
-<li><strong>lifetime</strong>: Cookie のライフタイム</li>
-<li><strong>path</strong>: Cookie のパス</li>
-<li><strong>domain</strong>: Cookie のドメイン</li>
-<li><strong>secure</strong>: Cookie のセキュア設定 (HTTPS)</li>
-<li><strong>httponly</strong>: Cookie が httpオンリーかどうかの設定</li>
+<li><strong>cookie_lifetime</strong>: Cookie のライフタイム</li>
+<li><strong>cookie_path</strong>: Cookie のパス</li>
+<li><strong>cookie_domain</strong>: Cookie のドメイン</li>
+<li><strong>cookie_secure</strong>: Cookie のセキュア設定 (HTTPS)</li>
+<li><strong>cookie_httponly</strong>: Cookie が httpのみかどうかの設定</li>
 </ul>
-<p>しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
-これを上書きするためには、 <tt class="docutils literal"><span class="pre">lifetime</span></tt> オプションを設定します。</p>
+<p>しかしながら、これらの全てはオプションです。標準のセッションのライフタイムは 1800 秒 ( 30 分) です。
+これを上書きするためには、 <code class="docutils literal"><span class="pre">lifetime</span></code> オプションを設定します。</p>
+<p>使用可能な全てのオプションについては <a class="reference external" href="http://php.net/session.configuration">PHP</a> の公式ドキュメントを見てください。</p>
+</li>
+<li><p class="first"><strong>session.test</strong>: セッションをシミュレートするかどうか(機能テストを書く際に便利です)。</p>
 </li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>サービス<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>session</strong>: Symfony2　の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session.html">Session</a> のインスタンス。</li>
-<li><strong>session.storage</strong>: セッションデータの永続化のために利用されるサービス。 標準は <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeFileSessionStorage.html">NativeFileSessionStorage</a>.</li>
+<li><strong>session</strong>: Symfony2　の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Session.html">Session</a> のインスタンス。</li>
+<li><strong>session.storage</strong>: セッションデータの永続化のために利用されるサービス。</li>
+<li><strong>session.storage.handler</strong>: データアクセスのために <code class="docutils literal"><span class="pre">session.storage</span></code> によって使用されるサービス。 標準では <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NativeFileSessionHandler.html">NativeFileSessionHandler</a>
+のストレージハンドラーに設定されています。</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h2>登録<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SessionServiceProvider</span><span class="p">());</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>使い方<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p>セッションのプロバイダーは <tt class="docutils literal"><span class="pre">session</span></tt> サービスを提供します。以下にユーザーを認証しそのユーザーのためにセッションを作成するサンプルです:</p>
+<div class="section" id="id4">
+<h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>セッションのプロバイダーは <code class="docutils literal"><span class="pre">session</span></code> サービスを提供します。以下はユーザーを認証しそのユーザーのためにセッションを作成するサンプルです。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
@@ -125,12 +134,22 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="id5">
+<h2>カスタムセッションの設定<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>もし、あなたのシステムがカスタムセッション設定を使用している場合（PHPエクステンションのredisハンドラーのようなもの）、 <code class="docutils literal"><span class="pre">session.storage.handler</span></code> をnullにセットすることで、NativeFileSessionHandler を無効にする必要があります。
+また <code class="docutils literal"><span class="pre">session.save_path</span></code> の設定を行う必要があります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.handler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>commit: 81a08269268e5e2adb250c4a801f021face5ab4a
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/session.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/session.rst</a></p>
+</div>
 </div>
 
 
 <div id="page_prev_next">
 <a class="prev" href="monolog.html">< MonologServiceProvider</a>
-<a class="next" href="translation.html">TranslationServiceProvider ></a>
+<a class="next" href="swiftmailer.html">SwiftmailerServiceProvider ></a>
 </div>
 
 <div class="common_content_footer">
@@ -153,9 +172,10 @@
   <ul>
 <li><a class="reference internal" href="#">SessionServiceProvider</a><ul>
 <li><a class="reference internal" href="#id1">パラメーター</a></li>
-<li><a class="reference internal" href="#id4">サービス</a></li>
-<li><a class="reference internal" href="#id5">登録</a></li>
-<li><a class="reference internal" href="#id6">使い方</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使い方</a></li>
+<li><a class="reference internal" href="#id5">カスタムセッションの設定</a></li>
 </ul>
 </li>
 </ul>
@@ -164,8 +184,8 @@
   <p class="topless"><a href="monolog.html"
                         title="previous chapter">MonologServiceProvider</a></p>
   <h4>次のドキュメント</h4>
-  <p class="topless"><a href="translation.html"
-                        title="next chapter">TranslationServiceProvider</a></p>
+  <p class="topless"><a href="swiftmailer.html"
+                        title="next chapter">SwiftmailerServiceProvider</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/providers/session.txt"

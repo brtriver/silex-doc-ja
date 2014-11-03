@@ -29,10 +29,12 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
     <link rel="next" title="SessionServiceProvider" href="session.html" />
     <link rel="prev" title="DoctrineServiceProvider" href="doctrine.html" /> 
   </head>
@@ -63,19 +65,19 @@
   <div class="section" id="monologserviceprovider">
 <h1>MonologServiceProvider<a class="headerlink" href="#monologserviceprovider" title="Permalink to this headline">¶</a></h1>
 <p><em>MonologServiceProvider</em> を使うことで Jordi Boggiano さんの
-<a class="reference external" href="https://github.com/Seldaek/monolog">Monolog</a> ライブラリを通して標準のログ機能を提供します。</p>
-<p>リクエストやエラーを記録しアプリケーションにデバッグを記録するようになります。
-そのため <tt class="docutils literal"><span class="pre">var_dump</span></tt> をもう使う必要はなくなります。
-これからはさらに一歩進んで <tt class="docutils literal"><span class="pre">tail</span> <span class="pre">-f</span></tt> コマンドを使うことができるようになります。</p>
+<a class="reference external" href="https://github.com/Seldaek/monolog">Monolog</a> ライブラリを通して標準のログ機能が使用できるようになります。</p>
+<p>Monologを使うことで、リクエストやエラーを記録することができるようになります。
+これによってプロダクション環境のアプリケーションのデバッグや監視を行えるようになります。</p>
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>monolog.logfile</strong>: ログファイルの場所。</li>
-<li><strong>monolog.class_path</strong> (オプション): Monolog ライブラリを設置したパス。</li>
-<li><strong>monolog.level</strong> (オプション): <tt class="docutils literal"><span class="pre">DEBUG</span></tt> に標準で記録するログのレベル。
-<tt class="docutils literal"><span class="pre">Logger::DEBUG</span></tt>, <tt class="docutils literal"><span class="pre">Logger::INFO</span></tt>, <tt class="docutils literal"><span class="pre">Logger::WARNING</span></tt>, <tt class="docutils literal"><span class="pre">Logger::ERROR</span></tt> のどれかを指定します。
-<tt class="docutils literal"><span class="pre">DEBUG</span></tt> はどんなものでも記録します。 <tt class="docutils literal"><span class="pre">INFO</span></tt> は <tt class="docutils literal"><span class="pre">DEBUG</span></tt> 意外のものを記録します。</li>
-<li><strong>monolog.name</strong> (オプション): Monolog チャンネルの名前。　標準は <tt class="docutils literal"><span class="pre">myapp</span></tt> 。</li>
+<li><strong>monolog.logfile</strong>: ログが書き込まれるファイルの場所。</li>
+<li><strong>monolog.level</strong> (オプション): <code class="docutils literal"><span class="pre">DEBUG</span></code> に標準で記録するログのレベル。
+<code class="docutils literal"><span class="pre">Logger::DEBUG</span></code>, <code class="docutils literal"><span class="pre">Logger::INFO</span></code>, <code class="docutils literal"><span class="pre">Logger::WARNING</span></code>, <code class="docutils literal"><span class="pre">Logger::ERROR</span></code> のどれかを指定します。
+<code class="docutils literal"><span class="pre">DEBUG</span></code> はどんなものでも記録します。 <code class="docutils literal"><span class="pre">INFO</span></code> は <code class="docutils literal"><span class="pre">DEBUG</span></code> 以外の全てのものを記録します。
+Logger::定数の代わりに各レベルの文字列を与えても構いません。例: &#8220;DEBUG&#8221;, &#8220;INFO&#8221;, &#8220;WARNING&#8221;, &#8220;ERROR&#8221;。</li>
+<li><strong>monolog.name</strong> (オプション): Monolog チャンネルの名前。　標準は <code class="docutils literal"><span class="pre">myapp</span></code> です。</li>
+<li><strong>monolog.exception.logger_filter</strong> (オプション): どの例外をログに残すべきかの無名関数のフィルタ</li>
 </ul>
 </div>
 <div class="section" id="id2">
@@ -87,28 +89,30 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first"><strong>monolog.configure</strong>: 引数としてロガーを取る保護されたクロージャー。標準の振る舞いを使いたくない場合は上書きすることができます。</p>
-</li>
 </ul>
 </div>
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">vendor/monolog</span></tt> ディレクトリに <em>Monolog</em> のコピーを置いていることを確認してください:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\MonologServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;monolog.logfile&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/development.log&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;monolog.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/monolog/src&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;monolog.logfile&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/development.log&#39;</span><span class="p">,</span>
 <span class="p">));</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Monolog は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> ファイルの中にコンパイルされていません。自分自身でアプリケーションに Monolog のコピーを追加する必要があります。</p>
+<p>Monologは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。:</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;monolog/monolog&quot;: &quot;&gt;=1.0.0&quot;
+}
+</pre></div>
 </div>
 </div>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>MonologServiceProvider は <tt class="docutils literal"><span class="pre">monolog</span></tt> サービスを提供します。
-このサービスはどんなエラーレベルも <tt class="docutils literal"><span class="pre">addDebug()</span></tt>,``addInfo()``, <tt class="docutils literal"><span class="pre">addWarning()</span></tt> そして <tt class="docutils literal"><span class="pre">addError()</span></tt> を通してログを追加することができます:</p>
+</div>
+<div class="section" id="id4">
+<h2>使用方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>MonologServiceProvider は <code class="docutils literal"><span class="pre">monolog</span></code> サービスを提供します。
+このサービスはエラーレベルごとに、それぞれ <code class="docutils literal"><span class="pre">addDebug()</span></code>, <code class="docutils literal"><span class="pre">addInfo()</span></code>, <code class="docutils literal"><span class="pre">addWarning()</span></code> そして <code class="docutils literal"><span class="pre">addError()</span></code> というメソッドを通してログを追加することができます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/user&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
@@ -120,7 +124,31 @@
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>より詳しい情報については、    <a class="reference external" href="https://github.com/Seldaek/monolog">Monolog ドキュメント</a> を参照してください.</p>
+</div>
+<div class="section" id="id5">
+<h2>設定<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>使用前に、 <code class="docutils literal"><span class="pre">monolog</span></code> サービスを拡張することによって
+好みに応じて(ハンドラの追加や変更などの)Monologの設定を変更できます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;monolog&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$monolog</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$monolog</span><span class="o">-&gt;</span><span class="na">pushHandler</span><span class="p">(</span><span class="o">...</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$monolog</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>トレイト<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\MonologTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>log</strong>: メッセージを記録します。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">log</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s2">&quot;User &#39;%s&#39; registered.&quot;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>より詳しい情報については、 <a class="reference external" href="https://github.com/Seldaek/monolog">Monolog ドキュメント</a> を参照してください。</p>
+<p>commit: 10535580b28f9a16c8e2cb5af7e5d39e8c1ca3c9
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/monolog.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/monolog.rst</a></p>
 </div>
 </div>
 
@@ -152,7 +180,9 @@
 <li><a class="reference internal" href="#id1">パラメーター</a></li>
 <li><a class="reference internal" href="#id2">サービス</a></li>
 <li><a class="reference internal" href="#id3">登録</a></li>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#id4">使用方法</a></li>
+<li><a class="reference internal" href="#id5">設定</a></li>
+<li><a class="reference internal" href="#id6">トレイト</a></li>
 </ul>
 </li>
 </ul>

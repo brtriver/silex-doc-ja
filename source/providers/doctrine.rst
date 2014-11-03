@@ -27,7 +27,7 @@ DoctrineServiceProvider
 
   * **password**: 接続先のデータベースのパスワード。
 
-  * **charset**: ``pdo_mysql`` と ``pdo_oci`` と ``oci8`` にだけ必要な項目で、データベースに接続する際に使用する文字コードを指定。
+  * **charset**: ``pdo_mysql`` と ``pdo_oci/oci8`` にだけ必要な項目で、データベースに接続する際に使用する文字コードを指定。
 
   * **path**: ``pdo_sqlite`` だけに必要な項目で SQLite のデータベースのパスを指定。
 
@@ -110,9 +110,9 @@ Doctrineプロバイダーを使うと、複数のデータベースからアク
 
 標準では、最初に登録された接続がデフォルトになります。つまり1つしか接続先を登録していないときと同じようにアクセスされます。さきほど書いた設定では以下の2行は同意です。 ::
 
-    $app['db']->fetchAssoc('SELECT * FROM table');
+    $app['db']->fetchAll('SELECT * FROM table');
 
-    $app['dbs']['mysql_read']->fetchAssoc('SELECT * FROM table');
+    $app['dbs']['mysql_read']->fetchAll('SELECT * FROM table');
 
 複数接続を使った例 ::
 
@@ -131,3 +131,7 @@ Doctrineプロバイダーを使うと、複数のデータベースからアク
 より詳細については、 `Doctrine DBAL documentation
 <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/>`_
 を見てください。
+
+
+commit: 038392643681171f5ee72bbcdf3d852f69863871
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/doctrine.rst

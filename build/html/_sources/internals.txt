@@ -1,7 +1,7 @@
 内部の仕組み
 ============
 
-この章では Silex 内部でどのように処理しているかについて説明します。
+この章では Silex 内部での処理ついて説明します。
 
 Silex
 -----
@@ -28,7 +28,7 @@ Symfony2 の `HttpKernelInterface
 <http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
 を使っています。
 イベントディスパッチャーのおかげで ``Request`` を取得し文字列のレスポンスを ``Response`` オブジェクトに変換したり例外をハンドリングしたりすることができます。
-この他にも before/after フィルターやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。
+この他にも before/after ミドルウェアやエラーなどの独自のイベントを通知するためにイベントディスパッチャーを使っています。
 
 コントローラー (Controller)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,12 +62,15 @@ URL の可変部分を必須項目にすることもできます。
 
 ``Application`` には ``ControllerCollection`` を flush するための ``flush`` というショートカットメソッドが用意されています。
 
+.. tip::
+
+    ``RouteCollection`` のインスタンスを自分で生成する代わりに、
+    ``$app['controllers_factory']`` ファクトリーを使いましょう。
+
 Symfony2
 --------
 
-以下の Symfony2 コンポーネントが Silex　で利用されています:
-
-* **ClassLoader**: クラスの自動読み込みのため
+以下の Symfony2 コンポーネントが Silex で利用されています:
 
 * **HttpFoundation**: ``Request`` と ``Response`` のため.
 
@@ -79,3 +82,7 @@ Symfony2
 
 より多くの情報を知りたい場合は、 `Symfony のサイトをチェックしてみてください
 <http://symfony.com/>`_.
+
+
+commit: a38db51ad653544e738a16d840fc6dca77d1b0db
+original: https://github.com/silexphp/Silex/blob/master/doc/internals.rst

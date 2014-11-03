@@ -2,24 +2,24 @@ MonologServiceProvider
 ==========================
 
 *MonologServiceProvider* を使うことで Jordi Boggiano さんの
-`Monolog <https://github.com/Seldaek/monolog>`_ ライブラリを通して標準のログ機能を提供します。
+`Monolog <https://github.com/Seldaek/monolog>`_ ライブラリを通して標準のログ機能が使用できるようになります。
 
-リクエストやエラーを記録しアプリケーションにデバッグを記録するようになります。
-そのため ``var_dump`` をもう使う必要はなくなります。
-これからはさらに一歩進んで ``tail -f`` コマンドを使うことができるようになります。
+Monologを使うことで、リクエストやエラーを記録することができるようになります。
+これによってプロダクション環境のアプリケーションのデバッグや監視を行えるようになります。
 
 パラメーター
 ------------
 
-* **monolog.logfile**: ログファイルの場所。
-
-* **monolog.class_path** (オプション): Monolog ライブラリを設置したパス。
+* **monolog.logfile**: ログが書き込まれるファイルの場所。
 
 * **monolog.level** (オプション): ``DEBUG`` に標準で記録するログのレベル。
   ``Logger::DEBUG``, ``Logger::INFO``, ``Logger::WARNING``, ``Logger::ERROR`` のどれかを指定します。 
-  ``DEBUG`` はどんなものでも記録します。 ``INFO`` は ``DEBUG`` 意外のものを記録します。  
+  ``DEBUG`` はどんなものでも記録します。 ``INFO`` は ``DEBUG`` 以外の全てのものを記録します。  
+  Logger::定数の代わりに各レベルの文字列を与えても構いません。例: "DEBUG", "INFO", "WARNING", "ERROR"。
 
-* **monolog.name** (オプション): Monolog チャンネルの名前。　標準は ``myapp`` 。
+* **monolog.name** (オプション): Monolog チャンネルの名前。　標準は ``myapp`` です。
+
+* **monolog.exception.logger_filter** (オプション): どの例外をログに残すべきかの無名関数のフィルタ
 
 サービス
 --------
@@ -30,27 +30,31 @@ MonologServiceProvider
 
     $app['monolog']->addDebug('Testing the Monolog logging.');
 
-* **monolog.configure**: 引数としてロガーを取る保護されたクロージャー。標準の振る舞いを使いたくない場合は上書きすることができます。
-
 登録
 -----------
 
-``vendor/monolog`` ディレクトリに *Monolog* のコピーを置いていることを確認してください::
+.. code-block:: php
 
     $app->register(new Silex\Provider\MonologServiceProvider(), array(
-        'monolog.logfile'       => __DIR__.'/development.log',
-        'monolog.class_path'    => __DIR__.'/vendor/monolog/src',
+        'monolog.logfile' => __DIR__.'/development.log',
     ));
 
 .. note::
 
-    Monolog は ``silex.phar`` ファイルの中にコンパイルされていません。自分自身でアプリケーションに Monolog のコピーを追加する必要があります。
+    Monologは"fat" Silexに付属し、標準サイズのSilexには付属しません。
+    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。:
 
-Usage
------
+    .. code-block:: json
+
+        "require": {
+            "monolog/monolog": ">=1.0.0"
+        }
+
+使用方法
+-----------
 
 MonologServiceProvider は ``monolog`` サービスを提供します。
-このサービスはどんなエラーレベルも ``addDebug()``,``addInfo()``, ``addWarning()`` そして ``addError()`` を通してログを追加することができます::
+このサービスはエラーレベルごとに、それぞれ ``addDebug()``, ``addInfo()``, ``addWarning()`` そして ``addError()`` というメソッドを通してログを追加することができます。 ::
 
     use Symfony\Component\HttpFoundation\Response;
 
@@ -62,5 +66,31 @@ MonologServiceProvider は ``monolog`` サービスを提供します。
         return new Response('', 201);
     });
 
-より詳しい情報については、    `Monolog ドキュメント
-<https://github.com/Seldaek/monolog>`_ を参照してください.
+設定
+-------------
+
+使用前に、 ``monolog`` サービスを拡張することによって
+好みに応じて(ハンドラの追加や変更などの)Monologの設定を変更できます。 ::
+
+    $app['monolog'] = $app->extend('monolog', function($monolog, $app) {
+        $monolog->pushHandler(...);
+
+        return $monolog;
+    };
+
+トレイト
+--------
+
+``Silex\Application\MonologTrait`` は以下のショートカットを追加します。
+
+* **log**: メッセージを記録します。
+
+.. code-block:: php
+
+    $app->log(sprintf("User '%s' registered.", $username));
+
+より詳しい情報については、 `Monolog ドキュメント
+<https://github.com/Seldaek/monolog>`_ を参照してください。
+
+commit: 10535580b28f9a16c8e2cb5af7e5d39e8c1ca3c9
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/monolog.rst

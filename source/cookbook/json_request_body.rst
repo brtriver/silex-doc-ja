@@ -86,3 +86,7 @@ Example API
 
     $ curl http://blog.lo/blog/posts -d '{"title":"Hello World!","body":"This is my first post!"}' -H 'Content-Type: application/json'
     {"id":"1","title":"Hello World!","body":"This is my first post!"}
+
+
+commit: 34fe312a89e1cbc1d696bba419b2466305b55316
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/json_request_body.rst

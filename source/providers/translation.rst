@@ -10,7 +10,7 @@ TranslationServiceProvider
 
 * **locale** (オプション): 翻訳のために使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は ``en`` です。
 
-* **locale_fallback** (オプション): 翻訳のために使用する代替のためのロケール。　現在のロケールでメッセージが設定されていないときに利用されます。
+* **locale_fallbacks** (オプション): 翻訳のために使用する代替のためのロケール。　現在のロケールでメッセージが設定されていないときに利用されます。
 
 サービス
 --------
@@ -34,6 +34,7 @@ TranslationServiceProvider
 
 .. code-block:: php
 
+    $app->register(new Silex\Provider\LocaleServiceProvider());
     $app->register(new Silex\Provider\TranslationServiceProvider(), array(
         'locale_fallbacks' => array('en'),
     ));
@@ -136,7 +137,7 @@ PHPファイルで翻訳ファイルを用意することは不便でしょう�
     
     use Symfony\Component\Translation\Loader\YamlFileLoader;
 
-    $app['translator'] = $app->share($app->extend('translator', function($translator, $app) {
+    $app['translator'] = $app->extend('translator', function($translator, $app) {
         $translator->addLoader('yaml', new YamlFileLoader());
 
         $translator->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
@@ -144,7 +145,7 @@ PHPファイルで翻訳ファイルを用意することは不便でしょう�
         $translator->addResource('yaml', __DIR__.'/locales/fr.yml', 'fr');
 
         return $translator;
-    }));
+    });
 
 XLIFFに基づいた言語ファイル
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -177,3 +178,7 @@ Twigテンプレートでの翻訳データへのアクセス
     {{ 'translation_key'|trans }}
     {{ 'translation_key'|transchoice }}
     {% trans %}translation_key{% endtrans %}
+
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/translation.rst

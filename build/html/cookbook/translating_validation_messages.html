@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>バリデーションのメッセージの国際化 | Japan Symfony Group</title>
+    <title>バリデーションメッセージの翻訳 | Japan Symfony Group</title>
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
@@ -29,13 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="up" title="Cookbook" href="index.html" />
-    <link rel="next" title="How to use PdoSessionStorage to store sessions in the database" href="session_storage.html" />
-    <link rel="prev" title="JSON リクエストを受け付ける" href="json_request_body.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="PdoSessionStorageでセッションをデータベースで管理する" href="session_storage.html" />
+    <link rel="prev" title="JSONリクエストの受け入れ" href="json_request_body.html" /> 
   </head>
   <body>
 
@@ -62,27 +63,29 @@
           <div class="body">
             
   <div class="section" id="id1">
-<h1>バリデーションのメッセージの国際化<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>Symfony2 のフォームを使うときは、バリデーションのメッセージをローカライズすることはよくあることです。</p>
-<p>ローカライズするためにトランスレータを登録し翻訳されたリソースを指定する必要があります:</p>
+<h1>バリデーションメッセージの翻訳<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Symfony2 バリデータを使っている場合、バリデーションメッセージのローカライズがしばしば必要になります。
+そのためには、トランスレーターを登録し、翻訳されたリソースを指定する必要があります。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;locale&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;sr_Latn&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;translation.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;translator.messages&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">()</span>
+    <span class="s1">&#39;translator.domains&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(),</span>
 <span class="p">));</span>
+
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">addLoader</span><span class="p">(</span><span class="s1">&#39;xlf&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Symfony\Component\Translation\Loader\XliffFileLoader</span><span class="p">());</span>
-    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;xlf&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/translations/validators.sr_Latn.xlf&#39;</span><span class="p">,</span> <span class="s1">&#39;sr_Latn&#39;</span><span class="p">,</span> <span class="s1">&#39;validators&#39;</span><span class="p">);</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;xlf&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/validator/Symfony/Component/Validator/Resources/translations/validators/validators.sr_Latn.xlf&#39;</span><span class="p">,</span> <span class="s1">&#39;sr_Latn&#39;</span><span class="p">,</span> <span class="s1">&#39;validators&#39;</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>そして、 Symfony2 の <tt class="docutils literal"><span class="pre">xlf</span></tt> ファイルから翻訳ファイルを持ってくるだけです。</p>
+<p>Symfony2 <code class="docutils literal"><span class="pre">xlf</span></code> ファイルから翻訳されたメッセージをロードするための処理は以上の記述で全てです。</p>
+<p>commit: 3f981d561df312cb008375df78e38e27fcf1cadd
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/translating_validation_messages.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/translating_validation_messages.rst</a></p>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="json_request_body.html">< JSON リクエストを受け付ける</a>
-<a class="next" href="session_storage.html">How to use PdoSessionStorage to store sessions in the database ></a>
+<a class="prev" href="json_request_body.html">< JSONリクエストの受け入れ</a>
+<a class="next" href="session_storage.html">PdoSessionStorageでセッションをデータベースで管理する ></a>
 </div>
 
 <div class="common_content_footer">
@@ -103,10 +106,10 @@
         <div class="sphinxsidebarwrapper">
   <h4>前のドキュメント</h4>
   <p class="topless"><a href="json_request_body.html"
-                        title="previous chapter">JSON リクエストを受け付ける</a></p>
+                        title="previous chapter">JSONリクエストの受け入れ</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="session_storage.html"
-                        title="next chapter">How to use PdoSessionStorage to store sessions in the database</a></p>
+                        title="next chapter">PdoSessionStorageでセッションをデータベースで管理する</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cookbook/translating_validation_messages.txt"

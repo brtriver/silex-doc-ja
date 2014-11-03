@@ -1,24 +1,22 @@
-JSON リクエストを受け付ける
+JSONリクエストの受け入れ
 =============================
 
-A common need when building a restful API is the ability to accept a JSON
-encoded entity from the request body.
+レストフルなAPIを構築する際には、JSONエンコードされたリクエストボディを許容する必要があります。ブログ記事の生成APIでの例をご紹介します。
 
-An example for such an API could be a blog post creation.
 
 Example API
 -----------
 
-In this example we will create an API for creating a blog post. The following
-is a spec of how we want it to work.
+この例では、ブログ記事の生成APIをご紹介します。
+以下は、私達の要求項目です。
 
-Request
-~~~~~~~
+リクエスト
+~~~~~~~~~~~~~
 
-In the request we send the data for the blog post as a JSON object. We also
-indicate that using the ``Content-Type`` header.
+リクエストでは、ブログ記事をJSONオブジェクトとして送信します。
+また、 ``Content-Type`` ヘッダを使用します。
 
-::
+.. code-block:: text
 
     POST /blog/posts
     Accept: application/json
@@ -27,14 +25,13 @@ indicate that using the ``Content-Type`` header.
 
     {"title":"Hello World!","body":"This is my first post!"}
 
-Response
-~~~~~~~~
+レスポンス
+~~~~~~~~~~~~~~
 
-The server responds with a 201 status code, telling us that the post was
-created. It tells us the ``Content-Type`` of the response, which is also
-JSON.
+サーバーはステータスコードといて201を返し、記事が作成されたということを伝えてくれます。
+また、 ``Content-Type`` によってレスポンスがJSONであるということも教えてくれます。
 
-::
+.. code-block:: text
 
     HTTP/1.1 201 Created
     Content-Type: application/json
@@ -43,17 +40,13 @@ JSON.
 
     {"id":"1","title":"Hello World!","body":"This is my first post!"}
 
-Parsing the request body
-------------------------
+リクエストボディのパース
+--------------------------
 
-The request body should only be parsed as JSON if the ``Content-Type`` header
-begins with ``application/json``. Since we want to do this for every request,
-the easiest solution is to use a before filter.
+``Content-Type`` ヘッダが ``application/json`` で始まる場合、リクエストボディはJSONとしてのみパースされるべきです。
+全てのリクエストに対して、この処理を行いたい場合、一番簡単な解は前処理アプリケーションミドルウェアを使用することです。
 
-We simply use ``json_decode`` to parse the content of the request and then
-replace the request data on the ``$request`` object.
-
-::
+シンプルに ``json_decode`` をリクエストの内容に対して、適用します。その後、 ``$request`` オブジェクトの内容を置換します。 ::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\ParameterBag;
@@ -65,18 +58,15 @@ replace the request data on the ``$request`` object.
         }
     });
 
-Controller implementation
+コントローラーの実装
 -------------------------
 
-Our controller will create a new blog post from the data provided and will
-return the post object, including its ``id``, as JSON.
-
-::
+コントローラーはリクエストデータに基づきブログ記事を生成し、 ``id`` を含んだJSONで記述されている記事のオブジェクトを返却します。 ::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
 
-    $app->post('/blog/posts', function (Request $request) {
+    $app->post('/blog/posts', function (Request $request) use ($app) {
         $post = array(
             'title' => $request->request->get('title'),
             'body'  => $request->request->get('body'),
@@ -84,17 +74,19 @@ return the post object, including its ``id``, as JSON.
 
         $post['id'] = createPost($post);
 
-        $json = json_encode($post);
-        return new Response($json, 201, array('Content-Type' => 'application/json'));
+        return $app->json($post, 201);
     });
 
-Manual testing
---------------
+手動テスト
+------------
 
-In order to manually test our API, we can use the ``curl`` command line
-utility, which allows sending HTTP requests.
+作成したAPIを手動テストするためには、HTTPリクエストを送信することができる ``curl`` コマンドラインユーティリティを使うことができます。
 
-::
+.. code-block:: bash
 
     $ curl http://blog.lo/blog/posts -d '{"title":"Hello World!","body":"This is my first post!"}' -H 'Content-Type: application/json'
     {"id":"1","title":"Hello World!","body":"This is my first post!"}
+
+
+commit: 34fe312a89e1cbc1d696bba419b2466305b55316
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/json_request_body.rst

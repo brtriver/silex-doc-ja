@@ -1,0 +1,260 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ServiceControllerServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="ウェブサーバーの設定" href="../web_servers.html" />
+    <link rel="prev" title="SerializerServiceProvider" href="serializer.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="servicecontrollerserviceprovider">
+<h1>ServiceControllerServiceProvider<a class="headerlink" href="#servicecontrollerserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p>Silexのアプリケーションが大きくると、コントローラのグループ化を行って、洗練させたくなるでしょう。Silexでは、DI(dependency injection)と遅延ロードの力をフルに発揮させることによって、少しの手間だけでコントローラークラスの枠を超えて、コントローラをサービスとして生成することができます。</p>
+<div class="section" id="id1">
+<h2>なんでこれが必要なのか<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">サービスロケーションを超えたDependency Injection</p>
+<p>この方法を使えば、
+あなたのコントローラにとって実際に必要な依存性だけを注入しながらも、
+コントローラと依存関係の読み込みを遅延させている間、  コントロールを完全に転換させることが出来ます。
+依存関係が明確に定義できているので、コントローラーから隔離してテストしやすいように簡単に依存関係をモック化できます。</p>
+</li>
+<li><p class="first">フレームワークからの独立</p>
+<p>この方法を使用すれば、
+あなたのコントローラーの、使用しているフレームワークへの依存性を減らす事ができます。
+注意深く作成されたコントローラは多数のフレームワークで再利用可能になるでしょう。
+依存性を注意深く管理し続けることで、コントローラを簡 単にちょっとした手間で、Silex, Symfony, Drupalとの互換性を持たせることが出来ます。</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>パラメータ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>現在は <code class="docutils literal"><span class="pre">ServiceControllerServiceProvider</span></code> にパラメータはありません。</p>
+</div>
+<div class="section" id="id3">
+<h2>サービス<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>特別なサービスは提供されません。
+<code class="docutils literal"><span class="pre">ServiceControllerServiceProvider</span></code> は単に、既存の <strong>resolever</strong> を拡張します。</p>
+</div>
+<div class="section" id="id4">
+<h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\ServiceControllerServiceProvider</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>使用方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>ブログAPIの少しだけ不自然な例で、
+<code class="docutils literal"><span class="pre">/posts.json</span></code> ルーティングがサービスとして定義されたコントローラを使うように変更したいと思います。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Demo\Repository\PostRepository</span><span class="p">;</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;posts.repository&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PostRepository</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/posts.json&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">json</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;posts.repository&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">findAll</span><span class="p">());</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>コントローラをサービスに書き換える方法はとてもシンプルで、
+普通のPHPオブジェクトに、　<code class="docutils literal"><span class="pre">PostRepository</span></code> を依存性として注入するようにし、 <code class="docutils literal"><span class="pre">indexJsonAction</span></code> メソッドをリクエストを扱えるようにするために、実装するだけです。</p>
+<p>下の例では示されていませんが、タイプヒンティングとパラメータの名前付けによって、
+普通のSilexのルーティングと同じようにあなたの欲しいパラメータが取得できます。</p>
+<p>もし、あなたがTDD/BDDのファンなら（そして、そうあるべきです！）、
+このコントローラが責務や依存性の面から見て、well-definedであり、テストが容易であることに気づくと思います。</p>
+<p>さらに、内部的な依存関係は、
+<code class="docutils literal"><span class="pre">Symfony\Component\HttpFoundation\JsonResponse</span></code> 、
+だけだということにも気づくと思います。
+これは、このコントローラは容易に、フルスタックなSymfonyや、
+他のアプリケーション、
+<a class="reference external" href="http://symfony.com/doc/master/components/http_foundation/introduction.html">Symfony/HttpFoundation</a>　の <code class="docutils literal"><span class="pre">Response</span></code> オブジェクトの扱い方を知っている他のフレームワーク
+で使用可能であるということを意味します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Demo\Controller</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Demo\Repository\PostRepository</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\JsonResponse</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostController</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$repo</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nx">PostRepository</span> <span class="nv">$repo</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span> <span class="o">=</span> <span class="nv">$repo</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">indexJsonAction</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">JsonResponse</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">repo</span><span class="o">-&gt;</span><span class="na">findAll</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>最後に、あなたのコントローラをアプリケーション中のサービスとしてルーティング付きで定義してください。ルーティング定義の際の文法は <code class="docutils literal"><span class="pre">サービス名：メソッド名</span></code> です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;posts.controller&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PostController</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;posts.repository&#39;</span><span class="p">]);</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/posts.json&#39;</span><span class="p">,</span> <span class="s2">&quot;posts.controller:indexJsonAction&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>commit: d48bcc6183b184b002a5632d8cc6108b665373da
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/service_controller.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/service_controller.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="serializer.html">< SerializerServiceProvider</a>
+<a class="next" href="../web_servers.html">ウェブサーバーの設定 ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/service_controller.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/service_controller.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/service_controller.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">ServiceControllerServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">なんでこれが必要なのか</a></li>
+<li><a class="reference internal" href="#id2">パラメータ</a></li>
+<li><a class="reference internal" href="#id3">サービス</a></li>
+<li><a class="reference internal" href="#id4">登録</a></li>
+<li><a class="reference internal" href="#id5">使用方法</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="serializer.html"
+                        title="previous chapter">SerializerServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="../web_servers.html"
+                        title="next chapter">ウェブサーバーの設定</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/service_controller.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,718 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SecurityServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="RememberMeServiceProvider" href="remember_me.html" />
+    <link rel="prev" title="HttpFragmentServiceProvider" href="http_fragment.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="securityserviceprovider">
+<h1>SecurityServiceProvider<a class="headerlink" href="#securityserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>SecurityServiceProvider</em> は、アプリケーションの認証と認可を管理します。</p>
+<div class="section" id="id1">
+<h2>パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>security.hide_user_not_found</strong> (オプション): ユーザーが見つからなかった場合に例外を投げるか否かを設定します。 標準ではtrueです。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>security</strong>: securityプロバイダへの主なアクセス源。現在のユーザーのトークンを入手したい場合は、これを使ってください。</li>
+<li><strong>security.authentication_manager</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/Authentication/AuthenticationProviderManager.html">AuthenticationProviderManager</a> のインスタンス。認証を担当しています。</li>
+<li><strong>security.access_manager</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/Authorization/AccessDecisionManager.html">AccessDecisionManager</a> のインスタンス。認可を担当しています。</li>
+<li><strong>security.session_strategy</strong>: 認証に使われるセッションの戦略を決定します。(標準では、migration strategyです。)。</li>
+<li><strong>security.user_checker</strong>: 認証の後にユーザーフラグをチェックするかどうかを決定します。</li>
+<li><strong>security.last_error</strong>: リクエストが与えられた際に発生した最後の認証エラーを返します。</li>
+<li><strong>security.encoder_factory</strong>: ユーザーパスワードのエンコード方法を指定します。(標準ではすべてのユーザーに対して、digestアルゴリズムを適用します。)</li>
+<li><strong>security.encoder.digest</strong>: 全てのユーザーに対して使用する標準のエンコードを指定します。</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">サービスプロバイダーは内部で使用されている他のたくさんのサービスの振舞を決定します。しかし、その内部の振舞をカスタマイズする必要性はあまりないでしょう。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SecurityServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;security.firewalls&#39;</span> <span class="o">=&gt;</span> <span class="c1">// 詳しくは下で</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Symfony Securityコンポーネントは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/security&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p>セキュリティ機能はアプリケーションが起動した後でのみ使用可能です。
+よって、リクエストの処理外でセキュリティ機能を使いたい場合は、最初に  <code class="docutils literal"><span class="pre">boot()</span></code> を忘れずに呼びましょう。</p>
+<div class="last highlight-php"><div class="highlight"><pre><span class="nv">$application</span><span class="o">-&gt;</span><span class="na">boot</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">もし認証されたユーザーに対するフォームを使用するなら、 <code class="docutils literal"><span class="pre">SessionServiceProvider</span></code> を有効にする必要があります。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使用方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>Symfony Securityコンポーネントは強力です。それらについて詳しく知りたい場合は <a class="reference external" href="http://symfony.com/doc/2.3/book/security.html">Symfony2 Security documentation</a> を読んでください。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">securityの設定が期待するものと異なる振舞になってしまったら、ログ処理(Monologエクステンションのインスタンスとともに)を有効にしましょう。 そうすることで、Securityコンポーネントは、たくさんの有益な情報を記録してくれます。</p>
+</div>
+<p>以下はいくつかの通常の使い方レシピのリストです。</p>
+<div class="section" id="id5">
+<h3>現在のユーザーへのアクセス<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>現在のユーザー情報はトークンに保存されています。これは <code class="docutils literal"><span class="pre">security</span></code> サービスを通してアクセス可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$token</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getToken</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>ユーザー情報が何もなかった場合、トークンは <code class="docutils literal"><span class="pre">null</span></code> になります。
+ユーザーが既知であった場合、 <code class="docutils literal"><span class="pre">getUser()</span></code> を呼ぶことでユーザーを取得できます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="k">null</span> <span class="o">!==</span> <span class="nv">$token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$user</span> <span class="o">=</span> <span class="nv">$token</span><span class="o">-&gt;</span><span class="na">getUser</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>ユーザーは <code class="docutils literal"><span class="pre">__toString()</span></code> メソッドや <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/User/UserInterface.html">UserInterface</a> のインスタンスを通して文字列やオブジェクトになれます。</p>
+</div>
+<div class="section" id="http">
+<h3>HTTP認証を使用したパスのセキュリティ対策<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">/admin/</span></code> 以下の安全なURLへの、HTTPのベーシック認証を用いた設定は下のように行えます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="c1">// 元のパスワードはfooです。</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pattern</span></code> は正規表現で記述します。(これは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestMatcher.html">RequestMatcher</a> のインスタンスでも代用できます。)
+<code class="docutils literal"><span class="pre">http</span></code> 設定はHTTPベーシック認証を使うかどうか、 <code class="docutils literal"><span class="pre">users</span></code> は許可されたユーザーがどのようなものかを定義します。</p>
+<p>全てのユーザーは次の情報によって定義されます。</p>
+<ul class="simple">
+<li>ロールか各ユーザーのロールの配列(ロールは <code class="docutils literal"><span class="pre">ROLE_</span></code> から始まる任意の文字列です。)</li>
+<li>ユーザーのエンコードされたパスワード</li>
+</ul>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">全てのユーザーは少なくともひとつのロールを持っている必要があります。</p>
+</div>
+<p>エクステンションの標準設定ではエンコードされたパスワードが強制されます。
+パスワードからエンコードされたパスワードを生成するには、 <code class="docutils literal"><span class="pre">security.encoder_factory</span></code> サービスを使用してください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="c1">// UserInterfaceインスタンス用のエンコーダーを探す</span>
+<span class="nv">$encoder</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.encoder_factory&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getEncoder</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
+
+<span class="c1">// fooというパスワードに対してエンコードを行なう。</span>
+<span class="nv">$password</span> <span class="o">=</span> <span class="nv">$encoder</span><span class="o">-&gt;</span><span class="na">encodePassword</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getSalt</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>ユーザーが認証されたとき、ユーザーは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/User/User.html">User</a> のインスタンスとしてトークンに保存されます。</p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p>php-cgi を Apache で利用している場合は、正しく動作するように以下の設定を追加する必要があります。</p>
+<div class="last highlight-apache"><div class="highlight"><pre><span class="nb">RewriteEngine</span> <span class="k">On</span>
+<span class="nb">RewriteCond</span> %{HTTP:Authorization} ^(.+)$
+<span class="nb">RewriteRule</span> .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+<span class="nb">RewriteCond</span> %{REQUEST_FILENAME} !-f
+<span class="nb">RewriteRule</span> ^(.*)$ app.php [QSA,L]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>フォームのセキュリティ対策<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>認証済みユーザーへのフォームは先ほどの物と近い設定で行えます。
+<code class="docutils literal"><span class="pre">http</span></code> 設定の代わりに <code class="docutils literal"><span class="pre">form</span></code> を設定し、パラメータを二つ設定してください。</p>
+<ul class="simple">
+<li><strong>login_path</strong>: ユーザーが認証を受けていない状態で、認証が必要な領域にアクセスしてきたときにリダイレクトされる、ログイン情報を入力できるようなページへのパス</li>
+<li><strong>check_path</strong>: Symfonyがユーザーの認証情報をバリデーションするためのチェックURL</li>
+</ul>
+<p>/admin/以下の、フォームを持つ全てのURLを安全にするための例を見てみましょう。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>次のルールに、常に注意していてください。</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">login_path</span></code> にはセキュリティが設定されている領域の <strong>外側</strong> へのパスを設定してください。(仮にセキュリティが設定されている領域でも、 <code class="docutils literal"><span class="pre">anonymous</span></code> 認証メカニズムが有効になっている必要があります。 &#8211; 詳しくは下で扱います。)</li>
+<li><code class="docutils literal"><span class="pre">check_path</span></code> にはセキュリティが設定されている領域の <strong>内側</strong> へのパスを設定してください。</li>
+</ul>
+<p>ログインフォームが動作するようにするためには、以下の様なコントローラーを作成してください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;login.html&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;error&#39;</span>         <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.last_error&#39;</span><span class="p">](</span><span class="nv">$request</span><span class="p">),</span>
+        <span class="s1">&#39;last_username&#39;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;_security.last_username&#39;</span><span class="p">),</span>
+    <span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>認証エラーが発生した場合、
+<code class="docutils literal"><span class="pre">error</span></code> と <code class="docutils literal"><span class="pre">last_username</span></code> 変数には最後の認証エラーと最後にユーザーによって入力されたユーザーの名前が格納されます。</p>
+<p>対応するテンプレートを作ります。:</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="x">&lt;form action=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;admin_login_check&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot; method=&quot;post&quot;&gt;</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">error</span> <span class="cp">}}</span><span class="x"></span>
+<span class="x">    &lt;input type=&quot;text&quot; name=&quot;_username&quot; value=&quot;</span><span class="cp">{{</span> <span class="nv">last_username</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
+<span class="x">    &lt;input type=&quot;password&quot; name=&quot;_password&quot; value=&quot;&quot; /&gt;</span>
+<span class="x">    &lt;input type=&quot;submit&quot; /&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">admin_login_check</span></code> ルーティングはSilexによって自動的に定義され、 <code class="docutils literal"><span class="pre">check_path</span></code> の値によってルートの名前が導出されます。(全ての <code class="docutils literal"><span class="pre">/</span></code> は <code class="docutils literal"><span class="pre">_</span></code> に置換され、最後の &#8220;&#8221;/&#8221;&#8220;は除去されます。)</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>複数のファイアーウォールの定義<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>1プロジェクトに対して複数のファイアーウォールを定義することができます。</p>
+<p>複数のファイアーウォールの設定は、ウェブサイトのパーツやユーザー(ウェブサイトのAPIではHTTPベーシック認証、管理エリアではフォームのセキュア設定を行なうなど)ごとに、
+別々の認証方式を設定したい場合に便利です。</p>
+<p>ログインフォーム以外の全てのURLに対してセキュリティ設定を行うのは以下のようにすれば簡単です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;login&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/login$&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;secured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^.*$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;admin&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>ファイアウォールの設定は最初にマッチしたものが優先されます。上の例では、　<code class="docutils literal"><span class="pre">/login</span></code> というページはセキュリティ設定がなされず（認証設定が存在しない）、その他のページではセキュリティ設定が行われます。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>全ての登録された認証は <code class="docutils literal"><span class="pre">security</span></code> フラグを使ったON/OFFの切り替えが可能です。</p>
+<div class="last highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;api&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/api&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;security&#39;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;debug&#39;</span><span class="p">]</span> <span class="o">?</span> <span class="k">false</span> <span class="o">:</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>ログアウトの追加<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>フォーム用の認証を使用している際には、 <code class="docutils literal"><span class="pre">logout</span></code> 設定を追加すれば、ユーザーをログアウトさせることができます。
+このとき <code class="docutils literal"><span class="pre">logout_path</span></code> はファイアーウォールの <code class="docutils literal"><span class="pre">pattern</span></code> にマッチする必要があります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;secured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;^/admin/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;login_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="s1">&#39;check_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/login_check&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;logout&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;logout_path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;/admin/logout&#39;</span><span class="p">),</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>ルーティングは設定したパスに基づいて（全ての <code class="docutils literal"><span class="pre">/``が</span> <span class="pre">``_</span></code> に置換され、最後の <code class="docutils literal"><span class="pre">/</span></code> は除去される）自動生成されます。:</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="x">&lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;admin_logout&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Logout&lt;/a&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>アノニマスユーザーの許可<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>ウェブサイトの一部分だけにセキュリティが設定を施す場合、ユーザー情報はセキュリティ設定がなされていない領域では利用可能ではありません。
+そのような領域でもユーザー情報にアクセス可能にするためには、
+<code class="docutils literal"><span class="pre">anonymous</span></code> 認証メカニズムを有効にしてください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;unsecured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;anonymous&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>アノニマス設定を行うことで、常にユーザー情報にアクセス可能になります。
+もし、ユーザーが認証を受けていなかった場合、ユーザー情報として <code class="docutils literal"><span class="pre">anon.</span></code> という文字列が返却されます。</p>
+</div>
+<div class="section" id="id10">
+<h3>ユーザーのロールチェック<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>ユーザーに対してロールが与えられているかを確認するためには、
+<code class="docutils literal"><span class="pre">isGranted()</span></code> メソッドを使ってください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">isGranted</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Twigテンプレートでも同様の確認が行えます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;/secured?_switch_user=fabien&quot;&gt;Switch to Fabien&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>ユーザーが認証されているかどうか（さらにアノニマスユーザーでない）は <code class="docutils literal"><span class="pre">IS_AUTHENTICATED_FULLY</span></code> という特別なロールを確認してください。:</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;IS_AUTHENTICATED_FULLY&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;logout&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Logout&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">else</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;</span><span class="cp">{{</span> <span class="nv">path</span><span class="o">(</span><span class="s1">&#39;login&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x">&quot;&gt;Login&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>もちろん、上記のコードを動かすためには  <code class="docutils literal"><span class="pre">login</span></code> ルートが定義されている必要があります。</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last"><code class="docutils literal"><span class="pre">getRoles()</span></code> メソッドをユーザーのロール確認に使用しないでください。</p>
+</div>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last"><code class="docutils literal"><span class="pre">isGranted()</span></code> は(セキュリティが設定されていない領域であるなどの理由で)
+認証情報が利用可能でない場合、例外を投げます。</p>
+</div>
+</div>
+<div class="section" id="id11">
+<h3>ユーザーの擬装<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>もし、(ユーザーのクレデンシャル抜きに)別のユーザーに切り替えることを許可したい場合、
+<code class="docutils literal"><span class="pre">switch_user</span></code> 認証方式を有効にしてください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;unsecured&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;switch_user&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;parameter&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;_switch_user&#39;</span><span class="p">,</span> <span class="s1">&#39;role&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">),</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>この操作によって、
+<code class="docutils literal"><span class="pre">ROLE_ALLOWED_TO_SWITCH</span></code> というロールを持っているユーザーとしてログインした時に、
+全てのURLに <code class="docutils literal"><span class="pre">_switch_user</span></code> というクエリパラメータを送ることで、
+他のユーザーへ切り替えることができるようになります。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;a href=&quot;?_switch_user=fabien&quot;&gt;Switch to user Fabien&lt;/a&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>擬装されているユーザーかどうかは <code class="docutils literal"><span class="pre">ROLE_PREVIOUS_ADMIN</span></code> というロールを持っているかどうか調べれば判断できます。 これは、ユーザーをメインアカウントに戻す操作を行なう場合に便利です。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{%</span> <span class="k">if</span> <span class="nv">is_granted</span><span class="o">(</span><span class="s1">&#39;ROLE_PREVIOUS_ADMIN&#39;</span><span class="o">)</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    You are an admin but you&#39;ve switched to another user,</span>
+<span class="x">    &lt;a href=&quot;?_switch_user=_exit&quot;&gt; exit&lt;/a&gt; the switch.</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h3>ロールの上下関係の定義<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>ロールの上下関係の定義によって、ユーザーに、複数のロールを自動的に追加することが可能になります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.role_hierarchy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;ROLE_ADMIN&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;ROLE_USER&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_ALLOWED_TO_SWITCH&#39;</span><span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>上記の設定を行えば、 <code class="docutils literal"><span class="pre">ROLE_ADMIN</span></code> を持つ全てのユーザーに <code class="docutils literal"><span class="pre">ROLE_USER</span></code> と <code class="docutils literal"><span class="pre">ROLE_ALLOWED_TO_SWITCH</span></code> のロールを与えることが出来ます。</p>
+</div>
+<div class="section" id="id13">
+<h3>アクセスルールの設定<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>ロールはユーザーグループによってウェブサイトの振舞を変更するのにとても良い仕組みです。さらにアクセスルールの設定によって、いくつかの領域を更にセキュアにすることが出来ます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.access_rules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="k">array</span><span class="p">(</span><span class="s1">&#39;^/admin&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">),</span>
+    <span class="k">array</span><span class="p">(</span><span class="s1">&#39;^.*$&#39;</span><span class="p">,</span> <span class="s1">&#39;ROLE_USER&#39;</span><span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>上記の設定を行えば、ユーザーは <code class="docutils literal"><span class="pre">/admin</span></code> 領域にアクセスするのに <code class="docutils literal"><span class="pre">ROLE_ADMIN</span></code> を持つことが必要になり、 その他の領域にアクセスするのには <code class="docutils literal"><span class="pre">ROLE_USER</span></code> を持っていることが必要となります。
+さらに管理領域ではHTTPSでないとアクセスできないようになっています。(HTTPSでない場合、自動的にリダイレクトされます。)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">最初の引数は <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/RequestMatcher.html">RequestMatcher</a>
+のインスタンスである必要があります。</p>
+</div>
+</div>
+<div class="section" id="id15">
+<h3>カスタムユーザープロバイダーの定義<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>個人のウェブサイトのadmin領域のセキュリティ設定をする際に、
+ユーザーの配列を使用するのは簡単で便利です。この場合、標準のメカニズムを上書きする必要があります。</p>
+<p><code class="docutils literal"><span class="pre">users</span></code> 設定は、サービスとして定義されています。このサービスは
+<a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/User/UserProviderInterface.html">UserProviderInterface</a>
+のインスタンスを返却します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">UserProvider</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]);</span>
+<span class="p">}),</span>
+</pre></div>
+</div>
+<p>以下に、ユーザープロバイダーの簡単な例を示します。
+ここでは、ユーザーを保管するのにDoctrine DBALを使用しています。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserProviderInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\UserInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\User\User</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Exception\UnsupportedUserException</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Exception\UsernameNotFoundException</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Doctrine\DBAL\Connection</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UserProvider</span> <span class="k">implements</span> <span class="nx">UserProviderInterface</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$conn</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nx">Connection</span> <span class="nv">$conn</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">conn</span> <span class="o">=</span> <span class="nv">$conn</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loadUserByUsername</span><span class="p">(</span><span class="nv">$username</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$stmt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">conn</span><span class="o">-&gt;</span><span class="na">executeQuery</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM users WHERE username = ?&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="nb">strtolower</span><span class="p">(</span><span class="nv">$username</span><span class="p">)));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$stmt</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">UsernameNotFoundException</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;Username &quot;%s&quot; does not exist.&#39;</span><span class="p">,</span> <span class="nv">$username</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">(</span><span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="nv">$user</span><span class="p">[</span><span class="s1">&#39;roles&#39;</span><span class="p">]),</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">refreshUser</span><span class="p">(</span><span class="nx">UserInterface</span> <span class="nv">$user</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span> <span class="nx">instanceof</span> <span class="nx">User</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">UnsupportedUserException</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;Instances of &quot;%s&quot; are not supported.&#39;</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span><span class="nv">$user</span><span class="p">)));</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">loadUserByUsername</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">getUsername</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">supportsClass</span><span class="p">(</span><span class="nv">$class</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$class</span> <span class="o">===</span> <span class="s1">&#39;Symfony\Component\Security\Core\User\User&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>この例では、標準の <code class="docutils literal"><span class="pre">User</span></code> クラスのインスタンスがユーザーののために作成されます。
+しかし、独自のクラスを定義することも可能です。
+唯一の制約は、クラスが <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Security/Core/User/UserInterface.html">UserInterface</a>
+を実装していることです。</p>
+<p>そして、以下が、データベーススキーマと数名のサンプルユーザーデータを生成するためのコードです。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Doctrine\DBAL\Schema\Table</span><span class="p">;</span>
+
+<span class="nv">$schema</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getSchemaManager</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$schema</span><span class="o">-&gt;</span><span class="na">tablesExist</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$users</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Table</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">);</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;unsigned&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="s1">&#39;autoincrement&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">setPrimaryKey</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">32</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addUniqueIndex</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">255</span><span class="p">));</span>
+    <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">addColumn</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;length&#39;</span> <span class="o">=&gt;</span> <span class="mi">255</span><span class="p">));</span>
+
+    <span class="nv">$schema</span><span class="o">-&gt;</span><span class="na">createTable</span><span class="p">(</span><span class="nv">$users</span><span class="p">);</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;fabien&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;roles&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_USER&#39;</span>
+    <span class="p">));</span>
+
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg==&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;roles&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;ROLE_ADMIN&#39;</span>
+    <span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">もしDoctrine ORMを使用していれば、Symfony bridge for Doctrine はエンティティからユーザーを読み込むためのユーザープロバイダークラスを提供します。</p>
+</div>
+</div>
+<div class="section" id="id17">
+<h3>カスタムエンコーダーの定義<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>標準では、Silexは　<code class="docutils literal"><span class="pre">sha512</span></code> アルゴリズムをパスワードのエンコーディングに用います。
+さらに、パスワードは複数回エンコードされた後にbase64方式に変換されます。
+これらの標準設定は、 <code class="docutils literal"><span class="pre">security.encoder.digest</span></code> サービスを上書きすることで、変更可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.encoder.digest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// sha1アルゴリズムを使用</span>
+    <span class="c1">// base64エンコードを行わない</span>
+    <span class="c1">// 1回のみのエンコード</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">MessageDigestPasswordEncoder</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id18">
+<h3>カスタム認証プロバイダー<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>Symfony Securityコンポーネントは、
+たくさんの利用可能な認証プロバイダーを提供します。(form, HTTP, X509, remember me, ...)新しいプロバイダーを容易することも簡単です。
+新しい認証プロバイダーを登録するには、
+<code class="docutils literal"><span class="pre">security.authentication_listener.factory.XXX</span></code> （ <code class="docutils literal"><span class="pre">XXX</span></code> は設定で使用したい名前)というサービスを作ってください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_listener.factory.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$options</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// authenticationプロバイダーオブジェクトの定義</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_provider.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">WsseProvider</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.user_provider.default&#39;</span><span class="p">],</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/security_cache&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="c1">// authenticationリスナーオブジェクトの定義</span>
+    <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_listener.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">WsseListener</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security&#39;</span><span class="p">],</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.authentication_manager&#39;</span><span class="p">]);</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
+        <span class="c1">// authentication providerのid</span>
+        <span class="s1">&#39;security.authentication_provider.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">,</span>
+        <span class="c1">// authentication listenerのid</span>
+        <span class="s1">&#39;security.authentication_listener.&#39;</span><span class="o">.</span><span class="nv">$name</span><span class="o">.</span><span class="s1">&#39;.wsse&#39;</span><span class="p">,</span>
+        <span class="c1">// entry pointのid</span>
+        <span class="k">null</span><span class="p">,</span>
+        <span class="c1">// スタック中のリスナーの位置</span>
+        <span class="s1">&#39;pre_auth&#39;</span>
+    <span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>このようにすれば、他のビルトインauthenticationプロバイダーと同じように設定可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SecurityServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;security.firewalls&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+            <span class="c1">// ...</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">true</span></code> の代わりにauthenticationファクトリーの振舞をカスタマイズするためのオプションの配列を定義することができます。これはauthenticationプロバイダークラスの第二引数として渡されます。(上の例を参照してください。)</p>
+<p>この例では、authenticationプロバイダークラスをSymfony <a class="reference external" href="http://symfony.com/doc/current/cookbook/security/custom_authentication_provider.html">cookbook</a> のように扱いました。</p>
+</div>
+<div class="section" id="id19">
+<h3>ステートレス認証<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>標準では、セッションクッキーがユーザーのコンテキストを保持し続けます。
+しかし、証明書やHTTP認証やWSSEなどを使用している場合、証明情報はリクエストの度に送信されます。そのようなケースでは <code class="docutils literal"><span class="pre">stateless</span></code> 認証フラグを <code class="docutils literal"><span class="pre">true</span></code> にすることで、このような保持を止めることができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;default&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;stateless&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;wsse&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+
+        <span class="c1">// ...</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id20">
+<h2>トレイト<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\SecurityTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>user</strong>: 現在のユーザーを返します。</li>
+<li><strong>encodePassword</strong>: 与えられたパスワードをエンコードします。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">();</span>
+
+<span class="nv">$encoded</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">encodePassword</span><span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Silex\Route\SecurityTrait</span></code> は以下のメソッドをコントローラに追加します。</p>
+<ul class="simple">
+<li><strong>secure</strong>: 与えられたロールに応じて、コントローラを安全にします。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// do something but only for admins</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">secure</span><span class="p">(</span><span class="s1">&#39;ROLE_ADMIN&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>commit: 78a9a90a18d69eaef6f3469163ed76e77bf0355d
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/security.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/security.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="http_fragment.html">< HttpFragmentServiceProvider</a>
+<a class="next" href="remember_me.html">RememberMeServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/security.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/security.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/security.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">SecurityServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">パラメータ</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使用方法</a><ul>
+<li><a class="reference internal" href="#id5">現在のユーザーへのアクセス</a></li>
+<li><a class="reference internal" href="#http">HTTP認証を使用したパスのセキュリティ対策</a></li>
+<li><a class="reference internal" href="#id6">フォームのセキュリティ対策</a></li>
+<li><a class="reference internal" href="#id7">複数のファイアーウォールの定義</a></li>
+<li><a class="reference internal" href="#id8">ログアウトの追加</a></li>
+<li><a class="reference internal" href="#id9">アノニマスユーザーの許可</a></li>
+<li><a class="reference internal" href="#id10">ユーザーのロールチェック</a></li>
+<li><a class="reference internal" href="#id11">ユーザーの擬装</a></li>
+<li><a class="reference internal" href="#id12">ロールの上下関係の定義</a></li>
+<li><a class="reference internal" href="#id13">アクセスルールの設定</a></li>
+<li><a class="reference internal" href="#id15">カスタムユーザープロバイダーの定義</a></li>
+<li><a class="reference internal" href="#id17">カスタムエンコーダーの定義</a></li>
+<li><a class="reference internal" href="#id18">カスタム認証プロバイダー</a></li>
+<li><a class="reference internal" href="#id19">ステートレス認証</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id20">トレイト</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="http_fragment.html"
+                        title="previous chapter">HttpFragmentServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="remember_me.html"
+                        title="next chapter">RememberMeServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/security.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

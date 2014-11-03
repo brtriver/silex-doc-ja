@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>How to use PdoSessionStorage to store sessions in the database | Japan Symfony Group</title>
+    <title>PdoSessionStorageでセッションをデータベースで管理する | Japan Symfony Group</title>
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
@@ -29,13 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="up" title="Cookbook" href="index.html" />
-    <link rel="next" title="内部の仕組み" href="../internals.html" />
-    <link rel="prev" title="バリデーションのメッセージの国際化" href="translating_validation_messages.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="FormExtensionを使用したフォームのCSRF保護の無効化" href="form_no_csrf.html" />
+    <link rel="prev" title="バリデーションメッセージの翻訳" href="translating_validation_messages.html" /> 
   </head>
   <body>
 
@@ -61,21 +62,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="how-to-use-pdosessionstorage-to-store-sessions-in-the-database">
-<h1>How to use PdoSessionStorage to store sessions in the database<a class="headerlink" href="#how-to-use-pdosessionstorage-to-store-sessions-in-the-database" title="Permalink to this headline">¶</a></h1>
-<p>By default, the <tt class="xref doc docutils literal"><span class="pre">SessionServiceProvider</span></tt> writes
-session information in files using Symfony2 NativeFileSessionStorage. Most
-medium to large websites use a database to store sessions instead of files,
-because databases are easier to use and scale in a multi-webserver
-environment.</p>
-<p>Symfony2 has multiple session storage solutions and one of them uses PDO to
-store sessions, <cite>PdoSessionStorage
-&lt;http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/PdoSessionStorage.html&gt;
-To use it, replace the ``session.storage`</cite> service in your application like
-explained below.</p>
-<div class="section" id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Session\Storage\PdoSessionStorage</span><span class="p">;</span>
+  <div class="section" id="pdosessionstorage">
+<h1>PdoSessionStorageでセッションをデータベースで管理する<a class="headerlink" href="#pdosessionstorage" title="Permalink to this headline">¶</a></h1>
+<p>デフォルトでは、 <a class="reference internal" href="../providers/session.html"><em>SessionServiceProvider</em></a> がSymfony2 NativeFileSessionStorageを使ってセッション情報をファイルに記述します。</p>
+<p>中・大規模ウェブサイトでは、セッション情報をファイルではなく、データベースで管理したいでしょう。なぜならデータベースは複数のウェブサーバー環境に容易にスケール可能だからです。</p>
+<p>Symfony2の <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html">NativeSessionStorage</a>
+は複数のストレージハンドラを持っています。そのうちの一つである
+<a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html">PdoSessionHandler</a>
+は、セッションの保存にPDOを使用します。
+これを使うためには、次に示す例のようにアプリケーション中の <code class="docutils literal"><span class="pre">session.storage.handler</span></code> サービスを置き換えます。</p>
+<div class="section" id="pdo">
+<h2>専用のPDO サービスの使用<a class="headerlink" href="#pdo" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler</span><span class="p">;</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SessionServiceProvider</span><span class="p">());</span>
 
@@ -83,49 +81,74 @@ explained below.</p>
 <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;myuser&#39;</span><span class="p">;</span>
 <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mypassword&#39;</span><span class="p">;</span>
 
-<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.db_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;db_table&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span>
     <span class="s1">&#39;db_id_col&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span>
     <span class="s1">&#39;db_data_col&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;session_value&#39;</span><span class="p">,</span>
     <span class="s1">&#39;db_time_col&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;session_time&#39;</span><span class="p">,</span>
 <span class="p">);</span>
 
-<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">PDO</span><span class="p">(</span>
         <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.dsn&#39;</span><span class="p">],</span>
         <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.user&#39;</span><span class="p">],</span>
         <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.password&#39;</span><span class="p">]</span>
     <span class="p">);</span>
-<span class="p">});</span>
+<span class="p">};</span>
 
-<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">PdoSessionStorage</span><span class="p">(</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.handler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PdoSessionHandler</span><span class="p">(</span>
         <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo&#39;</span><span class="p">],</span>
-        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;pdo.db_options&#39;</span><span class="p">],</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">],</span>
         <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.options&#39;</span><span class="p">]</span>
     <span class="p">);</span>
-<span class="p">});</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="database-structure">
-<h2>Database structure<a class="headerlink" href="#database-structure" title="Permalink to this headline">¶</a></h2>
-<p>PdoSessionStorage needs a database table with 3 columns:</p>
+<div class="section" id="doctrineserviceprovider">
+<h2>DoctrineServiceProviderの使用<a class="headerlink" href="#doctrineserviceprovider" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../providers/doctrine.html"><em>DoctrineServiceProvider</em></a> を使うなら、別のDBコネクションを生成する必要はありません。単に、 <code class="docutils literal"><span class="pre">getWrappedConnection</span></code> メソッドを渡すだけで大丈夫です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SessionServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;db_table&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_id_col&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_data_col&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;session_value&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;db_time_col&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;session_time&#39;</span><span class="p">,</span>
+<span class="p">);</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.handler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">PdoSessionHandler</span><span class="p">(</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getWrappedConnection</span><span class="p">(),</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.db_options&#39;</span><span class="p">],</span>
+        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;session.storage.options&#39;</span><span class="p">]</span>
+    <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>データベースの構造<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>PdoSessionStorageを使用するには3カラムで構成されるデータベーステーブルが必要です。:</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">session_id</span></tt>: ID column (VARCHAR(255) or larger)</li>
-<li><tt class="docutils literal"><span class="pre">session_value</span></tt>: Value column (TEXT or CLOB)</li>
-<li><tt class="docutils literal"><span class="pre">session_time</span></tt>: Time column (INTEGER)</li>
+<li><code class="docutils literal"><span class="pre">session_id</span></code>: ID column (VARCHAR(255) or larger)</li>
+<li><code class="docutils literal"><span class="pre">session_value</span></code>: Value column (TEXT or CLOB)</li>
+<li><code class="docutils literal"><span class="pre">session_time</span></code>: Time column (INTEGER)</li>
 </ul>
-<p>You can find examples of SQL statements to create the session table in the
-<cite>Symfony2 cookbook
-&lt;http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html&gt;</cite></p>
+<p>セッションテーブルを作成するためのSQLステートメントの例は
+<a class="reference external" href="http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements">Symfony2 cookbook</a> にあります。</p>
+<p>commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/session_storage.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/session_storage.rst</a></p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="translating_validation_messages.html">< バリデーションのメッセージの国際化</a>
-<a class="next" href="../internals.html">内部の仕組み ></a>
+<a class="prev" href="translating_validation_messages.html">< バリデーションメッセージの翻訳</a>
+<a class="next" href="form_no_csrf.html">FormExtensionを使用したフォームのCSRF保護の無効化 ></a>
 </div>
 
 <div class="common_content_footer">
@@ -146,19 +169,20 @@ explained below.</p>
         <div class="sphinxsidebarwrapper">
   <h3>このページのコンテンツ</h3>
   <ul>
-<li><a class="reference internal" href="#">How to use PdoSessionStorage to store sessions in the database</a><ul>
-<li><a class="reference internal" href="#example">Example</a></li>
-<li><a class="reference internal" href="#database-structure">Database structure</a></li>
+<li><a class="reference internal" href="#">PdoSessionStorageでセッションをデータベースで管理する</a><ul>
+<li><a class="reference internal" href="#pdo">専用のPDO サービスの使用</a></li>
+<li><a class="reference internal" href="#doctrineserviceprovider">DoctrineServiceProviderの使用</a></li>
+<li><a class="reference internal" href="#id1">データベースの構造</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>前のドキュメント</h4>
   <p class="topless"><a href="translating_validation_messages.html"
-                        title="previous chapter">バリデーションのメッセージの国際化</a></p>
+                        title="previous chapter">バリデーションメッセージの翻訳</a></p>
   <h4>次のドキュメント</h4>
-  <p class="topless"><a href="../internals.html"
-                        title="next chapter">内部の仕組み</a></p>
+  <p class="topless"><a href="form_no_csrf.html"
+                        title="next chapter">FormExtensionを使用したフォームのCSRF保護の無効化</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cookbook/session_storage.txt"

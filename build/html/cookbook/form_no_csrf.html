@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FormExtensionを使用したフォームのCSRF保護の無効化 | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="YAMLを使用してバリデーションを設定" href="validator_yaml.html" />
+    <link rel="prev" title="PdoSessionStorageでセッションをデータベースで管理する" href="session_storage.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="../providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="formextensioncsrf">
+<h1>FormExtensionを使用したフォームのCSRF保護の無効化<a class="headerlink" href="#formextensioncsrf" title="Permalink to this headline">¶</a></h1>
+<p><em>FormExtension</em> はSymfony2 Form componentの機能を使って、あなたのアプリケーションでフォームを作成するためのサービスを提供してくれます。
+標準では、 <em>FormExtenion</em> はクロスサイトリクエストフォージェリを防ぐためにCSRFプロテクションを使用します。クロスサイトリクエストフォージェリは
+悪意のあるユーザがあなたの正当なユーザになることを試み、送信するつもりでないデータを送信させようとする攻撃手法です。</p>
+<p>CSRFプロテクションやCSRFトークンについての詳細は <a class="reference external" href="http://symfony.com/doc/current/book/forms.html#csrf-protection">Symfony2 Book</a> にあります。</p>
+<p>いくつかのケースで（htmlメールにフォームを埋め込みたい場合など）、これを無効化したい場合があります。
+一番簡単な方法は <code class="docutils literal"><span class="pre">createBuilder()</span></code> メソッドを使ってフォームビルダーに詳細なオプションを設定する方法です。</p>
+<div class="section" id="id1">
+<h2>例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$form</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;form.factory&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">createBuilder</span><span class="p">(</span><span class="s1">&#39;form&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;csrf_protection&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>これによって、全てのフォームはCSRFプロテクションが無効になった状態で送信されます。</p>
+</div>
+<div class="section" id="id2">
+<h2>さらに<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>この詳細な例は、<code class="docutils literal"><span class="pre">createBuilder()</span></code> メソッドの <code class="docutils literal"><span class="pre">$options</span></code> パラメータ
+によって <code class="docutils literal"><span class="pre">csrf_protection</span></code> を変更するための方法を示唆しています。</p>
+<p>これはSymfony2の <code class="docutils literal"><span class="pre">getDefaultOptions()</span></code> メソッドを、あなたのformクラスで使うのと同じくらいシンプルです。
+<a class="reference external" href="http://symfony.com/doc/current/book/forms.html#book-form-creating-form-classes">詳細はこちらを参照してください</a> 。</p>
+<p>commit: 34fe312a89e1cbc1d696bba419b2466305b55316
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/form_no_csrf.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/form_no_csrf.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="session_storage.html">< PdoSessionStorageでセッションをデータベースで管理する</a>
+<a class="next" href="validator_yaml.html">YAMLを使用してバリデーションを設定 ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/cookbook/form_no_csrf.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/cookbook/form_no_csrf.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/cookbook/form_no_csrf.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">FormExtensionを使用したフォームのCSRF保護の無効化</a><ul>
+<li><a class="reference internal" href="#id1">例</a></li>
+<li><a class="reference internal" href="#id2">さらに</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="session_storage.html"
+                        title="previous chapter">PdoSessionStorageでセッションをデータベースで管理する</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="validator_yaml.html"
+                        title="next chapter">YAMLを使用してバリデーションを設定</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cookbook/form_no_csrf.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="../providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

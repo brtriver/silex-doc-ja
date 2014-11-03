@@ -29,12 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="next" title="SwiftmailerServiceProvider" href="swiftmailer.html" />
-    <link rel="prev" title="SessionServiceProvider" href="session.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="TwigServiceProvider" href="twig.html" />
+    <link rel="prev" title="SwiftmailerServiceProvider" href="swiftmailer.html" /> 
   </head>
   <body>
 
@@ -66,10 +68,9 @@
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>translator.messages</strong>: メッセージとロケールのマッピングした配列。　このパラメーターは全ての言語の翻訳されたデータを含む。</li>
-<li><strong>locale</strong> (オプション): 翻訳のための使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は <tt class="docutils literal"><span class="pre">en</span></tt> です。</li>
-<li><strong>locale_fallback</strong> (オプション): 翻訳のための使用する代替のためのロケール。　現在のロケールが設定されていないときに利用されます。</li>
-<li><strong>translation.class_path</strong> (オプション): Symfony2 の Translation コンポーネントを配置したパス。</li>
+<li><strong>translator.domains</strong> (オプション): ドメインとロケールとメッセージのマップ。このパラメータは全ての言語とドメインの翻訳データを含みます。</li>
+<li><strong>locale</strong> (オプション): 翻訳のために使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は <code class="docutils literal"><span class="pre">en</span></code> です。</li>
+<li><strong>locale_fallbacks</strong> (オプション): 翻訳のために使用する代替のためのロケール。　現在のロケールでメッセージが設定されていないときに利用されます。</li>
 </ul>
 </div>
 <div class="section" id="id2">
@@ -86,91 +87,144 @@
 </div>
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>Symfony2 Translation コンポーネントのコピーがが <tt class="docutils literal"><span class="pre">vendor/symfony/src</span></tt> に配置されていることを確認してください。
-一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;locale_fallback&#39;</span>           <span class="o">=&gt;</span> <span class="s1">&#39;en&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;translation.class_path&#39;</span>    <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">,</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\LocaleServiceProvider</span><span class="p">());</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;locale_fallbacks&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;en&#39;</span><span class="p">),</span>
 <span class="p">));</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Symfony Translation Componentは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/translation&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id4">
 <h2>使い方<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>Translation プロバイダーは <tt class="docutils literal"><span class="pre">translator</span></tt> サービスを提供し、 <tt class="docutils literal"><span class="pre">translator.messages</span></tt> パラメーターを利用します:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.messages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;en&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hello %name%&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Goodbye %name%&#39;</span><span class="p">,</span>
+<p>Translation プロバイダーは <code class="docutils literal"><span class="pre">translator</span></code> サービスを提供し、 <code class="docutils literal"><span class="pre">translator.domains</span></code> パラメーターを利用します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.domains&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;messages&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;en&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hello %name%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Goodbye %name%&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;de&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hallo %name%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Tschüss %name%&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Bonjour %name%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Au revoir %name%&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">),</span>
-    <span class="s1">&#39;de&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Hallo %name%&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Tschüss %name%&#39;</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-        <span class="s1">&#39;hello&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;Bonjour %name%&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;goodbye&#39;</span>   <span class="o">=&gt;</span> <span class="s1">&#39;Au revoir %name%&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;validators&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;This value should be a valid number.&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Cette valeur doit être un nombre.&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">),</span>
 <span class="p">);</span>
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$locale</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;locale&#39;</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;locale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$locale</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/{locale}/{message}/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/{_locale}/{message}/{name}&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">trans</span><span class="p">(</span><span class="nv">$message</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;%name%&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">));</span>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう:</p>
+<p>上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう。</p>
 <ul class="simple">
-<li><tt class="docutils literal"><span class="pre">/en/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></tt> を返す。</li>
-<li><tt class="docutils literal"><span class="pre">/de/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hallo</span> <span class="pre">igor</span></tt> を返す。</li>
-<li><tt class="docutils literal"><span class="pre">/fr/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Bonjour</span> <span class="pre">igor</span></tt> を返す。</li>
-<li><tt class="docutils literal"><span class="pre">/it/hello/igor</span></tt> は <tt class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></tt> を返す。 (代替設定のため).</li>
+<li><code class="docutils literal"><span class="pre">/en/hello/igor</span></code> は <code class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></code> を返す。</li>
+<li><code class="docutils literal"><span class="pre">/de/hello/igor</span></code> は <code class="docutils literal"><span class="pre">Hallo</span> <span class="pre">igor</span></code> を返す。</li>
+<li><code class="docutils literal"><span class="pre">/fr/hello/igor</span></code> は <code class="docutils literal"><span class="pre">Bonjour</span> <span class="pre">igor</span></code> を返す。</li>
+<li><code class="docutils literal"><span class="pre">/it/hello/igor</span></code> は <code class="docutils literal"><span class="pre">Hello</span> <span class="pre">igor</span></code> を返す。 (代替設定のため).</li>
 </ul>
 </div>
 <div class="section" id="id5">
-<h2>レシピ<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="yaml">
-<h3>YAMLで言語ファイル<a class="headerlink" href="#yaml" title="Permalink to this headline">¶</a></h3>
-<p>PHPファイルで翻訳ファイルを用意することは不便でしょう。
-このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。</p>
-<p>まず最初に Symfony2 にある <tt class="docutils literal"><span class="pre">Config</span></tt> と <tt class="docutils literal"><span class="pre">Yaml</span></tt> コンポーネントが必要です。
-オートローダーでこれらのコンポーネントが登録されるようにします。
-そのために Symfony2 全体のリポジトリを <tt class="docutils literal"><span class="pre">vendor/symfony</span></tt> ディレクトリにクローンしてしまいます:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerNamespace</span><span class="p">(</span><span class="s1">&#39;Symfony&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/symfony/src&#39;</span><span class="p">);</span>
+<h2>トレイト<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\TranslationTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>trans</strong>: 与えられたメッセージを翻訳します。</li>
+<li><strong>transChoice</strong>:　数字によって翻訳を選ぶことにより与えられた選択メッセージを翻訳します。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">trans</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">transChoice</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは <tt class="docutils literal"><span class="pre">locals/en.yml</span></tt> を使います。
-マッピングは以下のようなファイルで用意するだけです:</p>
+</div>
+<div class="section" id="id6">
+<h2>レシピ<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="yaml">
+<h3>YAMLでの言語ファイル<a class="headerlink" href="#yaml" title="Permalink to this headline">¶</a></h3>
+<p>PHPファイルで翻訳ファイルを用意することは不便でしょう。
+このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。</p>
+<p>まず最初にSymfony2の <code class="docutils literal"><span class="pre">Config</span></code> と <code class="docutils literal"><span class="pre">Yaml</span></code> コンポーネントをcomposerファイルに追加します。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/config&quot;: &quot;~2.3&quot;,
+    &quot;symfony/yaml&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは <code class="docutils literal"><span class="pre">locals/en.yml</span></code> のような名前を使います。
+マッピングは以下のようなファイルで用意するだけです。</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">hello</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Hello %name%</span>
 <span class="l-Scalar-Plain">goodbye</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Goodbye %name%</span>
 </pre></div>
 </div>
-<p>この作業をあなたが使いたい全ての言語ファイル分用意します。そして、　ファイルに言語をマッピングするために <tt class="docutils literal"><span class="pre">translator.messages</span></tt> を設定します:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.messages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;en&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/en.yml&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;de&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/de.yml&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;fr&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/fr.yml&#39;</span><span class="p">,</span>
-<span class="p">);</span>
+<p>そして <code class="docutils literal"><span class="pre">translator</span></code> に <code class="docutils literal"><span class="pre">YamlFileLoader</span></code> と全ての翻訳ファイルを登録します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Translation\Loader\YamlFileLoader</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;translator&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$translator</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addLoader</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">YamlFileLoader</span><span class="p">());</span>
+
+    <span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/en.yml&#39;</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">);</span>
+    <span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/de.yml&#39;</span><span class="p">,</span> <span class="s1">&#39;de&#39;</span><span class="p">);</span>
+    <span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/fr.yml&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$translator</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 </div>
-<p>最後に <tt class="docutils literal"><span class="pre">ArrayLoader</span></tt> の代わりに <tt class="docutils literal"><span class="pre">YamlFileLoader</span></tt> を使うために <tt class="docutils literal"><span class="pre">translator.loader</span></tt> を上書きします。:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;translator.loader&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Symfony\Component\Translation\Loader\YamlFileLoader</span><span class="p">();</span>
+</div>
+<div class="section" id="xliff">
+<h3>XLIFFに基づいた言語ファイル<a class="headerlink" href="#xliff" title="Permalink to this headline">¶</a></h3>
+<p>YAMLで翻訳ファイルを作成するのと同じように、Symfony2 <code class="docutils literal"><span class="pre">Config</span></code> コンポーネントを追加するために、依存関係をcomposerに追加した後に、 XLIFFファイルをロケールディレクトリに配置し、トランスレーターに渡します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;xliff&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/en.xlf&#39;</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">);</span>
+<span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;xliff&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/de.xlf&#39;</span><span class="p">,</span> <span class="s1">&#39;de&#39;</span><span class="p">);</span>
+<span class="nv">$translator</span><span class="o">-&gt;</span><span class="na">addResource</span><span class="p">(</span><span class="s1">&#39;xliff&#39;</span><span class="p">,</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/locales/fr.xlf&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>これで YAML ファイルから翻訳データを読み込むことができます。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">XLIFFローダーはエクステンションによって既に設定されています。</p>
+</div>
+</div>
+<div class="section" id="twig">
+<h3>Twigテンプレートでの翻訳データへのアクセス<a class="headerlink" href="#twig" title="Permalink to this headline">¶</a></h3>
+<p>ロードされていれば、Twigテンプレートからtranslation service providerを利用可能です。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.translator.trans</span><span class="o">(</span><span class="s1">&#39;translation_key&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>さらに、Symfonyによって提供されているTwig bridge (詳しくはこちらを見てください。
+<a class="reference internal" href="twig.html"><em>TwigServiceProvider</em></a>), を使えば、Twig流に翻訳文字を使用することが出来ます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="s1">&#39;translation_key&#39;</span><span class="o">|</span><span class="nf">trans</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{{</span> <span class="s1">&#39;translation_key&#39;</span><span class="o">|</span><span class="nf">transchoice</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">trans</span> <span class="cp">%}</span><span class="x">translation_key</span><span class="cp">{%</span> <span class="k">endtrans</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/translation.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/translation.rst</a></p>
 </div>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="session.html">< SessionServiceProvider</a>
-<a class="next" href="swiftmailer.html">SwiftmailerServiceProvider ></a>
+<a class="prev" href="swiftmailer.html">< SwiftmailerServiceProvider</a>
+<a class="next" href="twig.html">TwigServiceProvider ></a>
 </div>
 
 <div class="common_content_footer">
@@ -196,8 +250,11 @@
 <li><a class="reference internal" href="#id2">サービス</a></li>
 <li><a class="reference internal" href="#id3">登録</a></li>
 <li><a class="reference internal" href="#id4">使い方</a></li>
-<li><a class="reference internal" href="#id5">レシピ</a><ul>
-<li><a class="reference internal" href="#yaml">YAMLで言語ファイル</a></li>
+<li><a class="reference internal" href="#id5">トレイト</a></li>
+<li><a class="reference internal" href="#id6">レシピ</a><ul>
+<li><a class="reference internal" href="#yaml">YAMLでの言語ファイル</a></li>
+<li><a class="reference internal" href="#xliff">XLIFFに基づいた言語ファイル</a></li>
+<li><a class="reference internal" href="#twig">Twigテンプレートでの翻訳データへのアクセス</a></li>
 </ul>
 </li>
 </ul>
@@ -205,11 +262,11 @@
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="session.html"
-                        title="previous chapter">SessionServiceProvider</a></p>
-  <h4>次のドキュメント</h4>
   <p class="topless"><a href="swiftmailer.html"
-                        title="next chapter">SwiftmailerServiceProvider</a></p>
+                        title="previous chapter">SwiftmailerServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="twig.html"
+                        title="next chapter">TwigServiceProvider</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/providers/translation.txt"

@@ -20,7 +20,7 @@ SessionServiceProvider
   * **cookie_secure**: Cookie のセキュア設定 (HTTPS)
   * **cookie_httponly**: Cookie が httpのみかどうかの設定
 
-  しかしながら、これらの全てはオプションです。　セッションはブラウザを開いている間保持されます。
+  しかしながら、これらの全てはオプションです。標準のセッションのライフタイムは 1800 秒 ( 30 分) です。
   これを上書きするためには、 ``lifetime`` オプションを設定します。
 
   使用可能な全てのオプションについては `PHP
@@ -86,3 +86,7 @@ SessionServiceProvider
 .. code-block:: php
 
     $app['session.storage.handler'] = null;
+
+
+commit: 81a08269268e5e2adb250c4a801f021face5ab4a
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/session.rst

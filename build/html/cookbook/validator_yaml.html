@@ -1,0 +1,180 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>YAMLを使用してバリデーションを設定 | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="サブリクエストの作成" href="sub_requests.html" />
+    <link rel="prev" title="FormExtensionを使用したフォームのCSRF保護の無効化" href="form_no_csrf.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="../providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="yaml">
+<h1>YAMLを使用してバリデーションを設定<a class="headerlink" href="#yaml" title="Permalink to this headline">¶</a></h1>
+<p>シンプルであることはSilexは心臓部であるので、YAMLファイルをバリデーションに使うための独創的な方法はありません。しかし、不可能ではありませんので方法を見てみましょう。</p>
+<p>まず、YAMLコンポーネントをインストールします。 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルで以下のように依存関係を宣言してください。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/yaml&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>次にバリデーションサービスに、あなたのクラスメタデータではなくYAMLファイルをロードするために <code class="docutils literal"><span class="pre">StaticMethodLoader</span></code> を使用しないことを伝えてください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">ValidatorServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;validator.mapping.class_metadata_factory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Symfony\Component\Validator\Mapping\ClassMetadataFactory</span><span class="p">(</span>
+    <span class="k">new</span> <span class="nx">Symfony\Component\Validator\Mapping\Loader\YamlFileLoader</span><span class="p">(</span><span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/validation.yml&#39;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>これで、全てのスタティックメソッドの使い方を置き換え、バリデーションルールを <code class="docutils literal"><span class="pre">validation.yml</span></code> に記述することができるようになります。</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="c1"># validation.yml</span>
+<span class="l-Scalar-Plain">Post</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">properties</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">title</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">NotNull</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">~</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">NotBlank</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">~</span>
+    <span class="l-Scalar-Plain">body</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">Min</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">100</span>
+</pre></div>
+</div>
+<p>commit: 34fe312a89e1cbc1d696bba419b2466305b55316
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/validator_yaml.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/validator_yaml.rst</a></p>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="form_no_csrf.html">< FormExtensionを使用したフォームのCSRF保護の無効化</a>
+<a class="next" href="sub_requests.html">サブリクエストの作成 ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/cookbook/validator_yaml.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/cookbook/validator_yaml.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/cookbook/validator_yaml.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="form_no_csrf.html"
+                        title="previous chapter">FormExtensionを使用したフォームのCSRF保護の無効化</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="sub_requests.html"
+                        title="next chapter">サブリクエストの作成</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cookbook/validator_yaml.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="../providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

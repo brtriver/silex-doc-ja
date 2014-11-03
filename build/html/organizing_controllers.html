@@ -1,0 +1,212 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>コントローラーの組織化 (Organizing Controllers) | Japan Symfony Group</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="サービス" href="services.html" />
+    <link rel="prev" title="ミドルウェア (Middlewares)" href="middlewares.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="organizing-controllers">
+<h1>コントローラーの組織化 (Organizing Controllers)<a class="headerlink" href="#organizing-controllers" title="Permalink to this headline">¶</a></h1>
+<p>コントローラーが多くなりすぎてしまった場合、コントローラーを意味的にグループ化したいことがあります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="c1">// blog用のコントローラーを定義</span>
+<span class="nv">$blog</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+<span class="nv">$blog</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;Blog home page&#39;</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="c1">// ...</span>
+
+<span class="c1">// forum用のコントローラーを定義</span>
+<span class="nv">$forum</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+<span class="nv">$forum</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;Forum home page&#39;</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// &quot;global&quot; コントローラーを定義</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;Main home page&#39;</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mount</span><span class="p">(</span><span class="s1">&#39;/blog&#39;</span><span class="p">,</span> <span class="nv">$blog</span><span class="p">);</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mount</span><span class="p">(</span><span class="s1">&#39;/forum&#39;</span><span class="p">,</span> <span class="nv">$forum</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">$app['controllers_factory']</span></code> は使われた場合、 <code class="docutils literal"><span class="pre">ControllerCollection</span></code> の新しいインスタンスを返すファクトリーです。</p>
+</div>
+<p><code class="docutils literal"><span class="pre">mount()</span></code> は全てのルーティングに対し与えられた接頭辞を付け加え、メインアプリケーションに組み込みます。なので、 <code class="docutils literal"><span class="pre">/</span></code> はメインのホームページに、 <code class="docutils literal"><span class="pre">/blog/</span></code> はブログのホームページに、 <code class="docutils literal"><span class="pre">/forum/</span></code> はフォーラムのホームページにルーティングされます。</p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last"><code class="docutils literal"><span class="pre">/blog</span></code> 以下にルーティングコレクションをマウントする場合、 <code class="docutils literal"><span class="pre">/blog</span></code> というURLでルーティングを定義することは不可能です。一番短い可能なURLは
+<code class="docutils literal"><span class="pre">/blog/</span></code> です。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">get()</span></code> や、 <code class="docutils literal"><span class="pre">match()</span></code> や、その他のHTTPメソッドをアプリケーションで呼ぶ際、実際には <code class="docutils literal"><span class="pre">ControllerCollection</span></code> のデフォルトインスタンス( <code class="docutils literal"><span class="pre">$app['controllers']</span></code> に保存されています。)を呼び出しています。</p>
+</div>
+<p>コントローラー分割の、他のメリットとしては、複数のコントローラーに対しての設定を、簡単に適用できるようになることが挙げられます。以下はミドルウェアの章から持ってきた、バックエンドコレクションに対して、コントローラーが扱う全ルートにセキュリティ設定を施す方法の例です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$backend</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+
+<span class="c1">// ensure that all controllers require logged-in users</span>
+<span class="nv">$backend</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$mustBeLogged</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>可読性向上のため、コントローラーコレクションを複数ファイルに分割することが可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="c1">// blog.php</span>
+<span class="nv">$blog</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+<span class="nv">$blog</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">&#39;Blog home page&#39;</span><span class="p">;</span> <span class="p">});</span>
+
+<span class="k">return</span> <span class="nv">$blog</span><span class="p">;</span>
+
+<span class="c1">// app.php</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mount</span><span class="p">(</span><span class="s1">&#39;/blog&#39;</span><span class="p">,</span> <span class="k">include</span> <span class="s1">&#39;blog.php&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p class="last">ファイルをrequireする代わりに、 <a class="reference internal" href="providers.html#controller-providers"><em>コントローラプロバイダ</em></a> を作成することもできます。</p>
+</div>
+<p>commit: 5a4b0158a5f6376f0c3c6750c56fc25b868613c8
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/organizing_controllers.rst">https://github.com/silexphp/Silex/blob/master/doc/organizing_controllers.rst</a></p>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="middlewares.html">< ミドルウェア (Middlewares)</a>
+<a class="next" href="services.html">サービス ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/organizing_controllers.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/organizing_controllers.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/organizing_controllers.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="middlewares.html"
+                        title="previous chapter">ミドルウェア (Middlewares)</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="services.html"
+                        title="next chapter">サービス</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/organizing_controllers.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

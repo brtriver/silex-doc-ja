@@ -1,24 +1,24 @@
-How to use PdoSessionStorage to store sessions in the database
-==============================================================
+PdoSessionStorageでセッションをデータベースで管理する
+=========================================================
 
-By default, the :doc:`SessionServiceProvider <providers/session>` writes
-session information in files using Symfony2 NativeFileSessionStorage. Most
-medium to large websites use a database to store sessions instead of files,
-because databases are easier to use and scale in a multi-webserver
-environment.
+デフォルトでは、 :doc:`SessionServiceProvider </providers/session>` がSymfony2 NativeFileSessionStorageを使ってセッション情報をファイルに記述します。
 
-Symfony2 has multiple session storage solutions and one of them uses PDO to
-store sessions, `PdoSessionStorage
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/PdoSessionStorage.html>
-To use it, replace the ``session.storage`` service in your application like
-explained below.
+中・大規模ウェブサイトでは、セッション情報をファイルではなく、データベースで管理したいでしょう。なぜならデータベースは複数のウェブサーバー環境に容易にスケール可能だからです。
 
-Example
--------
+Symfony2の `NativeSessionStorage
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html>`_
+は複数のストレージハンドラを持っています。そのうちの一つである
+`PdoSessionHandler
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html>`_ 
+は、セッションの保存にPDOを使用します。
+これを使うためには、次に示す例のようにアプリケーション中の ``session.storage.handler`` サービスを置き換えます。 
 
-::
+専用のPDO サービスの使用
+----------------------------
 
-    use Symfony\Component\HttpFoundation\Session\Storage\PdoSessionStorage;
+.. code-block:: php
+
+    use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
     $app->register(new Silex\Provider\SessionServiceProvider());
 
@@ -26,38 +26,68 @@ Example
     $app['pdo.user'] = 'myuser';
     $app['pdo.password'] = 'mypassword';
 
-    $app['pdo.db_options'] = array(
+    $app['session.db_options'] = array(
         'db_table'      => 'session',
         'db_id_col'     => 'session_id',
         'db_data_col'   => 'session_value',
         'db_time_col'   => 'session_time',
     );
 
-    $app['pdo'] = $app->share(function () use ($app) {
+    $app['pdo'] = function () use ($app) {
         return new PDO(
             $app['pdo.dsn'],
             $app['pdo.user'],
             $app['pdo.password']
         );
-    });
+    };
 
-    $app['session.storage'] = $app->share(function () use ($app) {
-        return new PdoSessionStorage(
+    $app['session.storage.handler'] = function () use ($app) {
+        return new PdoSessionHandler(
             $app['pdo'],
-            $app['pdo.db_options'],
+            $app['session.db_options'],
             $app['session.storage.options']
         );
-    });
+    };
 
-Database structure
+DoctrineServiceProviderの使用
+---------------------------------
+
+:doc:`DoctrineServiceProvider </providers/doctrine>` を使うなら、別のDBコネクションを生成する必要はありません。単に、 ``getWrappedConnection`` メソッドを渡すだけで大丈夫です。
+
+.. code-block:: php
+
+    use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
+
+    $app->register(new Silex\Provider\SessionServiceProvider());
+
+    $app['session.db_options'] = array(
+        'db_table'      => 'session',
+        'db_id_col'     => 'session_id',
+        'db_data_col'   => 'session_value',
+        'db_time_col'   => 'session_time',
+    );
+
+    $app['session.storage.handler'] = function () use ($app) {
+        return new PdoSessionHandler(
+            $app['db']->getWrappedConnection(),
+            $app['session.db_options'],
+            $app['session.storage.options']
+        );
+    };
+
+データベースの構造
 ------------------
 
-PdoSessionStorage needs a database table with 3 columns:
+PdoSessionStorageを使用するには3カラムで構成されるデータベーステーブルが必要です。:
 
 * ``session_id``: ID column (VARCHAR(255) or larger)
 * ``session_value``: Value column (TEXT or CLOB)
 * ``session_time``: Time column (INTEGER)
 
-You can find examples of SQL statements to create the session table in the
+セッションテーブルを作成するためのSQLステートメントの例は
 `Symfony2 cookbook
-<http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html>`
+<http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements>`_ にあります。
+
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/session_storage.rst

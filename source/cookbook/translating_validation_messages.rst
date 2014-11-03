@@ -15,3 +15,7 @@ Symfony2 バリデータを使っている場合、バリデーションメッ�
     });
 
 Symfony2 ``xlf`` ファイルから翻訳されたメッセージをロードするための処理は以上の記述で全てです。
+
+
+commit: 3f981d561df312cb008375df78e38e27fcf1cadd
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/translating_validation_messages.rst

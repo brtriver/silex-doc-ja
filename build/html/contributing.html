@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -29,11 +29,12 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
-    <link rel="next" title="DoctrineServiceProvider" href="providers/doctrine.html" />
+    <link rel="top" title="Silex 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="組み込みのプロバイダー" href="providers/index.html" />
     <link rel="prev" title="内部の仕組み" href="internals.html" /> 
   </head>
   <body>
@@ -64,19 +65,12 @@
 <h1>プロジェクトへの貢献<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>私たちは Silex のコードへの貢献をオープンにしています。
 もしバグを見つけたり、エクステンションで貢献したいと思ったなら次の手順に従ってください。</p>
-<ul>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="https://github.com/fabpot/Silex">Silex のリポジトリ</a></dt>
-<dd><p class="first last">を github からフォークしてください。</p>
-</dd>
-</dl>
-</li>
-<li><p class="first">機能を追加したり、バグフィックスを行ってください。</p>
-</li>
-<li><p class="first">追加した作業へのテストを行ってください。未来のバージョンが動かなくなってしまわないようにするために重要な作業です。</p>
-</li>
-<li><p class="first">プルリクエストを送ってください。　Bonus points for topic branches.</p>
-</li>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/silexphp/Silex">Silex のリポジトリ</a> を github からフォークしてください。</li>
+<li>機能を追加したり、バグフィックスを行ってください。</li>
+<li>追加した作業へのテストを行ってください。これは未来のバージョンが意図せず動かなくなってしまわないようにするために重要な作業です。</li>
+<li>場合によっては、ドキュメントを追加してください。</li>
+<li>適切な <cite>target branch</cite> に、 <a class="reference external" href="https://help.github.com/articles/creating-a-pull-request">プルリクエスト</a> を送ってください。</li>
 </ul>
 <p>もし大きな変更をおこなったり、何かしらの議論を必要とする場合は、
 <a class="reference external" href="http://groups.google.com/group/silex-php">メーリングリスト</a>
@@ -88,11 +82,30 @@
 License.</p>
 </div>
 </div>
+<div class="section" id="id4">
+<h1>ターゲットブランチ<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<p>Silexへプルリクエストを行う前に、どのブランチに投稿するかを決定する必要があります。まず、このセクションを注意深く読んでください。</p>
+<p>Silex は二つの: <cite>1.0</cite> and <cite>master</cite> (<cite>1.1</cite>)という有効なブランチを持っています。</p>
+<ul class="simple">
+<li><strong>1.0</strong>: バグの修正と、ドキュメントの修正は1.0 branchに行ってください。1.0 は定期的にマスターにマージされます。 1.0 branchでのSymfony2のバージョンは2.1, 2.2, 2.3です。</li>
+<li><strong>1.1</strong>: 全ての新しい機能は1.1branchに行ってください。変更は前方互換性を破壊してはいけません。 1.1branchでのSymfony2のバージョンは2.3です。</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h1>ドキュメントの作成<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<p>ドキュメントは <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> で記述され、 <a class="reference external" href="http://sphinx-doc.org">sphinx</a> で生成されています。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd </span>doc
+<span class="nv">$ </span>sphinx-build -b html . build
+</pre></div>
+</div>
+<p>commit: 2daa75051a195cad1b66a13b8df273161b9b8652
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/contributing.rst">https://github.com/silexphp/Silex/blob/master/doc/contributing.rst</a></p>
+</div>
 
 
 <div id="page_prev_next">
 <a class="prev" href="internals.html">< 内部の仕組み</a>
-<a class="next" href="providers/doctrine.html">DoctrineServiceProvider ></a>
+<a class="next" href="providers/index.html">組み込みのプロバイダー ></a>
 </div>
 
 <div class="common_content_footer">
@@ -111,12 +124,19 @@ License.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">プロジェクトへの貢献</a></li>
+<li><a class="reference internal" href="#id4">ターゲットブランチ</a></li>
+<li><a class="reference internal" href="#id5">ドキュメントの作成</a></li>
+</ul>
+
   <h4>前のドキュメント</h4>
   <p class="topless"><a href="internals.html"
                         title="previous chapter">内部の仕組み</a></p>
   <h4>次のドキュメント</h4>
-  <p class="topless"><a href="providers/doctrine.html"
-                        title="next chapter">DoctrineServiceProvider</a></p>
+  <p class="topless"><a href="providers/index.html"
+                        title="next chapter">組み込みのプロバイダー</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/contributing.txt"

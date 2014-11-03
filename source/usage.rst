@@ -17,7 +17,7 @@
     └── web
         └── index.php
 
-Silexをもっと柔軟に使いたい場合は、Composerを用います。
+Silexをもっと柔軟に使いたい場合は、 Composer_ を用います。
 まず以下の様な ``composer.json`` を作ってください。
 
 .. code-block:: json
@@ -28,7 +28,7 @@ Silexをもっと柔軟に使いたい場合は、Composerを用います。
         }
     }
 
-その後に、Composerを実行すればSilexと、それに関する全ての依存パッケージがインストールされます。
+その後に、 Composer_ を実行すればSilexと、それに関する全ての依存パッケージがインストールされます。
 
 .. code-block:: bash
 
@@ -194,19 +194,18 @@ POSTルーティングはリソースの生成を意味します。
     ``mail()`` 関数を使用する代わりに、 :doc:`SwiftmailerServiceProvider <providers/swiftmailer>` も使用できます。
 
 タイプヒンティングのおかげで、 ``request`` は、 Silex によって自動的にクロージャに注入されています。
-リクエストは `Request
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_ のインスタンスです。このことによって、HTTPステータスコードを設定することが可能になります。今回の例では``201　Created`` に設定されます。
+リクエストは Request_
+のインスタンスです。このことによって、HTTPステータスコードを設定することが可能になります。今回の例では``201　Created`` に設定されます。
 
 
 リクエストの ``get`` メソッドを使うことで変数を取得することができます。
 
-文字列を返す代わりに `Response
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html>`_ のインスタンスを返しています。
+文字列を返す代わりに Response_ のインスタンスを返しています。
 また、 HTTP のステータスコードを設定することもでき、今回の場合であれば ``201 Created`` が設定されています。
 
 .. note::
 
-    Silexは、常に ``Response`` を内部で使用し、 文字列を ``200 OK`` の HTTP のステータスコードと一緒にレスポンスオブジェクトに変換します。 
+    Silexは、常に Response_ を内部で使用し、 文字列を ``200 OK`` の HTTP のステータスコードと一緒にレスポンスオブジェクトに変換します。 
 
 他のメソッド (Other methods)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -319,7 +318,7 @@ POSTルーティングはリソースの生成を意味します。
         // ...
     })->convert('user', $userProvider);
 
-変換処理のコールバックは ``Request`` を第2引数として受け取ることができます。 ::
+変換処理のコールバックは Request_ を第2引数として受け取ることができます。 ::
 
     $callback = function ($post, Request $request) {
         return new Post($request->attributes->get('slug'));
@@ -355,9 +354,9 @@ POSTルーティングはリソースの生成を意味します。
 
 このサービスはアプリケーションで登録されることはなく、コンバートメソッドはコンバーターとして使われます。 ::
 
-    $app['converter.user'] = $app->share(function () {
+    $app['converter.user'] = function () {
         return new UserConverter();
-    });
+    };
 
     $app->get('/user/{user}', function (User $user) {
         // ...
@@ -423,12 +422,12 @@ POSTルーティングはリソースの生成を意味します。
 無名関数を使いたくない場合、コントローラをメソッドとして定義することが出来ます。
 これは ``ControllerClass::methodName`` という文法によって実現されます。このときコントローラオブジェクトの生成を遅延させることが可能です。 ::
 
-    $app->get('/', 'Igorw\\Foo::bar');
+    $app->get('/', 'Acme\\Foo::bar');
 
     use Silex\Application;
     use Symfony\Component\HttpFoundation\Request;
 
-    namespace Igorw
+    namespace Acme
     {
         class Foo
         {
@@ -439,7 +438,7 @@ POSTルーティングはリソースの生成を意味します。
         }
     }
 
-この例は レスポンスを得るために、 ``Igorw\Foo`` というクラスを要求に応じて読み込み、インスタンスを生成した後に、 ``bar`` メソッドを呼び出します。このとき、 ``$request`` と ``$app`` をクロージャに注入するために ``Request`` と ``Silex\Application`` というタイプヒンティングが使用可能です。
+この例は レスポンスを得るために、 ``Igorw\Foo`` というクラスを要求に応じて読み込み、インスタンスを生成した後に、 ``bar`` メソッドを呼び出します。このとき、 ``$request`` と ``$app`` をクロージャに注入するために Request_ と ``Silex\Application`` というタイプヒンティングが使用可能です。
 
 こうすることで、Silexとあなたのコントローラの分離度が強まるため、 :doc:`コントローラをサービスとして定義することが出来ます。 <providers/service_controller>`.
 
@@ -517,7 +516,7 @@ POSTルーティングはリソースの生成を意味します。
 
 .. note::
 
-    Silex にはエラーのログ処理を行うための `Monolog <https://github.com/Seldaek/monolog>`_
+    Silex にはエラーのログ処理を行うための Monolog_
     プロバイダーも付いてきます。
     詳しくは *Providers* の章を参照してください。
 
@@ -721,3 +720,10 @@ Silexではショートカットメソッドを定義するトレイトを使用
       });
 
 .. _download: http://silex.sensiolabs.org/download
+.. _Composer: http://getcomposer.org/
+.. _Request: http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html
+.. _Response: http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html
+.. _Monolog: https://github.com/Seldaek/monolog
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/usage.rst

@@ -1,0 +1,297 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>サブリクエストの作成 | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="エラーを例外に変換する方法" href="error_handler.html" />
+    <link rel="prev" title="YAMLを使用してバリデーションを設定" href="validator_yaml.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="../providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>サブリクエストの作成<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Silexは <code class="docutils literal"><span class="pre">HttpKernelInterface</span></code> に基づいて構成されています。
+これによって、 アプリケーションに対するリクエストをシミュレートすることができます。</p>
+<p>これは、ページの中に異なるページを埋め込むことができることを意味します、さらに、それは、URLを変更せずに内部的にリダイレクトを行うことによってリクエストのフォワードを行えるということも意味しています。</p>
+<div class="section" id="id2">
+<h2>基礎<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Application</span></code> の <code class="docutils literal"><span class="pre">handle</span></code> メソッドを呼ぶことでサブリクエストを作成することが出来ます。
+このメソッドの引数は3つです。</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">$request</span></code>: <code class="docutils literal"><span class="pre">Request</span></code> クラスのインスタンスで、HTTPリクエストを表現します。</li>
+<li><code class="docutils literal"><span class="pre">$type</span></code>: <code class="docutils literal"><span class="pre">HttpKernelInterface::MASTER_REQUEST</span></code> または
+<code class="docutils literal"><span class="pre">HttpKernelInterface::SUB_REQUEST</span></code> のどちらかである必要があります。 リスナーはマスターリクエストに対してのみ実行されるので、これを <code class="docutils literal"><span class="pre">SUB_REQUEST</span></code> に設定することが重要です.</li>
+<li><code class="docutils literal"><span class="pre">$catch</span></code>: 例外を補足し、ステータスコード <code class="docutils literal"><span class="pre">500</span></code> とともにレスポンスを返却します。この引数はデフォルトで <code class="docutils literal"><span class="pre">true</span></code> になっています。サブリクエストのためには、基本的には <code class="docutils literal"><span class="pre">false</span></code> に設定したほうが好ましい場合が多いでしょう。</li>
+</ul>
+<p><code class="docutils literal"><span class="pre">handle</span></code> を呼ぶと、 手動でサブリクエストを生成できます。以下がその例です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>もう少し、注意しておくべき事があります。
+だいたいのケースでは、現在のマスターリクエストのいくつかの部分(クッキー、サーバー情報、セッションなどを含む)をフォワードしたいでしょう。</p>
+<p>詳細な例を下記に示します。(<code class="docutils literal"><span class="pre">$request</span></code>
+がマスターリクエストを保持しています。)</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">(),</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">server</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">());</span>
+<span class="k">if</span> <span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getSession</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$subRequest</span><span class="o">-&gt;</span><span class="na">setSession</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getSession</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>クライアントに対してレスポンスをフォワードするには、単にコントローラから返却すれば大丈夫です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/foo&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">,</span> <span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">);</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$subRequest</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span><span class="o">::</span><span class="na">SUB_REQUEST</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>もし、レスポンスを大きいページの内部に入れたい場合は <code class="docutils literal"><span class="pre">Response::getContent</span></code> を読んでください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$header</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span>
+<span class="nv">$footer</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span>
+<span class="nv">$body</span> <span class="o">=</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">();</span>
+
+<span class="k">return</span> <span class="nv">$header</span><span class="o">.</span><span class="nv">$body</span><span class="o">.</span><span class="nv">$footer</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="twig">
+<h2>Twigテンプレートによるレンダリング<a class="headerlink" href="#twig" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../providers/twig.html"><em>TwigServiceProvider</em></a> はTwigテンプレートで使うことが出来る <code class="docutils literal"><span class="pre">render</span></code> メソッドを提供します。
+これによって、ページを内包させるのが便利になります。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">render</span><span class="o">(</span><span class="s1">&#39;/sidebar&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>詳しくは、 <a class="reference internal" href="../providers/twig.html"><em>TwigServiceProvider</em></a> の章を読んでください。</p>
+</div>
+<div class="section" id="edge-side-includes">
+<h2>エッジサイドインクルード (Edge Side Includes)<a class="headerlink" href="#edge-side-includes" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../providers/http_cache.html"><em>HttpCacheServiceProvider</em></a> か、Varnishのようなリバースプロキシキャッシュを通して、ESIを使用することが出来ます。
+これを使うとページを内包させるだけでなく、ページの一部分をキャッシュできるというメリットも生じます。</p>
+<p>以下がESI経由でページを内包させる例です。:</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="x">&lt;esi:include src=&quot;/sidebar&quot; /&gt;</span>
+</pre></div>
+</div>
+<p>詳しくは、 <a class="reference internal" href="../providers/http_cache.html"><em>HttpCacheServiceProvider</em></a> の章を読んでください。</p>
+</div>
+<div class="section" id="url">
+<h2>ベースURLに基づいたリクエストの分配<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h2>
+<p>一つ注意すべきなのはベースURLです。
+もしあなたのアプリケーションがウェブサーバーのウェブルートに配置されていない場合、
+<code class="docutils literal"><span class="pre">http://example.org/foo/index.php/articles/42</span></code> のようなURLを持つことでしょう。</p>
+<p>この場合、 <code class="docutils literal"><span class="pre">/foo/index.php</span></code> が、あなたのリクエストベースパスです。
+Silexはルーティングプロセスでのパスプレフィックスを、 <code class="docutils literal"><span class="pre">$request-&gt;server</span></code> から読み取ることで解釈します。
+サブリクエストでは、この挙動は問題を生じることがあります。
+ベースパスをリクエストの前に付けなかった場合、リクエストはあなたがマッチさせたいベースパスを間違えて切り落としてしまうことがあるからです。</p>
+<p>このような問題はベースパスを常にリクエストを構築する前に付けることで回避することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$url</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getUriForPath</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="nv">$subRequest</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="nv">$url</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">cookies</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">(),</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">server</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>手動でサブリクエストを作成する際には、このような注意が必要です。</p>
+</div>
+<div class="section" id="id3">
+<h2>コンテナースコープの欠如<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Silexでは、とても強力なサブリクエストが使用可能であるため、制限をかける必要があります。やってしまいがちな主な制限/危険性は、Pimpleコンテナー上のスコープの欠如です。</p>
+<p>コンテナーはSilexアプリケーションに対してグローバルです。そのため、アプリケーションオブジェクト <strong>は</strong> コンテナーです。 アプリケーションに対するどんなリクエストも、同じサービスの再利用で処理されます。
+そのため、これらのサービスは可変（mutable）であり、マスターリクエスト中の処理はサブリクエストなどに影響を与えます。 <code class="docutils literal"><span class="pre">request</span></code> に依存するどんなサービスも（マスター/サブ）リクエストを受け取った時点でそれを保存し、それを使い続けます。このときリクエストが既に終了したとしても、そのリクエストを使用し続けてしまいます。</p>
+<p>例</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ContentFormatNegotiator</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$request</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span> <span class="o">=</span> <span class="nv">$request</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">negotiateFormat</span><span class="p">(</span><span class="k">array</span> <span class="nv">$serverTypes</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$clientAcceptType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">headers</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;Accept&#39;</span><span class="p">);</span>
+
+        <span class="o">...</span>
+
+        <span class="k">return</span> <span class="nv">$format</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>この例は一見すると無害に見えます。しかし、実はあなたが
+　<code class="docutils literal"><span class="pre">$request-&gt;headers-&gt;get()</span></code> が実際に何を返すかを知る方法はありません。　なぜなら、 <code class="docutils literal"><span class="pre">$request</span></code> はマスターリクエストかもしれないし、サブリクエストかもしれないからです。
+この場合はリクエストを <code class="docutils literal"><span class="pre">negotiateFormat</span></code> の引数として与えることが正解です。そうすることで、リスナーやコントローラといった現在のリクエストへの安全なアクセスが可能な場所で、それを与えることが出来ます。</p>
+<p>以下に、もう少し一般的な、この問題に対する対処方法を示します。:</p>
+<ul class="simple">
+<li>VarnishによるESIを使う。</li>
+<li>リクエストを注入(inject)しない。 リスナーで代用し、リクエストを保存しなくともにアクセス可能な状態にする。</li>
+<li>Silexアプリケーションを注入(inject)し、そこからリクエストをフェッチする。</li>
+</ul>
+<p>commit: 6d9e3fe4d7d9ed563800ee8b4559bd51c13457e5
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/sub_requests.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/sub_requests.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="validator_yaml.html">< YAMLを使用してバリデーションを設定</a>
+<a class="next" href="error_handler.html">エラーを例外に変換する方法 ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/cookbook/sub_requests.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/cookbook/sub_requests.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/cookbook/sub_requests.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">サブリクエストの作成</a><ul>
+<li><a class="reference internal" href="#id2">基礎</a></li>
+<li><a class="reference internal" href="#twig">Twigテンプレートによるレンダリング</a></li>
+<li><a class="reference internal" href="#edge-side-includes">エッジサイドインクルード (Edge Side Includes)</a></li>
+<li><a class="reference internal" href="#url">ベースURLに基づいたリクエストの分配</a></li>
+<li><a class="reference internal" href="#id3">コンテナースコープの欠如</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="validator_yaml.html"
+                        title="previous chapter">YAMLを使用してバリデーションを設定</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="error_handler.html"
+                        title="next chapter">エラーを例外に変換する方法</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cookbook/sub_requests.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="../providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

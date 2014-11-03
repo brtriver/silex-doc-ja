@@ -26,9 +26,9 @@ submodule化したSilex.gitのdocへのコミット履歴を確認して差分�
 
     $ git pull
 
-2.Silex.gitに移動
+2.Silexに移動
 
-    $ cd Silex.git
+    $ cd Silex
 
 3.翻訳作業を最後に同期した日時以降の更新内容を確認
 
@@ -46,6 +46,6 @@ submodule化したSilex.gitのdocへのコミット履歴を確認して差分�
     $ git push origin master
 
 ## 作業が完了している本家コミットの年月日
-2013-11-18
+2014-10-12
 
 [id]: http://silex.sensiolabs.org/

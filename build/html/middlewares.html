@@ -1,0 +1,307 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ミドルウェア (Middlewares) | Japan Symfony Group</title>
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="コントローラーの組織化 (Organizing Controllers)" href="organizing_controllers.html" />
+    <link rel="prev" title="使用方法 (Usage)" href="usage.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="middlewares">
+<h1>ミドルウェア (Middlewares)<a class="headerlink" href="#middlewares" title="Permalink to this headline">¶</a></h1>
+<p>Silexでは、リクエスト処理の際に <em>ミドルウェア</em> を通して、色々なタイミングでSilexの振舞を変更するようなコードを実行させることが出来ます。</p>
+<ul class="simple">
+<li><em>アプリケーションミドルウェア</em> は今、制御されているリクエストとは独立に呼び出されます。</li>
+<li><em>ルートミドルウェア</em> は、それが関連付けられたルーティングにマッチした時に呼び出されます。</li>
+</ul>
+<div class="section" id="application-middlewares">
+<h2>アプリケーションミドルウェア (Application Middlewares)<a class="headerlink" href="#application-middlewares" title="Permalink to this headline">¶</a></h2>
+<p>アプリケーションミドルウェアは&#8221;マスター&#8221;リクエストに対してのみ実行されます。</p>
+<div class="section" id="before-middleware">
+<h3>前処理ミドルウェア (Before Middleware)<a class="headerlink" href="#before-middleware" title="Permalink to this headline">¶</a></h3>
+<p><em>前処理</em> ミドルウェアでは、コントローラが実行される前にリクエストの微調整を行なうことができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>標準では、ミドルウェアはルーティングとセキュリティに関する処理の後に実行されます。</p>
+<p>早く例外が発生した場合でも(インスタンスに対する404や403エラーなど)ミドルウェアを実行させたいときは、ミドルウェアを早期イベントとして登録する必要があります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">EARLY_EVENT</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>もちろん、この場合では、ルーティングとセキュリティは実行されません。従って、ロケールやルーティングやセキュリティユーザに関する情報にはアクセスできません。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">前処理ミドルウェアはSymfony <em>request</em> イベントに登録されたイベントです。</p>
+</div>
+</div>
+<div class="section" id="after-middleware">
+<h3>後処理ミドルウェア (After Middleware)<a class="headerlink" href="#after-middleware" title="Permalink to this headline">¶</a></h3>
+<p><em>後処理</em> アプリケーションミドルウェアは、レスポンスの微調整をクライアントに送信する前に行なうことが出来ます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">後処理ミドルウェアはSymfony <em>response</em> イベントに登録されたイベントです。</p>
+</div>
+</div>
+<div class="section" id="finish-middleware">
+<h3>完了ミドルウェア (Finish Middleware)<a class="headerlink" href="#finish-middleware" title="Permalink to this headline">¶</a></h3>
+<p><em>完了</em> アプリケーションミドルウェアは、レスポンスをクライアントに対して送信した後に、何らかのタスク(メールの送信、ログ処理等)を実行することが可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">finish</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="c1">// 注意：リクエストやレスポンスに対する変更は無視されます。</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">完了ミドルウェアはSymfony <em>terminate</em> イベントに登録されたイベントです。</p>
+</div>
+</div>
+<div class="section" id="routes-middlewares">
+<h3>ルートミドルウェア (Routes middlewares)<a class="headerlink" href="#routes-middlewares" title="Permalink to this headline">¶</a></h3>
+<p>ルートミドルウェアは、ルーティングやルーティングコレクションに対して追加することが出来ます。ルートミドルウェアは対応するルーティングがマッチしたときに呼び出されます。また、呼び出しは次の例のようにスタックすることが出来ます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before1</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before2</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after1</span><span class="p">)</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after2</span><span class="p">)</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>前処理ミドルウェア (Before Middleware)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><em>前処理</em> ルートミドルウェアはルーティングのコールバックが実行される前に呼び出されます。ただし、 <em>前処理</em> アプリケーションミドルウェアよりは後に呼び出されます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$before</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="nv">$before</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>後処理ミドルウェア (After Middleware)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p><em>後処理</em> ルートミドルウェアは、ルーティングのコールバックが実行された後に呼び出されます。ただし、 <em>後処理</em> アプリケーションミドルウェアよりは前に呼び出されます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$after</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">Response</span> <span class="nv">$response</span><span class="p">,</span> <span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">};</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/somewhere&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">after</span><span class="p">(</span><span class="nv">$after</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="middlewares-priority">
+<h2>ミドルウェアの優先度 (Middlewares Priority)<a class="headerlink" href="#middlewares-priority" title="Permalink to this headline">¶</a></h2>
+<p>望むがままにたくさんのミドルウェアを追加しても構いません、その場合は、追加した順番と同じ順番でミドルウェアが呼び出されます。</p>
+<p>登録メソッドに対し、追加の引数を渡すことで、明示的にミドルウェアの優先度を制御することが可能です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="mi">32</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>利便性のために、出来るだけ早く、出来るだけ遅く、というイベントの登録に用いることが出来る二つの定数が用意されています。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">EARLY_EVENT</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span> <span class="nx">Application</span><span class="o">::</span><span class="na">LATE_EVENT</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="short-circuiting-the-controller">
+<h2>コントローラの省略 (Short-circuiting the Controller)<a class="headerlink" href="#short-circuiting-the-controller" title="Permalink to this headline">¶</a></h2>
+<p>前処理ミドルウェアがレスポンスオブジェクトを返す場合、リクエスト制御では、以降の前処理ミドルウェアおよびルーティングコールバックの実行を省略し、後処理ミドルウェアにレスポンスを渡します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// アクセスしたページが保護されている場合ログイン画面にリダイレクトする。</span>
+    <span class="c1">// redirect the user to the login screen if access to the Resource is protected</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">RedirectResponse</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">前処理ミドルウェアがレスポンスや `` null `` を返さない場合 <code class="docutils literal"><span class="pre">RuntimeException</span></code> が投げられます。</p>
+</div>
+<p>commit: 5ae31daefeea39c7fde4b44f8ac92f8e9b7d7b92
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/middlewares.rst">https://github.com/silexphp/Silex/blob/master/doc/middlewares.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="usage.html">< 使用方法 (Usage)</a>
+<a class="next" href="organizing_controllers.html">コントローラーの組織化 (Organizing Controllers) ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/middlewares.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/middlewares.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/middlewares.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">ミドルウェア (Middlewares)</a><ul>
+<li><a class="reference internal" href="#application-middlewares">アプリケーションミドルウェア (Application Middlewares)</a><ul>
+<li><a class="reference internal" href="#before-middleware">前処理ミドルウェア (Before Middleware)</a></li>
+<li><a class="reference internal" href="#after-middleware">後処理ミドルウェア (After Middleware)</a></li>
+<li><a class="reference internal" href="#finish-middleware">完了ミドルウェア (Finish Middleware)</a></li>
+<li><a class="reference internal" href="#routes-middlewares">ルートミドルウェア (Routes middlewares)</a></li>
+<li><a class="reference internal" href="#id1">前処理ミドルウェア (Before Middleware)</a></li>
+<li><a class="reference internal" href="#id2">後処理ミドルウェア (After Middleware)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#middlewares-priority">ミドルウェアの優先度 (Middlewares Priority)</a></li>
+<li><a class="reference internal" href="#short-circuiting-the-controller">コントローラの省略 (Short-circuiting the Controller)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="usage.html"
+                        title="previous chapter">使用方法 (Usage)</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="organizing_controllers.html"
+                        title="next chapter">コントローラーの組織化 (Organizing Controllers)</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/middlewares.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

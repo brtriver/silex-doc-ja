@@ -6,13 +6,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Changelog | Japan Symfony Group</title>
+    <title>チェンジログ | Japan Symfony Group</title>
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -29,10 +29,12 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="index.html" />
+    <link rel="prev" title="ウェブサーバーの設定" href="web_servers.html" /> 
   </head>
   <body>
 
@@ -58,26 +60,248 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
-<p>このチェンジログはすべての後方互換性がない部分について説明しています:</p>
+  <div class="section" id="id1">
+<h1>チェンジログ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="xx-xx">
+<h2>2.0.0 (2013-XX-XX)<a class="headerlink" href="#xx-xx" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Updated Pimple to 2.1</li>
+<li>Updated session listeners to extends HttpKernel ones</li>
+<li>[BC BREAK] Locale management has been moved to LocaleServiceProvider which must be registered
+if you want Silex to manage your locale (must also be registered for the translation service provider)</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>1.2.2 (2014-09-26)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>fixed Translator locale management</li>
+<li>added support for the $app argument in application middlewares (to make it consistent with route middlewares)</li>
+<li>added form.types to the Form provider</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>1.2.1 (2014-07-01)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>added support permissions in the Monolog provider</li>
+<li>fixed Switfmailer spool where the event dispatcher is different from the other ones</li>
+<li>fixed locale when changing it on the translator itself</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>1.2.0 (2013-XX-XX)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Reverted &#8220;convert attributes on the request that actually exist&#8221;</li>
+<li>[BC BREAK] Routes are now always added in the order of their registration (even for mounted routes)</li>
+<li>Added run() on Route to be able to define the controller code</li>
+<li>Deprecated TwigCoreExtension (register the new HttpFragmentServiceProvider instead)</li>
+<li>Added HttpFragmentServiceProvider</li>
+<li>Allowed a callback to be a method call on a service (before, after, finish, error, on Application; convert, before, after on Controller)</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>1.1.3 (2013-XX-XX)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed translator locale management</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>1.1.2 (2013-10-30)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Added missing &#8220;security.hide_user_not_found&#8221; support in SecurityServiceProvider</li>
+<li>Fixed event listeners that are registered after the boot via the on() method</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h2>1.0.2 (2013-10-30)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed SecurityServiceProvider to use null as a fake controller so that routes can be dumped</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>1.1.1 (2013-10-11)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Removed or replaced deprecated Symfony code</li>
+<li>Updated code to take advantages of 2.3 new features</li>
+<li>Only convert attributes on the request that actually exist.</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>1.1.0 (2013-07-04)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Support for any <code class="docutils literal"><span class="pre">Psr\Log\LoggerInterface</span></code> as opposed to the monolog-bridge
+one.</li>
+<li>Made dispatcher proxy methods <code class="docutils literal"><span class="pre">on</span></code>, <code class="docutils literal"><span class="pre">before</span></code>, <code class="docutils literal"><span class="pre">after</span></code> and <code class="docutils literal"><span class="pre">error</span></code>
+lazy, so that they will not instantiate the dispatcher early.</li>
+<li>Dropped support for 2.1 and 2.2 versions of Symfony.</li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h2>1.0.1 (2013-07-04)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed RedirectableUrlMatcher::redirect() when Silex is configured to use a logger</li>
+<li>Make <code class="docutils literal"><span class="pre">DoctrineServiceProvider</span></code> multi-db support lazy.</li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>1.0.0 (2013-05-03)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>2012-03-11</strong>: Added route middlewares</p>
+<li><p class="first"><strong>2013-04-12</strong>: Added support for validators as services.</p>
 </li>
-<li><p class="first"><strong>2012-03-02</strong>: Switched to use Composer for dependency management</p>
+<li><p class="first"><strong>2013-04-01</strong>: Added support for host matching with symfony 2.2:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// app-specific action</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">host</span><span class="p">(</span><span class="s1">&#39;example.com&#39;</span><span class="p">);</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// user-specific action</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">host</span><span class="p">(</span><span class="s1">&#39;{user}.example.com&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>2013-03-08</strong>: Added support for form type extensions and guessers as
+services.</p>
+</li>
+<li><p class="first"><strong>2013-03-08</strong>: Added support for remember-me via the
+<code class="docutils literal"><span class="pre">RememberMeServiceProvider</span></code>.</p>
+</li>
+<li><p class="first"><strong>2013-02-07</strong>: Added <code class="docutils literal"><span class="pre">Application::sendFile()</span></code> to ease sending
+<code class="docutils literal"><span class="pre">BinaryFileResponse</span></code>.</p>
+</li>
+<li><p class="first"><strong>2012-11-05</strong>: Filters have been renamed to application middlewares in the
+documentation.</p>
+</li>
+<li><p class="first"><strong>2012-11-05</strong>: The <code class="docutils literal"><span class="pre">before()</span></code>, <code class="docutils literal"><span class="pre">after()</span></code>, <code class="docutils literal"><span class="pre">error()</span></code>, and <code class="docutils literal"><span class="pre">finish()</span></code>
+listener priorities now set the priority of the underlying Symfony event
+instead of a custom one before.</p>
+</li>
+<li><p class="first"><strong>2012-11-05</strong>: Removing the default exception handler should now be done
+via its <code class="docutils literal"><span class="pre">disable()</span></code> method:</p>
+<blockquote>
+<div><p>Before:</p>
+<blockquote>
+<div><p>unset($app[&#8216;exception_handler&#8217;]);</p>
+</div></blockquote>
+<p>After:</p>
+<blockquote>
+<div><p>$app[&#8216;exception_handler&#8217;]-&gt;disable();</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>2012-07-15</strong>: removed the <code class="docutils literal"><span class="pre">monolog.configure</span></code> service. Use the
+<code class="docutils literal"><span class="pre">extend</span></code> method instead:</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog.configure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$monolog</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;monolog&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;monolog&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$monolog</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+
+    <span class="k">return</span> <span class="nv">$monolog</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>2012-06-17</strong>: <code class="docutils literal"><span class="pre">ControllerCollection</span></code> now takes a required route instance
+as a constructor argument.</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$controllers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$controllers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">(</span><span class="k">new</span> <span class="nx">Route</span><span class="p">());</span>
+
+<span class="c1">// or even better</span>
+<span class="nv">$controllers</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>2012-06-17</strong>: added application traits for PHP 5.4</p>
+</li>
+<li><p class="first"><strong>2012-06-16</strong>: renamed <code class="docutils literal"><span class="pre">request.default_locale</span></code> to <code class="docutils literal"><span class="pre">locale</span></code></p>
+</li>
+<li><p class="first"><strong>2012-06-16</strong>: Removed the <code class="docutils literal"><span class="pre">translator.loader</span></code> service. See documentation
+for how to use XLIFF or YAML-based translation files.</p>
+</li>
+<li><p class="first"><strong>2012-06-15</strong>: removed the <code class="docutils literal"><span class="pre">twig.configure</span></code> service. Use the <code class="docutils literal"><span class="pre">extend</span></code>
+method instead:</p>
+<blockquote>
+<div><p>Before:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig.configure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">protect</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$twig</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>After:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>2012-06-13</strong>: Added a route <code class="docutils literal"><span class="pre">before</span></code> middleware</p>
+</li>
+<li><p class="first"><strong>2012-06-13</strong>: Renamed the route <code class="docutils literal"><span class="pre">middleware</span></code> to <code class="docutils literal"><span class="pre">before</span></code></p>
+</li>
+<li><p class="first"><strong>2012-06-13</strong>: Added an extension for the Symfony Security component</p>
+</li>
+<li><p class="first"><strong>2012-05-31</strong>: Made the <code class="docutils literal"><span class="pre">BrowserKit</span></code>, <code class="docutils literal"><span class="pre">CssSelector</span></code>, <code class="docutils literal"><span class="pre">DomCrawler</span></code>,
+<code class="docutils literal"><span class="pre">Finder</span></code> and <code class="docutils literal"><span class="pre">Process</span></code> components optional dependencies. Projects that
+depend on them (e.g. through functional tests) should add those dependencies
+to their <code class="docutils literal"><span class="pre">composer.json</span></code>.</p>
+</li>
+<li><p class="first"><strong>2012-05-26</strong>: added <code class="docutils literal"><span class="pre">boot()</span></code> to <code class="docutils literal"><span class="pre">ServiceProviderInterface</span></code>.</p>
+</li>
+<li><p class="first"><strong>2012-05-26</strong>: Removed <code class="docutils literal"><span class="pre">SymfonyBridgesServiceProvider</span></code>. It is now implicit
+by checking the existence of the bridge.</p>
+</li>
+<li><p class="first"><strong>2012-05-26</strong>: Removed the <code class="docutils literal"><span class="pre">translator.messages</span></code> parameter (use
+<code class="docutils literal"><span class="pre">translator.domains</span></code> instead).</p>
+</li>
+<li><p class="first"><strong>2012-05-24</strong>: Removed the <code class="docutils literal"><span class="pre">autoloader</span></code> service (use composer instead).
+The <code class="docutils literal"><span class="pre">*.class_path</span></code> settings on all the built-in providers have also been
+removed in favor of Composer.</p>
+</li>
+<li><p class="first"><strong>2012-05-21</strong>: Changed error() to allow handling specific exceptions.</p>
+</li>
+<li><p class="first"><strong>2012-05-20</strong>: Added a way to define settings on a controller collection.</p>
+</li>
+<li><p class="first"><strong>2012-05-20</strong>: The Request instance is not available anymore from the
+Application after it has been handled.</p>
+</li>
+<li><p class="first"><strong>2012-04-01</strong>: Added <code class="docutils literal"><span class="pre">finish</span></code> filters.</p>
+</li>
+<li><p class="first"><strong>2012-03-20</strong>: Added <code class="docutils literal"><span class="pre">json</span></code> helper:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;some&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;data&#39;</span><span class="p">);</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">json</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>2012-03-11</strong>: Added route middlewares.</p>
+</li>
+<li><p class="first"><strong>2012-03-02</strong>: Switched to use Composer for dependency management.</p>
 </li>
 <li><p class="first"><strong>2012-02-27</strong>: Updated to Symfony 2.1 session handling.</p>
 </li>
 <li><p class="first"><strong>2012-01-02</strong>: Introduced support for streaming responses.</p>
 </li>
-<li><p class="first"><strong>2011-09-22</strong>: <tt class="docutils literal"><span class="pre">ExtensionInterface</span></tt> has been renamed to
-<tt class="docutils literal"><span class="pre">ServiceProviderInterface</span></tt>. All built-in extensions have been renamed
-accordingly (for instance, <tt class="docutils literal"><span class="pre">Silex\Extension\TwigExtension</span></tt> has been
-renamed to <tt class="docutils literal"><span class="pre">Silex\Provider\TwigServiceProvider</span></tt>)</p>
+<li><p class="first"><strong>2011-09-22</strong>: <code class="docutils literal"><span class="pre">ExtensionInterface</span></code> has been renamed to
+<code class="docutils literal"><span class="pre">ServiceProviderInterface</span></code>. All built-in extensions have been renamed
+accordingly (for instance, <code class="docutils literal"><span class="pre">Silex\Extension\TwigExtension</span></code> has been
+renamed to <code class="docutils literal"><span class="pre">Silex\Provider\TwigServiceProvider</span></code>).</p>
 </li>
 <li><p class="first"><strong>2011-09-22</strong>: The way reusable applications work has changed. The
-<tt class="docutils literal"><span class="pre">mount()</span></tt> method now takes an instance of <tt class="docutils literal"><span class="pre">ControllerCollection</span></tt> instead
-of an <tt class="docutils literal"><span class="pre">Application</span></tt> one.</p>
+<code class="docutils literal"><span class="pre">mount()</span></code> method now takes an instance of <code class="docutils literal"><span class="pre">ControllerCollection</span></code> instead
+of an <code class="docutils literal"><span class="pre">Application</span></code> one.</p>
 <blockquote>
 <div><p>Before:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">();</span>
@@ -108,10 +332,14 @@ of an <tt class="docutils literal"><span class="pre">Application</span></tt> one
 </div></blockquote>
 </li>
 </ul>
+<p>commit: 4ad14ef0513a91fcd44ed3d7b014c7ec6e4bf488
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/changelog.rst">https://github.com/silexphp/Silex/blob/master/doc/changelog.rst</a></p>
+</div>
 </div>
 
 
 <div id="page_prev_next">
+<a class="prev" href="web_servers.html">< ウェブサーバーの設定</a>
 </div>
 
 <div class="common_content_footer">
@@ -130,6 +358,27 @@ of an <tt class="docutils literal"><span class="pre">Application</span></tt> one
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">チェンジログ</a><ul>
+<li><a class="reference internal" href="#xx-xx">2.0.0 (2013-XX-XX)</a></li>
+<li><a class="reference internal" href="#id2">1.2.2 (2014-09-26)</a></li>
+<li><a class="reference internal" href="#id3">1.2.1 (2014-07-01)</a></li>
+<li><a class="reference internal" href="#id4">1.2.0 (2013-XX-XX)</a></li>
+<li><a class="reference internal" href="#id5">1.1.3 (2013-XX-XX)</a></li>
+<li><a class="reference internal" href="#id6">1.1.2 (2013-10-30)</a></li>
+<li><a class="reference internal" href="#id7">1.0.2 (2013-10-30)</a></li>
+<li><a class="reference internal" href="#id8">1.1.1 (2013-10-11)</a></li>
+<li><a class="reference internal" href="#id9">1.1.0 (2013-07-04)</a></li>
+<li><a class="reference internal" href="#id10">1.0.1 (2013-07-04)</a></li>
+<li><a class="reference internal" href="#id11">1.0.0 (2013-05-03)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="web_servers.html"
+                        title="previous chapter">ウェブサーバーの設定</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/changelog.txt"

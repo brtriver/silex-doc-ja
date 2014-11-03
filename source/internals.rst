@@ -70,7 +70,7 @@ URL の可変部分を必須項目にすることもできます。
 Symfony2
 --------
 
-以下の Symfony2 コンポーネントが Silex　で利用されています:
+以下の Symfony2 コンポーネントが Silex で利用されています:
 
 * **HttpFoundation**: ``Request`` と ``Response`` のため.
 
@@ -82,3 +82,7 @@ Symfony2
 
 より多くの情報を知りたい場合は、 `Symfony のサイトをチェックしてみてください
 <http://symfony.com/>`_.
+
+
+commit: a38db51ad653544e738a16d840fc6dca77d1b0db
+original: https://github.com/silexphp/Silex/blob/master/doc/internals.rst

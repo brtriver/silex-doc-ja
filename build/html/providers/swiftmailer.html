@@ -29,12 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="next" title="SymfonyBridgesServiceProvider" href="symfony_bridges.html" />
-    <link rel="prev" title="TranslationServiceProvider" href="translation.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="TranslationServiceProvider" href="translation.html" />
+    <link rel="prev" title="SessionServiceProvider" href="session.html" /> 
   </head>
   <body>
 
@@ -62,15 +64,14 @@
             
   <div class="section" id="swiftmailerserviceprovider">
 <h1>SwiftmailerServiceProvider<a class="headerlink" href="#swiftmailerserviceprovider" title="Permalink to this headline">¶</a></h1>
-<p><em>SwiftmailerServiceProvider</em> は <cite>Swift Mailer&lt;http://swiftmailer.org&gt;</cite> ライブラリを使用した
-メール送信のサービスを提供します。</p>
-<p><tt class="docutils literal"><span class="pre">mailer</span></tt> サービスを使用し、簡単にメールを送信することができます。
+<p><em>SwiftmailerServiceProvider</em> は <a class="reference external" href="http://swiftmailer.org">Swift Mailer</a> ライブラリを使用した
+メール送信のためのサービスを提供します。</p>
+<p><code class="docutils literal"><span class="pre">mailer</span></code> サービスを使用し、簡単にメールを送信することができます。
 デフォルトでは、SMTP プロトコルでのメール送信を試みます。</p>
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>swiftmailer.options</strong>: デフォルトの SMTP 送信の設定のための
-オプションです。</p>
+<li><p class="first"><strong>swiftmailer.options</strong>: デフォルトの SMTP 送信の設定を記述した配列です。</p>
 <p>次のオプションを指定することができます:</p>
 <ul class="simple">
 <li><strong>host</strong>: SMTP ホスト名, デフォルトは &#8216;localhost&#8217; です。</li>
@@ -80,17 +81,25 @@
 <li><strong>encryption</strong>: SMTP 暗号, デフォルトは null です。</li>
 <li><strong>auth_mode</strong>: SMTP 認証方法, デフォルトは null です。</li>
 </ul>
-</li>
-<li><p class="first"><strong>swiftmailer.class_path</strong> (optional): Swift Mailer のライブラリを
-格納しているパス。</p>
+<p>使用例</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;host&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;port&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;25&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;encryption&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+    <span class="s1">&#39;auth_mode&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span>
+<span class="p">);</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </div>
 <div class="section" id="id2">
 <h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first"><strong>mailer</strong>: メイラーのインスタンスです。</p>
-<p>Example usage:</p>
+<li><p class="first"><strong>mailer</strong>: メーラーのインスタンスです。</p>
+<p>使用例</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$message</span> <span class="o">=</span> <span class="nx">\Swift_Message</span><span class="o">::</span><span class="na">newInstance</span><span class="p">();</span>
 
 <span class="c1">// ...</span>
@@ -100,37 +109,37 @@
 </div>
 </li>
 <li><p class="first"><strong>swiftmailer.transport</strong>: メール送信のトランスポートです。
-デフォルトは、 <tt class="docutils literal"><span class="pre">Swift_Transport_EsmtpTransport</span></tt> 。</p>
+デフォルトは、 <code class="docutils literal"><span class="pre">Swift_Transport_EsmtpTransport</span></code> 。</p>
 </li>
 <li><p class="first"><strong>swiftmailer.transport.buffer</strong>: トランスポートで使用される
 ストリームバッファ。</p>
 </li>
 <li><p class="first"><strong>swiftmailer.transport.authhandler</strong>: トランスポートで使用される
-認証ハンドラー。 CRAM-MD5, login, plaintext をデフォルトで使用します。</p>
+認証ハンドラー。 CRAM-MD5, login, plaintext をデフォルトで試します。</p>
 </li>
-<li><p class="first"><strong>swiftmailer.transport.eventdispatcher</strong>: Swiftmailer で使用される
-内部のイベントディスパッチャー。</p>
+<li><p class="first"><strong>swiftmailer.transport.eventdispatcher</strong>: Swiftmailer で使用される内部のイベントディスパッチャー。</p>
 </li>
 </ul>
 </div>
 <div class="section" id="id3">
 <h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">vendor/swiftmailer</span></tt> ディレクトリーに <em>Swift Mailer</em> のコピーを配置してください。
-<tt class="docutils literal"><span class="pre">/lib/classes</span></tt> へのクラスパスを指定してください。</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SwiftmailerServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;swiftmailer.class_path&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/swiftmailer/lib/classes&#39;</span><span class="p">,</span>
-<span class="p">));</span>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SwiftmailerServiceProvider</span><span class="p">());</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Swift Mailer は <tt class="docutils literal"><span class="pre">silex.phar</span></tt> ファイルにはコンパイルされていません。
-使用する際には、Swift Mailer をアプリケーションに自分で追加してください。</p>
+<p>SwiftMailerは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;swiftmailer/swiftmailer&quot;: &quot;&gt;=4.1.2,&lt;4.2-dev&quot;
+}
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id4">
 <h2>使用方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>Swiftmaielr プロバイダーは、 <tt class="docutils literal"><span class="pre">mailer</span></tt> サービスを提供します。</p>
+<p>Swiftmaielr プロバイダーは、 <code class="docutils literal"><span class="pre">mailer</span></code> サービスを提供します。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/feedback&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">];</span>
 
@@ -146,15 +155,43 @@
 <span class="p">});</span>
 </pre></div>
 </div>
+<div class="section" id="id5">
+<h3>コマンドでの使用方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>Swiftmailer プロバイダーは <code class="docutils literal"><span class="pre">KernelEvents::TERMINATE</span></code> を使ってメールを送信します。
+これはレスポンスが送信された後に発火します。しかしながら、コンソールコマンドからではこのイベントが発火しないため、メールが送信されません。</p>
+<p>このような理由で、コマンドコンソールからメールを送信する場合は、手動でコマンドが終了する前にメッセージスプールをフラッシュさせてください。そうするためには、次のようなコードを利用します:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.spooltransport&#39;</span><span class="p">]</span>
+    <span class="o">-&gt;</span><span class="na">getSpool</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">flushQueue</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;swiftmailer.transport&#39;</span><span class="p">])</span>
+<span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>トレイト<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\SwiftmailerTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>mail</strong>: メールを送信します。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mail</span><span class="p">(</span><span class="nx">\Swift_Message</span><span class="o">::</span><span class="na">newInstance</span><span class="p">()</span>
+    <span class="o">-&gt;</span><span class="na">setSubject</span><span class="p">(</span><span class="s1">&#39;[YourSite] Feedback&#39;</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">setFrom</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;noreply@yoursite.com&#39;</span><span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">setTo</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;feedback@yoursite.com&#39;</span><span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">setBody</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)));</span>
+</pre></div>
+</div>
 <p>詳細は、 <a class="reference external" href="http://swiftmailer.org">Swift Mailer documentation</a>
-を参照してください.</p>
+を参照してください。</p>
+<p>commit: 09e21e66d79d856be90016bb39b82cf32b18b36e
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/swiftmailer">https://github.com/silexphp/Silex/blob/master/doc/providers/swiftmailer</a>.rst&lt;</p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="translation.html">< TranslationServiceProvider</a>
-<a class="next" href="symfony_bridges.html">SymfonyBridgesServiceProvider ></a>
+<a class="prev" href="session.html">< SessionServiceProvider</a>
+<a class="next" href="translation.html">TranslationServiceProvider ></a>
 </div>
 
 <div class="common_content_footer">
@@ -179,17 +216,21 @@
 <li><a class="reference internal" href="#id1">パラメーター</a></li>
 <li><a class="reference internal" href="#id2">サービス</a></li>
 <li><a class="reference internal" href="#id3">登録</a></li>
-<li><a class="reference internal" href="#id4">使用方法</a></li>
+<li><a class="reference internal" href="#id4">使用方法</a><ul>
+<li><a class="reference internal" href="#id5">コマンドでの使用方法</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">トレイト</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="translation.html"
-                        title="previous chapter">TranslationServiceProvider</a></p>
+  <p class="topless"><a href="session.html"
+                        title="previous chapter">SessionServiceProvider</a></p>
   <h4>次のドキュメント</h4>
-  <p class="topless"><a href="symfony_bridges.html"
-                        title="next chapter">SymfonyBridgesServiceProvider</a></p>
+  <p class="topless"><a href="translation.html"
+                        title="next chapter">TranslationServiceProvider</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/providers/swiftmailer.txt"

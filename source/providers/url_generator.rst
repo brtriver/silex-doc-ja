@@ -60,6 +60,13 @@ Twigを使っている場合、サービスを以下のように使用するこ�
     {{ path('hello', {name: 'Fabien'}) }}
     {{ url('hello', {name: 'Fabien'}) }} {# 絶対URL http://example.org/hello/Fabien の生成 #}
 
+.. warning::
+
+    ``url_generator`` をリクエストの操作外で利用するためには、最初にはっきりとルーティングを flush しなければなりません::
+
+        $app->flush();
+        $url = $app['url_generator']->generate('homepage');
+
 トレイト
 ---------
 
@@ -73,3 +80,7 @@ Twigを使っている場合、サービスを以下のように使用するこ�
 
     $app->path('homepage');
     $app->url('homepage');
+
+
+commit: c2421fabd29ca5dd056f96c13281c4b0f7f7c8e8
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/url_generator.rst

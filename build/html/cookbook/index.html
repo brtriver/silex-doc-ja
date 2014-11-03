@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Cookbook | Japan Symfony Group</title>
+    <title>クックブック | Japan Symfony Group</title>
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
@@ -29,12 +29,13 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="next" title="JSON リクエストを受け付ける" href="json_request_body.html" />
-    <link rel="prev" title="テスト" href="../testing.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="next" title="JSONリクエストの受け入れ" href="json_request_body.html" />
+    <link rel="prev" title="テスト (Testing)" href="../testing.html" /> 
   </head>
   <body>
 
@@ -60,27 +61,33 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="cookbook">
-<h1>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="id1">
+<h1>クックブック<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>cookbook セクションは特定の問題を解決するためのレシピが掲載されています。</p>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="recipes">
-<h2>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>レシピ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="json_request_body.html"><em>Accepting a JSON request body</em></a> A common need when
-building a restful API is the ability to accept a JSON encoded entity from
-the request body.</li>
-<li><a class="reference internal" href="translating_validation_messages.html"><em>Translating Validation Messages</em></a>.</li>
-<li><a class="reference internal" href="session_storage.html"><em>How to use PdoSessionStorage to store sessions in the database</em></a>.</li>
+<li><a class="reference internal" href="json_request_body.html"><em>JSON リクエストの受け入れ</em></a></li>
+<li><a class="reference internal" href="translating_validation_messages.html"><em>バリデーションメッセージの翻訳</em></a></li>
+<li><a class="reference internal" href="session_storage.html"><em>PdoSessionStorageを使ったデータベース上でのセッションの保存</em></a></li>
+<li><a class="reference internal" href="form_no_csrf.html"><em>フォームエクステンションを使用した。フォームでのCSRF保護の無効化</em></a></li>
+<li><a class="reference internal" href="validator_yaml.html"><em>YAMLを使用してバリデーションを設定</em></a></li>
+<li><a class="reference internal" href="sub_requests.html"><em>サブリクエストの作成</em></a></li>
+<li><a class="reference internal" href="error_handler.html"><em>エラーを例外に変換する方法</em></a></li>
+<li><a class="reference internal" href="multiple_loggers.html"><em>複数のモノログの使用</em></a></li>
+<li><a class="reference internal" href="assets.html"><em>テンプレートでのアセット管理</em></a></li>
 </ul>
+<p>commit: b045442cd357202002ba7d5ee51c98ccf39f40ed
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/index.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/index.rst</a></p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="../testing.html">< テスト</a>
-<a class="next" href="json_request_body.html">JSON リクエストを受け付ける ></a>
+<a class="prev" href="../testing.html">< テスト (Testing)</a>
+<a class="next" href="json_request_body.html">JSONリクエストの受け入れ ></a>
 </div>
 
 <div class="common_content_footer">
@@ -101,18 +108,18 @@ the request body.</li>
         <div class="sphinxsidebarwrapper">
   <h3>このページのコンテンツ</h3>
   <ul>
-<li><a class="reference internal" href="#">Cookbook</a><ul>
-<li><a class="reference internal" href="#recipes">Recipes</a></li>
+<li><a class="reference internal" href="#">クックブック</a><ul>
+<li><a class="reference internal" href="#id2">レシピ</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>前のドキュメント</h4>
   <p class="topless"><a href="../testing.html"
-                        title="previous chapter">テスト</a></p>
+                        title="previous chapter">テスト (Testing)</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="json_request_body.html"
-                        title="next chapter">JSON リクエストを受け付ける</a></p>
+                        title="next chapter">JSONリクエストの受け入れ</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cookbook/index.txt"

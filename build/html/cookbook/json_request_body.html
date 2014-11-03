@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>JSON リクエストを受け付ける | Japan Symfony Group</title>
+    <title>JSONリクエストの受け入れ | Japan Symfony Group</title>
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
@@ -29,13 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="up" title="Cookbook" href="index.html" />
-    <link rel="next" title="バリデーションのメッセージの国際化" href="translating_validation_messages.html" />
-    <link rel="prev" title="Cookbook" href="index.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="バリデーションメッセージの翻訳" href="translating_validation_messages.html" />
+    <link rel="prev" title="クックブック" href="index.html" /> 
   </head>
   <body>
 
@@ -62,69 +63,63 @@
           <div class="body">
             
   <div class="section" id="json">
-<h1>JSON リクエストを受け付ける<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
-<p>A common need when building a restful API is the ability to accept a JSON
-encoded entity from the request body.</p>
-<p>An example for such an API could be a blog post creation.</p>
+<h1>JSONリクエストの受け入れ<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
+<p>レストフルなAPIを構築する際には、JSONエンコードされたリクエストボディを許容する必要があります。ブログ記事の生成APIでの例をご紹介します。</p>
 <div class="section" id="example-api">
 <h2>Example API<a class="headerlink" href="#example-api" title="Permalink to this headline">¶</a></h2>
-<p>In this example we will create an API for creating a blog post. The following
-is a spec of how we want it to work.</p>
-<div class="section" id="request">
-<h3>Request<a class="headerlink" href="#request" title="Permalink to this headline">¶</a></h3>
-<p>In the request we send the data for the blog post as a JSON object. We also
-indicate that using the <tt class="docutils literal"><span class="pre">Content-Type</span></tt> header.</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">blog</span><span class="o">/</span><span class="nx">posts</span>
-<span class="nx">Accept</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">57</span>
+<p>この例では、ブログ記事の生成APIをご紹介します。
+以下は、私達の要求項目です。</p>
+<div class="section" id="id1">
+<h3>リクエスト<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>リクエストでは、ブログ記事をJSONオブジェクトとして送信します。
+また、 <code class="docutils literal"><span class="pre">Content-Type</span></code> ヘッダを使用します。</p>
+<div class="highlight-text"><div class="highlight"><pre>POST /blog/posts
+Accept: application/json
+Content-Type: application/json
+Content-Length: 57
 
-<span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">,</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="s2">&quot;This is my first post!&quot;</span><span class="p">}</span>
+{&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}
 </pre></div>
 </div>
 </div>
-<div class="section" id="response">
-<h3>Response<a class="headerlink" href="#response" title="Permalink to this headline">¶</a></h3>
-<p>The server responds with a 201 status code, telling us that the post was
-created. It tells us the <tt class="docutils literal"><span class="pre">Content-Type</span></tt> of the response, which is also
-JSON.</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
-<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">65</span>
-<span class="nx">Connection</span><span class="o">:</span> <span class="nx">close</span>
+<div class="section" id="id2">
+<h3>レスポンス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>サーバーはステータスコードといて201を返し、記事が作成されたということを伝えてくれます。
+また、 <code class="docutils literal"><span class="pre">Content-Type</span></code> によってレスポンスがJSONであるということも教えてくれます。</p>
+<div class="highlight-text"><div class="highlight"><pre>HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Length: 65
+Connection: close
 
-<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">,</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="s2">&quot;This is my first post!&quot;</span><span class="p">}</span>
+{&quot;id&quot;:&quot;1&quot;,&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="parsing-the-request-body">
-<h2>Parsing the request body<a class="headerlink" href="#parsing-the-request-body" title="Permalink to this headline">¶</a></h2>
-<p>The request body should only be parsed as JSON if the <tt class="docutils literal"><span class="pre">Content-Type</span></tt> header
-begins with <tt class="docutils literal"><span class="pre">application/json</span></tt>. Since we want to do this for every request,
-the easiest solution is to use a before filter.</p>
-<p>We simply use <tt class="docutils literal"><span class="pre">json_decode</span></tt> to parse the content of the request and then
-replace the request data on the <tt class="docutils literal"><span class="pre">$request</span></tt> object.</p>
+<div class="section" id="id3">
+<h2>リクエストボディのパース<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Content-Type</span></code> ヘッダが <code class="docutils literal"><span class="pre">application/json</span></code> で始まる場合、リクエストボディはJSONとしてのみパースされるべきです。
+全てのリクエストに対して、この処理を行いたい場合、一番簡単な解は前処理アプリケーションミドルウェアを使用することです。</p>
+<p>シンプルに <code class="docutils literal"><span class="pre">json_decode</span></code> をリクエストの内容に対して、適用します。その後、 <code class="docutils literal"><span class="pre">$request</span></code> オブジェクトの内容を置換します。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\ParameterBag</span><span class="p">;</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">before</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">===</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">headers</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">),</span> <span class="s1">&#39;application/json&#39;</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nv">$data</span> <span class="o">=</span> <span class="nx">json_decode</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
         <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">replace</span><span class="p">(</span><span class="nb">is_array</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="o">?</span> <span class="nv">$data</span> <span class="o">:</span> <span class="k">array</span><span class="p">());</span>
     <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="controller-implementation">
-<h2>Controller implementation<a class="headerlink" href="#controller-implementation" title="Permalink to this headline">¶</a></h2>
-<p>Our controller will create a new blog post from the data provided and will
-return the post object, including its <tt class="docutils literal"><span class="pre">id</span></tt>, as JSON.</p>
+<div class="section" id="id4">
+<h2>コントローラーの実装<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>コントローラーはリクエストデータに基づきブログ記事を生成し、 <code class="docutils literal"><span class="pre">id</span></code> を含んだJSONで記述されている記事のオブジェクトを返却します。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/blog/posts&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="p">{</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">&#39;/blog/posts&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
     <span class="nv">$post</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">&#39;title&#39;</span> <span class="o">=&gt;</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">),</span>
         <span class="s1">&#39;body&#39;</span>  <span class="o">=&gt;</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">),</span>
@@ -132,27 +127,27 @@ return the post object, including its <tt class="docutils literal"><span class="
 
     <span class="nv">$post</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">createPost</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span>
 
-    <span class="nv">$json</span> <span class="o">=</span> <span class="nx">json_encode</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="nv">$json</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;application/json&#39;</span><span class="p">));</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">json</span><span class="p">(</span><span class="nv">$post</span><span class="p">,</span> <span class="mi">201</span><span class="p">);</span>
 <span class="p">});</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="manual-testing">
-<h2>Manual testing<a class="headerlink" href="#manual-testing" title="Permalink to this headline">¶</a></h2>
-<p>In order to manually test our API, we can use the <tt class="docutils literal"><span class="pre">curl</span></tt> command line
-utility, which allows sending HTTP requests.</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="err">$</span> <span class="nx">curl</span> <span class="nx">http</span><span class="o">://</span><span class="nx">blog</span><span class="o">.</span><span class="nx">lo</span><span class="o">/</span><span class="nx">blog</span><span class="o">/</span><span class="nx">posts</span> <span class="o">-</span><span class="nx">d</span> <span class="s1">&#39;{&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}&#39;</span> <span class="o">-</span><span class="nx">H</span> <span class="s1">&#39;Content-Type: application/json&#39;</span>
-<span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="o">:</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">,</span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="s2">&quot;This is my first post!&quot;</span><span class="p">}</span>
+<div class="section" id="id5">
+<h2>手動テスト<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>作成したAPIを手動テストするためには、HTTPリクエストを送信することができる <code class="docutils literal"><span class="pre">curl</span></code> コマンドラインユーティリティを使うことができます。</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>curl http://blog.lo/blog/posts -d <span class="s1">&#39;{&quot;title&quot;:&quot;Hello World!&quot;,&quot;body&quot;:&quot;This is my first post!&quot;}&#39;</span> -H <span class="s1">&#39;Content-Type: application/json&#39;</span>
+<span class="o">{</span><span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;title&quot;</span>:<span class="s2">&quot;Hello World!&quot;</span>,<span class="s2">&quot;body&quot;</span>:<span class="s2">&quot;This is my first post!&quot;</span><span class="o">}</span>
 </pre></div>
 </div>
+<p>commit: 34fe312a89e1cbc1d696bba419b2466305b55316
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/json_request_body.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/json_request_body.rst</a></p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="index.html">< Cookbook</a>
-<a class="next" href="translating_validation_messages.html">バリデーションのメッセージの国際化 ></a>
+<a class="prev" href="index.html">< クックブック</a>
+<a class="next" href="translating_validation_messages.html">バリデーションメッセージの翻訳 ></a>
 </div>
 
 <div class="common_content_footer">
@@ -173,25 +168,25 @@ utility, which allows sending HTTP requests.</p>
         <div class="sphinxsidebarwrapper">
   <h3>このページのコンテンツ</h3>
   <ul>
-<li><a class="reference internal" href="#">JSON リクエストを受け付ける</a><ul>
+<li><a class="reference internal" href="#">JSONリクエストの受け入れ</a><ul>
 <li><a class="reference internal" href="#example-api">Example API</a><ul>
-<li><a class="reference internal" href="#request">Request</a></li>
-<li><a class="reference internal" href="#response">Response</a></li>
+<li><a class="reference internal" href="#id1">リクエスト</a></li>
+<li><a class="reference internal" href="#id2">レスポンス</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#parsing-the-request-body">Parsing the request body</a></li>
-<li><a class="reference internal" href="#controller-implementation">Controller implementation</a></li>
-<li><a class="reference internal" href="#manual-testing">Manual testing</a></li>
+<li><a class="reference internal" href="#id3">リクエストボディのパース</a></li>
+<li><a class="reference internal" href="#id4">コントローラーの実装</a></li>
+<li><a class="reference internal" href="#id5">手動テスト</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>前のドキュメント</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Cookbook</a></p>
+                        title="previous chapter">クックブック</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="translating_validation_messages.html"
-                        title="next chapter">バリデーションのメッセージの国際化</a></p>
+                        title="next chapter">バリデーションメッセージの翻訳</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/cookbook/json_request_body.txt"

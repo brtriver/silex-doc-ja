@@ -49,7 +49,7 @@ PHPUnit
         }
 
 アサーションの一覧は PHPUnit のドキュメントにある `PHPUnit 用のテストの書き方
-<http://www.phpunit.de/manual/current/ja/writing-tests-for-phpunit.html>`_
+<https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html>`_
 の章で確認することができます。
 
 Web テストケース
@@ -78,7 +78,8 @@ Silex のために用意したバージョンは ``Silex\WebTestCase`` であり
     .. code-block:: json
 
         "require-dev": {
-            "symfony/browser-kit": ">=2.3,<2.4-dev"
+            "symfony/browser-kit": ">=2.3,<2.4-dev",
+            "symfony/css-selector": ">=2.3,<2.4-dev"
         }
 
 WebTestCase のために、 ``createApplication`` メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
@@ -209,3 +210,7 @@ PHPUnit を設定するためには ``phpunit.xml.dis`` ファイルを作成す
     }
 
 これで、 ``phpunit`` をコマンドラインから実行することで、あなたが書いたテストケースが処理されます。
+
+
+commit: 8c8b6a67b70996dd85f20f24695504b9dd002914
+original: https://github.com/silexphp/Silex/blob/master/doc/testing.rst

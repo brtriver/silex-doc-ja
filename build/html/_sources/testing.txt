@@ -1,9 +1,9 @@
-テスト
-=======
+テスト (Testing)
+====================
 
 Silex は Symfony2 のさらにその上に構築されているフレームワークです。
 つまり機能テストを書き易いということです。機能テストというのはあなたの書いたコードが正しく動いているかどうかを保証するために自動的にソフトウェアのテストを行う仕組みのことです。
-疑似ブラウザを使ったユーザーインターフェースを通してユーザーが行うであろう動き擬似的に再現することができます。
+疑似ブラウザを使ったユーザーインターフェースを通してユーザーが行うであろう動きを擬似的に再現することができます。
 
 なぜ
 -----
@@ -19,13 +19,13 @@ Silex は Symfony2 のさらにその上に構築されているフレームワ�
 <http://www.slideshare.net/avalanche123/clean-code-5609451>`_
 をチェックしてみてください。
 
-PHPUnit TESTフレームワーク
-------------------------------------------
+PHPUnit
+-------
 
 `PHPUnit <https://github.com/sebastianbergmann/phpunit>`_
-はデファクトスタンダードなPHPのためのテストフレームワークです。そして単体テストだけでなく機能テストも書くことができます。
-新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは ``PHPUnit_Framework_TestCase`` を拡張するようにします。
-そして、テストケースのメソッド名の先頭に ``test`` を付けるようにします::
+はデファクトスタンダードなPHPのためのテストフレームワークです。単体テストのために作られたものですが、単体テストだけでなく機能テストも書くことができます。
+新しいクラスを用意することでテストを書くことができます。そしてこの用意するクラスは ``PHPUnit_Framework_TestCase`` を継承するようにします。
+テストケースのメソッド名の先頭には ``test`` を付ける必要があります。 ::
 
     class ContactFormTest extends PHPUnit_Framework_TestCase
     {
@@ -35,8 +35,8 @@ PHPUnit TESTフレームワーク
         }
     }
 
-テストケースにおいて、あなたがテスト時に期待する条件(アサーション)を書いておきます。
-今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています::
+テストケースでは、あなたがテスト対象に期待する状態についてのアサーションを書いておきます。
+今回は問い合わせフォームをテストする場合を想定しているので、ページが正しく読み込まれ、表示されたコンテンツにフォームが含まれているかを確認しています。 ::
 
         public function testInitialPage()
         {
@@ -48,15 +48,15 @@ PHPUnit TESTフレームワーク
             $this->assertContains('<form', $pageContent);
         }
 
-アサーションは複数用意されているので、一覧を PHPUnit のドキュメントにある `PHPUnit 用のテストの書き方
-<http://www.phpunit.de/manual/current/ja/writing-tests-for-phpunit.html>`_
-の章でで確認することができます。
+アサーションの一覧は PHPUnit のドキュメントにある `PHPUnit 用のテストの書き方
+<https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html>`_
+の章で確認することができます。
 
 Web テストケース
 ----------------
 
 Symfony2 は WebTestCase クラスという機能テストを書くために利用することができるクラスを提供してくれています。
-Silex のために用意したバージョンは ``Silex\WebTestCase`` であり、このクラスを拡張することでテストを書くことができます:: 
+Silex のために用意したバージョンは ``Silex\WebTestCase`` であり、このクラスを継承することでテストを書くことができます。 :: 
 
     use Silex\WebTestCase;
 
@@ -65,10 +65,25 @@ Silex のために用意したバージョンは ``Silex\WebTestCase`` であり
         ...
     }
 
-アプリケーションのテストを行えるようにするために、 aaaaa次のような :doc:`usage` にある "アプリケーションの再利用性" の部分に書かれているようにしましょう。
+
+.. note::
+
+    アプリケーションのテストを行い易くするために、 次のような :doc:`usage` にある "アプリケーションの再利用性" の部分に従うようにしましょう。
+
+.. note::
+
+    もしSymfony2 ``WebTestCase`` クラスを使いたければ、プロジェクトにおいて明示的に依存関係をインストールしなければなりません。
+    そのためには ``composer.json`` に以下のように記述する必要があります。:
+
+    .. code-block:: json
+
+        "require-dev": {
+            "symfony/browser-kit": ">=2.3,<2.4-dev",
+            "symfony/css-selector": ">=2.3,<2.4-dev"
+        }
 
 WebTestCase のために、 ``createApplication`` メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
-次のようなコードになります::
+次のようなコードになります。 ::
 
         public function createApplication()
         {
@@ -81,35 +96,31 @@ WebTestCase のために、 ``createApplication`` メソッドを実装するこ
 
     標準で、アプリケーションはブラウザから使っているときと同じように動作します。
     しかし、エラーが発生したとき、HTMLでレンダリングされたページではなく直接エラーメッセージを簡単に取得することができます。
-    次のコードのように ``createApplication()`` をアプリケーションの設定で調整しておけばより簡単です::
+    次のコードのように ``createApplication()`` をアプリケーションの設定で調整しておけばより簡単です。 ::
 
         public function createApplication()
         {
             $app = require __DIR__.'/path/to/app.php';
             $app['debug'] = true;
-            unset($app['exception_handler']);
+            $app['exception_handler']->disable();
 
             return $app;
         }
 
 .. tip::
 
-    あなたのアプリケーションでセッションを使用していた際には、セッションを格納するのに
-    ``FilesystemSessionStorage`` を使用しなければなりません。::
-
-        // ...
-        use Symfony\Component\HttpFoundation\SessionStorage\FilesystemSessionStorage;
-        // ...
+    あなたのアプリケーションでセッションを使用している場合、セッションのシミュレートを行なうためには、 ``session.test`` を ``true`` に設定する必要があります。 ::
 
         public function createApplication()
         {
-            // ...
-            $this->app['session.storage'] = $this->app->share(function() {
-                return new FilesystemSessionStorage(sys_get_temp_dir());
-            });
-            // ...
+            // ...
 
-WebTestCase は　``createClient`` メソッドがあります。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下にどのように動作しているかみてみましょう::
+            $app['session.test'] = true;
+
+            // ...
+        }
+
+WebTestCase は　``createClient`` メソッドを提供します。クライアントはブラウザのようなものであり、アプリケーションと対話することができるようになります。以下でどのように動作しているかみてみましょう。 ::
 
         public function testInitialPage()
         {
@@ -117,20 +128,20 @@ WebTestCase は　``createClient`` メソッドがあります。クライアン
             $crawler = $client->request('GET', '/');
 
             $this->assertTrue($client->getResponse()->isOk());
-            $this->assertEquals(1, count($crawler->filter('h1:contains("Contact us")')));
-            $this->assertEquals(1, count($crawler->filter('form')));
+            $this->assertCount(1, $crawler->filter('h1:contains("Contact us")'));
+            $this->assertCount(1, $crawler->filter('form'));
             ...
         }
 
 このコードに見慣れない用語がでてきます。 それは ``Client`` と ``Crawler`` です。
 
-また、 ``$this->app`` を通してアプリケーションにアクセスすることもできます。
+なお、 ``$this->app`` を通してアプリケーションにアクセスすることができます。
 
 クライアント (Client)
 ---------------------
 
 クライアントはブラウザを表現したものです。　画面遷移した履歴やクッキーなどを保持しておくことができます。
-``request`` メソッドを使うことでテストするアプリケーションへのアクセスするためのリクエストを作ることができます。
+``request`` メソッドを使うことでテストするアプリケーションへアクセスするためのリクエストを作ることができます。
 
 .. note::
 
@@ -179,7 +190,7 @@ PHPUnit を設定するためには ``phpunit.xml.dis`` ファイルを作成す
 
 ファイルの自動読み込みのためのブートストラップや、コードカバレッジのレポートのためのホワイトリストを設定することもできます。
 
-そして、 ``tests/YourApp/Tests/YourTest.php`` は次のようになります::
+そして、 ``tests/YourApp/Tests/YourTest.php`` は次のようになります。 ::
 
     namespace YourApp\Tests;
 
@@ -199,3 +210,7 @@ PHPUnit を設定するためには ``phpunit.xml.dis`` ファイルを作成す
     }
 
 これで、 ``phpunit`` をコマンドラインから実行することで、あなたが書いたテストケースが処理されます。
+
+
+commit: 8c8b6a67b70996dd85f20f24695504b9dd002914
+original: https://github.com/silexphp/Silex/blob/master/doc/testing.rst

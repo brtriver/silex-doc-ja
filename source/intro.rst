@@ -11,13 +11,16 @@ Silex には次のような目的があります。
 * *高い拡張性*: Silex は Pimple というマイクロサービスコンテナーを利用した拡張機能を備えています。
   Pimple によって簡単にサードパーティーのライブラリを利用できます。
 
-* *テスト*: Silex は Symfony2　の リクエストとレスポンスを抽象化しているHttpKernelコンポーネントを利用しています。
+* *テスト容易性*: Silex は Symfony2 の リクエストとレスポンスを抽象化しているHttpKernelコンポーネントを利用しています。
   このおかげで、アプリケーションやフレームワーク自身をテストすることが、とても簡単になっています。
   また、HTTPの仕様書を順守し適切な利用を促進します。
 
 一言で言えば、コントローラーを定義しそれらをルーティングにマップする作業のすべてを、たった1ステップで行うことができるのです。
 
-**使ってみましょう!** ::
+利用方法
+-------------
+
+.. code-block:: php
 
     // web/index.php
 
@@ -45,3 +48,6 @@ Silex のインストールは Silex をダウンロードしてくるのと同�
 .. _Symfony2: http://symfony.com/
 .. _Pimple: http://pimple.sensiolabs.org/
 .. _Sinatra: http://www.sinatrarb.com/
+
+commit: c119f90e6e1a7a46ba6c15d440dd80f55d4ee4ca
+original: https://github.com/silexphp/Silex/blob/master/doc/intro.rst

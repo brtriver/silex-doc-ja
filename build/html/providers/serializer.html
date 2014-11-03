@@ -1,0 +1,227 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SerializerServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="ServiceControllerServiceProvider" href="service_controller.html" />
+    <link rel="prev" title="RememberMeServiceProvider" href="remember_me.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="serializerserviceprovider">
+<h1>SerializerServiceProvider<a class="headerlink" href="#serializerserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>SerializerServiceProvider</em> オブジェクトをシリアライズするためのサービスを提供します。</p>
+<div class="section" id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<p>無し</p>
+</div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>serializer</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Serializer/Serializer.html">Symfony\Component\Serializer\Serializer</a> のインスタンスです。</li>
+<li><strong>serializer.encoders</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Serializer/Encoder/JsonEncoder.html">Symfony\Component\Serializer\Encoder\JsonEncoder</a>
+と <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Serializer/Encoder/XmlEncoder.html">Symfony\Component\Serializer\Encoder\XmlEncoder</a> 。</li>
+<li><strong>serializer.normalizers</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/CustomNormalizer.html">Symfony\Component\Serializer\Normalizer\CustomNormalizer</a>
+と <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/GetSetMethodNormalizer.html">Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer</a> 。</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>登録<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SerializerServiceProvider</span><span class="p">());</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><em>SerializerServiceProvider</em> は Symfony の <a class="reference external" href="http://symfony.com/doc/current/components/serializer.html">Serializer Component</a> に依存しており、
+&#8220;全部入り&#8221; Silex のアーカイブには含まれますが、通常版には含まれません。
+そのため依存関係を <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに追記してください:</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/serializer&quot;: &quot;&gt;=2.3,&lt;2.5-dev&quot;,
+ }
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>使い方<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">SerializerServiceProvider</span></code> プロバイダーは <code class="docutils literal"><span class="pre">serializer</span></code> サービスを提供します。:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Silex\Provider\SerializerServiceProvider</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">();</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">SerializerServiceProvider</span><span class="p">());</span>
+
+<span class="c1">// アサートメソッド経由で、シリアライザーが扱えるコンテンツタイプのみを受け入れる</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;/pages/{id}.{_format}&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Pageオブジェクトを返すページリポジトリサービスがあるとします。</span>
+    <span class="c1">// また返されたオブジェクトはゲッターとセッターを持っているとします。</span>
+    <span class="nv">$page</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;page_repository&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+    <span class="nv">$format</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getRequestFormat</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$page</span> <span class="nx">instanceof</span> <span class="nx">Page</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">abort</span><span class="p">(</span><span class="s2">&quot;No page found for id: </span><span class="si">$id</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;serializer&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">serialize</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$format</span><span class="p">),</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s2">&quot;Content-Type&quot;</span> <span class="o">=&gt;</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">getMimeType</span><span class="p">(</span><span class="nv">$format</span><span class="p">)</span>
+    <span class="p">));</span>
+<span class="p">})</span><span class="o">-&gt;</span><span class="na">assert</span><span class="p">(</span><span class="s2">&quot;_format&quot;</span><span class="p">,</span> <span class="s2">&quot;xml|json&quot;</span><span class="p">)</span>
+  <span class="o">-&gt;</span><span class="na">assert</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;\d+&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>commit: a8ab1f8bac91246f420d9ba0b151bf1f77c38f0a
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/serializer.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/serializer.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="remember_me.html">< RememberMeServiceProvider</a>
+<a class="next" href="service_controller.html">ServiceControllerServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/serializer.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/serializer.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/serializer.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">SerializerServiceProvider</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#services">Services</a></li>
+<li><a class="reference internal" href="#id1">登録</a></li>
+<li><a class="reference internal" href="#id2">使い方</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="remember_me.html"
+                        title="previous chapter">RememberMeServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="service_controller.html"
+                        title="next chapter">ServiceControllerServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/serializer.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

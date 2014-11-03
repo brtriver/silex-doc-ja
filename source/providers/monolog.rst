@@ -19,6 +19,8 @@ Monologを使うことで、リクエストやエラーを記録することが�
 
 * **monolog.name** (オプション): Monolog チャンネルの名前。　標準は ``myapp`` です。
 
+* **monolog.exception.logger_filter** (オプション): どの例外をログに残すべきかの無名関数のフィルタ
+
 サービス
 --------
 
@@ -70,11 +72,11 @@ MonologServiceProvider は ``monolog`` サービスを提供します。
 使用前に、 ``monolog`` サービスを拡張することによって
 好みに応じて(ハンドラの追加や変更などの)Monologの設定を変更できます。 ::
 
-    $app['monolog'] = $app->share($app->extend('monolog', function($monolog, $app) {
+    $app['monolog'] = $app->extend('monolog', function($monolog, $app) {
         $monolog->pushHandler(...);
 
         return $monolog;
-    }));
+    };
 
 トレイト
 --------
@@ -89,3 +91,6 @@ MonologServiceProvider は ``monolog`` サービスを提供します。
 
 より詳しい情報については、 `Monolog ドキュメント
 <https://github.com/Seldaek/monolog>`_ を参照してください。
+
+commit: 10535580b28f9a16c8e2cb5af7e5d39e8c1ca3c9
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/monolog.rst

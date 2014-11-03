@@ -37,3 +37,6 @@ cookbook セクションは特定の問題を解決するためのレシピが�
 * :doc:`複数のモノログの使用 <multiple_loggers>`
 
 * :doc:`テンプレートでのアセット管理 <assets>`
+
+commit: b045442cd357202002ba7d5ee51c98ccf39f40ed
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/index.rst

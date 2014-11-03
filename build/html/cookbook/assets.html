@@ -1,0 +1,203 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>テンプレートでのアセット管理 | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="クックブック" href="index.html" />
+    <link rel="next" title="内部の仕組み" href="../internals.html" />
+    <link rel="prev" title="複数のモノログの使用" href="multiple_loggers.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="../providers/index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>テンプレートでのアセット管理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Silexアプリケーションはウェブルートディレクトリに配置されているとは限りません。
+別のページへのリンクを作成する際に、何度もベースパスを記述することを避けるために、 <a class="reference internal" href="../providers/url_generator.html"><em>URL generator service provider</em></a> を使用することが強く推奨されます。</p>
+<p>しかし、画像やスタイルシート、JavaScriptファイルはどのようにすればいいのでしょうか。
+これらのURLはSilexのルーターによっては管理されません。しかし、これらのリソースにもベースパスによるプレフィックスが必要です。幸運にもリクエストオブジェクトは、我々がプレフィックスとして欲しいアプリケーションベースパスを保有しています。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="c1">// /css/styles.cssにあるスタイルシートへのリンク</span>
+<span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getBasePath</span><span class="p">()</span><span class="o">.</span><span class="s1">&#39;/css/styles.css&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Twigテンプレートでは同じことを、より簡単な方法で実行できます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.request.basepath</span> <span class="cp">}}</span><span class="x">/css/styles.css</span>
+</pre></div>
+</div>
+<p>あなたのアセットが異なるホスト下にある場合は、Silexのパラメータを設定することで、パスを抽象化してください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;http://assets.examples.com&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>これはテンプレートでは以下のようにして使うことが出来ます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.asset_path</span> <span class="cp">}}</span><span class="x">/css/styles.css</span>
+</pre></div>
+</div>
+<p>アセットとは独立なロジックが必要なら、文字列の代わりにサービスを定義してください。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">function</span> <span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">// アセットへのパスを決定するのに必要なロジックをここに実装する。</span>
+
+    <span class="k">return</span> <span class="s1">&#39;http://assets.examples.com&#39;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>これも、先ほどと同様に使用することができます。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">app.asset_path</span> <span class="cp">}}</span><span class="x">/css/styles.css</span>
+</pre></div>
+</div>
+<p>もし、アセットの場所がアセットのタイプやパスに依存する場合、さらなる抽象化が必要です。以下にTwig関数を使って、それを行った例を示します。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;twig&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$twig</span><span class="p">,</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$twig</span><span class="o">-&gt;</span><span class="na">addFunction</span><span class="p">(</span><span class="k">new</span> <span class="nx">\Twig_SimpleFunction</span><span class="p">(</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$asset</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// アセットへのパスを決定するのに必要なロジックをここに実装する。</span>
+
+        <span class="k">return</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;http://assets.examples.com/%s&#39;</span><span class="p">,</span> <span class="nb">ltrim</span><span class="p">(</span><span class="nv">$asset</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">));</span>
+    <span class="p">}));</span>
+
+    <span class="k">return</span> <span class="nv">$twig</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">asset</span></code> 関数は以下のようにして使用可能です。</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="cp">{{</span> <span class="nv">asset</span><span class="o">(</span><span class="s1">&#39;/css/styles.css&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+</div>
+<p>commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/cookbook/assets.rst">https://github.com/silexphp/Silex/blob/master/doc/cookbook/assets.rst</a></p>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="multiple_loggers.html">< 複数のモノログの使用</a>
+<a class="next" href="../internals.html">内部の仕組み ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/cookbook/assets.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/cookbook/assets.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/cookbook/assets.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="multiple_loggers.html"
+                        title="previous chapter">複数のモノログの使用</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="../internals.html"
+                        title="next chapter">内部の仕組み</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/cookbook/assets.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="../providers/index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

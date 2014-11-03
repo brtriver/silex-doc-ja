@@ -128,12 +128,16 @@ Twig extension は ``twig`` サービスを提供します。 ::
 
 使用する前であれば、 ``twig`` サービスを拡張することでTwigの環境をカスタマイズできます。 ::
 
-    $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
+    $app['twig'] = $app->extend('twig', function($twig, $app) {
         $twig->addGlobal('pi', 3.14);
         $twig->addFilter('levenshtein', new \Twig_Filter_Function('levenshtein'));
 
         return $twig;
-    }));
+    });
 
 より詳しい情報については、 `Twig ドキュメント
 <http://twig.sensiolabs.org>`_ を参照してください.
+
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/twig.rst

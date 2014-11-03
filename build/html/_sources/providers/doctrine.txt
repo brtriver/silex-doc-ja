@@ -1,15 +1,15 @@
 DoctrineServiceProvider
 =============================
 
-*DoctrineServiceProvider* を使うことでデータベースへアクセスするための `Doctrine DBAL
+*DoctrineServiceProvider* を使うことで簡単にデータベースへアクセスするための `Doctrine DBAL
 <http://www.doctrine-project.org/projects/dbal>`_ を利用することができます。
 
 .. note::
 
-    Doctrine DBAL だけで ORM サービスは提供 **されません**
+    Doctrine DBAL だけでは ORM サービスは提供 **されません**
 
 パラメーター
----------------
+--------------
 
 * **db.options**: Doctrine DBAL のオプションを指定する配列
 
@@ -17,7 +17,7 @@ DoctrineServiceProvider
 
   * **driver**: 利用するデータベースドライバ。 標準では ``pdo_mysql`` です。
     次のどれかを指定できます: ``pdo_mysql`` 、 ``pdo_sqlite`` 、 ``pdo_pgsql`` 、
-    ``pdo_oci`` 、 ``oci8`` 、 ``ibm_db2`` 、 ``pdo_ibm`` 、 ``pdo_sqlsrv`` .
+    ``pdo_oci`` 、 ``oci8`` 、 ``ibm_db2`` 、 ``pdo_ibm`` 、 ``pdo_sqlsrv`` 。
 
   * **dbname**: 接続先のデータベース名。
 
@@ -27,13 +27,13 @@ DoctrineServiceProvider
 
   * **password**: 接続先のデータベースのパスワード。
 
+  * **charset**: ``pdo_mysql`` と ``pdo_oci/oci8`` にだけ必要な項目で、データベースに接続する際に使用する文字コードを指定。
+
   * **path**: ``pdo_sqlite`` だけに必要な項目で SQLite のデータベースのパスを指定。
 
+  * **port**: ``pdo_mysql`` と ``pdo_pgsql`` と ``pdo_oci/oci8`` にだけ必要な項目で、データベースに接続する際に使用するポートを指定。
+
   これらのオプションの詳細については `Doctrine DBAL 設定についてのドキュメント <http://www.doctrine-project.org/docs/dbal/2.0/en/reference/configuration.html>`_ を参照してください。
-
-* **db.dbal.class_path** (オプション): Doctrine DBAL を配置したパス。
-
-* **db.common.class_path** (オプション): Doctrine Common を配置したパス。
 
 サービス
 --------
@@ -47,23 +47,31 @@ DoctrineServiceProvider
 登録
 -----------
 
-*Doctrine DBAL* が ``vendor/doctrine-dbal`` に、そして *Doctrine Common* が ``vendor/doctrine-common`` にコピーされているかを確認してください::
+.. code-block:: php
 
-    $app->register(new Silex\ServiceProvider\DoctrineServiceProvider(), array(
-        'db.options'            => array(
-            'driver'    => 'pdo_sqlite',
-            'path'      => __DIR__.'/app.db',
+    $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+        'db.options' => array(
+            'driver'   => 'pdo_sqlite',
+            'path'     => __DIR__.'/app.db',
         ),
-        'db.dbal.class_path'    => __DIR__.'/vendor/doctrine-dbal/lib',
-        'db.common.class_path'  => __DIR__.'/vendor/doctrine-common/lib',
     ));
 
+.. note::
+
+    Doctrine DBALは "fat" Silexアーカイブに付属します。レギュラーサイズのSilexには付属しません。もしComposerを使っているのならば ``composer.json`` ファイルに依存関係を記述してください。
+
+    .. code-block:: json
+
+        "require": {
+            "doctrine/dbal": "2.2.*",
+         }
+
 使い方
--------
+---------
 
-Doctrine のエクションテンションで ``db`` サービスを使うことができます。以下が使い方のサンプルです。::
+Doctrine プロバイダーは ``db`` サービスを提供します。以下が使い方のサンプルです。 ::
 
-    $app->get('/blog/show/{id}', function ($id) use ($app) {
+    $app->get('/blog/{id}', function ($id) use ($app) {
         $sql = "SELECT * FROM posts WHERE id = ?";
         $post = $app['db']->fetchAssoc($sql, array((int) $id));
 
@@ -74,12 +82,10 @@ Doctrine のエクションテンションで ``db`` サービスを使うこと
 複数のデータベースの利用
 ------------------------
 
-Doctrine プロバイダーを使うと複数のデータベースへアクセスすることができます。
-データソースを指定するためにはプロバイダーの登録から **db.options** を、 **dbs.options** という名前の配列で置き換える必要があります。
-
-dbs 配列の各キーはオプションの設定を含んでいなければなりません。
-
-複数のデータベース接続を登録するためには次のようにします::
+Doctrineプロバイダーを使うと、複数のデータベースからアクセスすることができます。
+データソースを指定するためにはプロバイダーの登録から **db.options** を、 
+**dbs.options** という名前の配列で置き換える必要があります。
+**dbs.options** は設定の配列であり、各キーは接続名で、値はオプションの設定を含んでいなければなりません。 ::
 
     $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'dbs.options' => array (
@@ -89,6 +95,7 @@ dbs 配列の各キーはオプションの設定を含んでいなければな�
                 'dbname'    => 'my_database',
                 'user'      => 'my_username',
                 'password'  => 'my_password',
+                'charset'   => 'utf8',
             ),
             'mysql_write' => array(
                 'driver'    => 'pdo_mysql',
@@ -96,29 +103,25 @@ dbs 配列の各キーはオプションの設定を含んでいなければな�
                 'dbname'    => 'my_database',
                 'user'      => 'my_username',
                 'password'  => 'my_password',
+                'charset'   => 'utf8',
             ),
         ),
-        'db.dbal.class_path'    => __DIR__.'/vendor/doctrine-dbal/lib',
-        'db.common.class_path'  => __DIR__.'/vendor/doctrine-common/lib',
     ));
 
-標準では、最初に登録された接続がデフォルトになります。つまり1つしか接続先を登録していないときと同じようにアクセスされます。さきほど書いた設定では以下の2行は同意です::
+標準では、最初に登録された接続がデフォルトになります。つまり1つしか接続先を登録していないときと同じようにアクセスされます。さきほど書いた設定では以下の2行は同意です。 ::
 
-    $app['dbal']->fetchAssoc('SELECT * FROM table');
-       
-    $app['dbal.connection.sqlite']->fetchAssoc('SELECT * FROM table');
+    $app['db']->fetchAll('SELECT * FROM table');
 
+    $app['dbs']['mysql_read']->fetchAll('SELECT * FROM table');
 
-標準の接続先は **default** オプションを設定することによって洗濯されます。
+複数接続を使った例 ::
 
-複数接続を使った例::
-
-    $app->get('/blog/show/{id}', function ($id) use ($app) {
+    $app->get('/blog/{id}', function ($id) use ($app) {
         $sql = "SELECT * FROM posts WHERE id = ?";
-        $post = $app['dbs']['mysql_read']->fetchAssoc($mysqlQuery, array((int) $id));
+        $post = $app['dbs']['mysql_read']->fetchAssoc($sql, array((int) $id));
 
-        $mysqlUpdate = "UPDATE posts SET value = ? WHERE id = ?";
-        $app['dbs']['mysql_write']->execute($mysqlUpdate, array('newValue', (int) $id));
+        $sql = "UPDATE posts SET value = ? WHERE id = ?";
+        $app['dbs']['mysql_write']->executeUpdate($sql, array('newValue', (int) $id));
 
         return  "<h1>{$post['title']}</h1>".
                 "<p>{$post['body']}</p>";
@@ -126,5 +129,9 @@ dbs 配列の各キーはオプションの設定を含んでいなければな�
  
 
 より詳細については、 `Doctrine DBAL documentation
-<http://www.doctrine-project.org/docs/dbal/2.0/en/>`_
+<http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/>`_
 を見てください。
+
+
+commit: 038392643681171f5ee72bbcdf3d852f69863871
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/doctrine.rst

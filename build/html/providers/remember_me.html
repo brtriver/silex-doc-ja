@@ -1,0 +1,217 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>RememberMeServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="SerializerServiceProvider" href="serializer.html" />
+    <link rel="prev" title="SecurityServiceProvider" href="security.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="remembermeserviceprovider">
+<h1>RememberMeServiceProvider<a class="headerlink" href="#remembermeserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>RememberMeServiceProvider</em> は &#8220;Remember-Me&#8221; という認証を
+<em>SecurityServiceProvider</em> に追加します。</p>
+<div class="section" id="id1">
+<h2>パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>無し</p>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>無し</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">サービスプロバイダは内部で使用するための他のサービスをたくさん定義します。しかし、それらをカスタマイズする必要がある場合はあまりありません。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>このサービスプロバイダーを登録する前に、
+<em>SecurityServiceProvider</em> を登録する必要があります。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\SecurityServiceProvider</span><span class="p">());</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\RememberMeServiceProvider</span><span class="p">());</span>
+
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;security.firewalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;my-firewall&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;pattern&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;^/secure$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;form&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;logout&#39;</span>      <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;remember_me&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;key&#39;</span>                <span class="o">=&gt;</span> <span class="s1">&#39;Choose_A_Unique_Random_Key&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;always_remember_me&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+            <span class="cm">/* Other options */</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;users&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span> <span class="cm">/* ... */</span> <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>オプション<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>key</strong>: トークン生成に使用するための秘密鍵(値にはランダムな文字列を使用すべきです。)</li>
+<li><strong>name</strong>: クッキー名 (標準では、 <code class="docutils literal"><span class="pre">REMEMBERME</span></code> です。)</li>
+<li><strong>lifetime</strong>: クッキーライフタイム (標準では、 <code class="docutils literal"><span class="pre">31536000</span></code> ~ 1年です。).</li>
+<li><strong>path</strong>: クッキーのパス (標準では、 <code class="docutils literal"><span class="pre">/</span></code> です。)</li>
+<li><strong>domain</strong>: クッキードメイン (標準では、 <code class="docutils literal"><span class="pre">null</span></code> = リクエストドメインです。)</li>
+<li><strong>secure</strong>: クッキーがセキュアかどうか (標準では、 <code class="docutils literal"><span class="pre">false</span></code> です。)</li>
+<li><strong>httponly</strong>: クッキーがHTTPのみかどうか (標準では、 <code class="docutils literal"><span class="pre">true</span></code> です。)</li>
+<li><strong>always_remember_me</strong>: remember meを有効にするかどうか (標準では、 <code class="docutils literal"><span class="pre">false</span></code> です。)</li>
+<li><strong>remember_me_parameter</strong>: remember_meをログイン時に有効にするためのリクエストパラメーターの名前
+ログインフォームにチェックボックスを追加するためのものです。より詳しい情報については、 <a class="reference external" href="http://symfony.com/doc/current/cookbook/security/remember_me.html">Symfonyクックブック</a> を参照してください。 (標準では、 <code class="docutils literal"><span class="pre">_remember_me</span></code> です。)</li>
+</ul>
+<p>commit: 6e374c0ed61bec69c021b6f35113875149c4d234
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/remember_me.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/remember_me.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="security.html">< SecurityServiceProvider</a>
+<a class="next" href="serializer.html">SerializerServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/remember_me.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/remember_me.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/remember_me.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">RememberMeServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">パラメータ</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">オプション</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="security.html"
+                        title="previous chapter">SecurityServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="serializer.html"
+                        title="next chapter">SerializerServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/remember_me.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

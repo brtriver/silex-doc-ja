@@ -29,11 +29,14 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="../index.html" />
-    <link rel="prev" title="ValidatorServiceProvider" href="validator.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="HttpFragmentServiceProvider" href="http_fragment.html" />
+    <link rel="prev" title="FormServiceProvider" href="form.html" /> 
   </head>
   <body>
 
@@ -61,7 +64,7 @@
             
   <div class="section" id="httpcacheserviceprovider">
 <h1>HttpCacheServiceProvider<a class="headerlink" href="#httpcacheserviceprovider" title="Permalink to this headline">¶</a></h1>
-<p><em>HttpCacheServiceProvider</em> で Symfony2 のリバースプロキシー をサポートすることができます。</p>
+<p><em>HttpCacheServiceProvider</em> で Symfony2 のリバースプロクシー をサポートすることができます。</p>
 <div class="section" id="id1">
 <h2>パラメーター<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -75,33 +78,52 @@
 <ul class="simple">
 <li><strong>http_cache</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html">HttpCache</a>
 のインスタンス</li>
+<li><strong>http_cache.esi</strong>: リクエストとレスポンスに対してESI 機能を持った <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Esi.html">Esi</a> のインスタンス</li>
+<li><strong>http_cache.store</strong>: リクエストとレスポンスヘッダーに関するメタデータを保存する仕組みを実装した <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Store.html">Store</a> のインスタンス。</li>
 </ul>
 </div>
 <div class="section" id="id4">
 <h2>登録<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;http_cache.cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
 <span class="p">));</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="id5">
 <h2>使い方<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<p>Silex は標準で HTTP キャッシュヘッダーを返すように設定することで Vanish のようなリバースプロクシーをサポートしています:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+<p>Silex は標準で HTTP キャッシュヘッダーを返すように設定することで Vanish のようなリバースプロクシーをサポートしています。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">&#39;Cache-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;s-maxage=5&#39;</span><span class="p">,</span>
     <span class="p">));</span>
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>このプロバイダー使い Silex のアプリケーションはリクエストを操作するために <cite>http_cache</cite> サービスを追加することで Symfony2 のリバースプロクシーを使うことができるようになります。:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$request</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>Silexに$ipというアドレスからのリバースプロクシからの <code class="docutils literal"><span class="pre">X-Forwarded-For*</span></code> ヘッダを信用させたい場合、 <a class="reference external" href="http://symfony.com/doc/current/components/http_foundation/trusting_proxies.html">Trusting Proxies</a> に記述されているような形式でホワイトリストを作成する必要があります。</p>
+<blockquote>
+<div>Varnishを同一マシン上で起動させている場合の例</div></blockquote>
+<div class="last highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nx">Request</span><span class="o">::</span><span class="na">setTrustedProxies</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;::1&#39;</span><span class="p">));</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
 </pre></div>
 </div>
-<p>このプロバイダー ESI もサポートしています。:</p>
+</div>
+<p>このプロバイダーは <code class="docutils literal"><span class="pre">http_cache</span></code> サービスを用いることで、Symfony2リバースプロクシをSilexアプリケーション上で使用可能にします。Symfony2リバースプロクシは他のプロクシと同じように動作するのでホワイトリストにしたいと思うでしょう。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+
+<span class="nx">Request</span><span class="o">::</span><span class="na">setTrustedProxies</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">));</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>このプロバイダーはESIもサポートしています。:</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s">&lt;&lt;&lt;EOF</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s">&lt;&lt;&lt;EOF</span>
 <span class="s">&lt;html&gt;</span>
 <span class="s">    &lt;body&gt;</span>
 <span class="s">        Hello</span>
@@ -111,28 +133,50 @@
 
 <span class="s">EOF</span>
     <span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
-        <span class="s1">&#39;Cache-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;s-maxage=20&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Surrogate-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;content=&quot;ESI/1.0&quot;&#39;</span><span class="p">,</span>
     <span class="p">));</span>
+
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
 <span class="p">});</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/included&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
-        <span class="s1">&#39;Cache-Control&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;s-maxage=5&#39;</span><span class="p">,</span>
-    <span class="p">));</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span><span class="s1">&#39;Foo&#39;</span><span class="p">);</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">setTtl</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
 <span class="p">});</span>
 
-<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$request</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+<span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;http_cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
 </pre></div>
+</div>
+<p>ESIを使わない場合、パフォーマンスを少し上げるために無効にすることが出来ます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\HttpCacheServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+   <span class="s1">&#39;http_cache.cache_dir&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/cache/&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;http_cache.esi&#39;</span>       <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>キャッシュの問題をデバッグするにはアプリケーションの <code class="docutils literal"><span class="pre">debug</span></code> をtrueにしてください。
+Symfonyは自動的にキャッシュヒットやミスに関する情報を持った <code class="docutils literal"><span class="pre">X-Symfony-Cache</span></code> ヘッダを全てのレスポンスに追加します。</p>
+<p>もしSymfony Sessionプロバイダーを使って <em>いない</em> 場合、
+PHPの標準の振舞を回避するために <code class="docutils literal"><span class="pre">session.cash_limiter</span></code> をからの値に設定したほうが良いです。</p>
+<p class="last">最後に、あなたのウェブサーバーがキャッシュ戦略を上書きしないかどうか確認して下さい。</p>
 </div>
 <p>詳細については、 <a class="reference external" href="http://symfony.com/doc/current/book/http_cache.html">Symfony2 HTTP キャッシュのドキュメント</a>
 を参照してください。</p>
+<p>commit: 4b1ae82bd6e81b26c37450feefa88319ca28b162
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/http_cache.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/http_cache.rst</a></p>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="validator.html">< ValidatorServiceProvider</a>
+<a class="prev" href="form.html">< FormServiceProvider</a>
+<a class="next" href="http_fragment.html">HttpFragmentServiceProvider ></a>
 </div>
 
 <div class="common_content_footer">
@@ -163,8 +207,11 @@
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="validator.html"
-                        title="previous chapter">ValidatorServiceProvider</a></p>
+  <p class="topless"><a href="form.html"
+                        title="previous chapter">FormServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="http_fragment.html"
+                        title="next chapter">HttpFragmentServiceProvider</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/providers/http_cache.txt"

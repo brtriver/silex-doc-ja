@@ -120,3 +120,6 @@ ESIを使わない場合、パフォーマンスを少し上げるために無�
 詳細については、 `Symfony2 HTTP キャッシュのドキュメント 
 <http://symfony.com/doc/current/book/http_cache.html>`_
 を参照してください。
+
+commit: 4b1ae82bd6e81b26c37450feefa88319ca28b162
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/http_cache.rst

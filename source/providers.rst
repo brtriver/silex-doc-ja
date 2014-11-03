@@ -73,7 +73,7 @@
 プロバイダーの作成
 ----------------------
 
-プロバイダーは ``Silex\ServiceProviderInterface`` を実装しなければなりません。 ::
+プロバイダーは ``Silex\Api\ServiceProviderInterface`` を実装しなければなりません。 ::
 
     {
         function register(Application $app);
@@ -89,7 +89,7 @@
     namespace Acme;
 
     use Silex\Application;
-    use Silex\ServiceProviderInterface;
+    use Silex\Api\ServiceProviderInterface;
 
     class HelloServiceProvider implements ServiceProviderInterface
     {
@@ -161,7 +161,7 @@
     namespace Acme;
 
     use Silex\Application;
-    use Silex\ControllerProviderInterface;
+    use Silex\Api\ControllerProviderInterface;
 
     class HelloControllerProvider implements ControllerProviderInterface
     {
@@ -196,3 +196,6 @@
 .. tip::
 
     サービスプロバイダーインタフェースとコントローラープロバイダーインタフェースの両方を実装したプロバイダーも定義することができ、コントローラの動作に必要なサービスと同じクラスの中で、そのプロバイダをパッケージ化できます。
+
+commit: 1ba15a1769979083b19d775237fa0cfefb1475fe
+original: https://github.com/silexphp/Silex/blob/master/doc/providers.rst

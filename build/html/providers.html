@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="_static/configurationblock.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -29,12 +29,13 @@
           $('.section h1').corner();
           $('.highlight-python pre').corner();
           $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
           $('.highlight').corner();
       });
       </script>
-    <link rel="top" title="Silex v0.0.0 documentation" href="index.html" />
-    <link rel="next" title="テスト" href="testing.html" />
-    <link rel="prev" title="使用方法" href="usage.html" /> 
+    <link rel="top" title="Silex 0.0.0 documentation" href="index.html" />
+    <link rel="next" title="テスト (Testing)" href="testing.html" />
+    <link rel="prev" title="サービス" href="services.html" /> 
   </head>
   <body>
 
@@ -62,19 +63,19 @@
             
   <div class="section" id="providers">
 <h1>プロバイダー (Providers)<a class="headerlink" href="#providers" title="Permalink to this headline">¶</a></h1>
-<p>プロバイダーは、開発者が、アプリケーションの一部を他のアプリケーションでも再利用できるようにします。 Silex は２つのインタフェースによって定義された二種類のプロバイダーを提供しています。１つは、サービスのためのインタフェースで、 ServiceProviderInterfaceで、もう１つは、コントローラーのためのインタフェースで、 ControllerProviderInterface です。</p>
+<p>プロバイダーは、開発者が、アプリケーションの一部を他のアプリケーションでも再利用できるようにします。 Silex は２つのインタフェースによって定義された二種類のプロバイダーを提供しています。１つは、サービスのためのインタフェース <code class="docutils literal"><span class="pre">ServiceProviderInterface</span></code> で、もう１つは、コントローラーのためのインタフェース  <code class="docutils literal"><span class="pre">ControllerProviderInterface</span></code> です。</p>
 <div class="section" id="service-providers">
 <h2>サービスプロバイダー (Service Providers)<a class="headerlink" href="#service-providers" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="loading-extensions">
 <h3>プロバイダーの読み込み (Loading extensions)<a class="headerlink" href="#loading-extensions" title="Permalink to this headline">¶</a></h3>
-<p>プロバイダーを読み込んで使うためには、アプリケーションにそのプロバイダーを登録しなければなりません:</p>
+<p>プロバイダーを読み込んで使うためには、アプリケーションにそのプロバイダーを登録しなければなりません。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\DatabaseServiceProvider</span><span class="p">());</span>
 </pre></div>
 </div>
 <p>第２引数としてパラメーターを提供することもできます。
-この作業はエクステンションが登録される <strong>前</strong> に行う必要があります:</p>
+これはプロバイダーが登録された <strong>後</strong> かつ、起動する <strong>前</strong> に設定されます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\DatabaseServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;database.dsn&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;mysql:host=localhost;dbname=myapp&#39;</span><span class="p">,</span>
     <span class="s1">&#39;database.user&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
@@ -84,65 +85,64 @@
 </div>
 </div>
 </div>
-<div class="section" id="id1">
-<h2>規約<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="conventions">
+<h2>規約 (Conventions)<a class="headerlink" href="#conventions" title="Permalink to this headline">¶</a></h2>
 <p>プロバイダーとやりとりするときにどのような順序でやりとりを行うかを知っておく必要があります。
 以下に説明するルールに従うだけです:</p>
 <ul>
-<li><p class="first">(オートローダーのための) クラスへのパスはプロバイダーが登録される <strong>前</strong> に定義しなければなりません。
-パスは <tt class="docutils literal"><span class="pre">Application::register</span></tt> の第２引数として渡してください。
-なぜなら渡されたパラメーターを最初にセットするからです。</p>
-<p><em>理由: プロバイダーは、自身が登録されるときにオートローダーを設定しようとします。
-もしこの時点でクラスのパスが渡されていなければオートローダーを登録することができないからです。</em></p>
-</li>
 <li><p class="first">既に存在しているサービスを上書き処理する場合はプロバイダーが登録された <strong>後</strong> にしなくてはなりません。</p>
 <p><em>理由: サービスがすでに存在していると、プロバイダーはそれを上書きしようとするからです。</em></p>
 </li>
-<li><p class="first">サービスがアクセスされる前のタイミングであればパラメーターをセットすることができます。</p>
+<li><p class="first">プロバイダが登録された <strong>後</strong> で、サービスが実際にアクセスされる <strong>前</strong> のタイミングであればパラメーターを何度でもセットすることができます。</p>
+<p><em>理由: サービスと同じようにプロバイダでも、パラメータの既存の値を上書きすることができるためです。</em></p>
 </li>
 </ul>
 <p>あなたのオリジナルのプロバイダーを作成するときはこの振る舞いに注意してください。</p>
 </div>
-<div class="section" id="id2">
-<h2>プロバイダーのインクルード<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h2>プロバイダーのインクルード<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>標準で用意されているプロバイダーは以下の通りです。
-これらすべてのプロバイダーの名前空間は <tt class="docutils literal"><span class="pre">Silex\Provider</span></tt> になります。</p>
+これらすべてのプロバイダーの名前空間は <code class="docutils literal"><span class="pre">Silex\Provider</span></code> になります。</p>
 <ul class="simple">
 <li><a class="reference internal" href="providers/doctrine.html"><em>DoctrineServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/monolog.html"><em>MonologServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/session.html"><em>SessionServiceProvider</em></a></li>
-<li><a class="reference internal" href="providers/swiftmailer.html"><em>SwiftMailerServiceProvider</em></a></li>
-<li><a class="reference internal" href="providers/symfony_bridges.html"><em>SymfonyBridgesServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/serializer.html"><em>SerializerServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/swiftmailer.html"><em>SwiftmailerServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/twig.html"><em>TwigServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/translation.html"><em>TranslationServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/url_generator.html"><em>UrlGeneratorServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/validator.html"><em>ValidatorServiceProvider</em></a></li>
 <li><a class="reference internal" href="providers/http_cache.html"><em>HttpCacheServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/form.html"><em>FormServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/security.html"><em>SecurityServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/remember_me.html"><em>RememberMeServiceProvider</em></a></li>
+<li><a class="reference internal" href="providers/service_controller.html"><em>ServiceControllerServiceProvider</em></a></li>
 </ul>
-<div class="section" id="id3">
-<h3>サードパーティーのプロバイダ<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>サードパーティーのプロバイダ<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>コミュニティで開発されているサービスプロバイダもあります。
-これらのサードパーティのプロバイダの一覧は <cite>Silex</cite> リポジトリの wiki
-&lt;<a class="reference external" href="https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders">https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders</a>&gt;`_ にあります.</p>
+これらのサードパーティのプロバイダの一覧は <a class="reference external" href="https://github.com/silexphp/Silex/wiki/Third-Party-ServiceProviders">Silexリポジトリのwiki</a> にあります.</p>
 <p>あなたのプロバイダーもぜひ共有してみてください。</p>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>プロバイダーの作成<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>プロバイダーは <tt class="docutils literal"><span class="pre">Silex\ServiceProviderInterface</span></tt> を実装しなければなりません:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ServiceProviderInterface</span>
-<span class="p">{</span>
+<div class="section" id="id3">
+<h2>プロバイダーの作成<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>プロバイダーは <code class="docutils literal"><span class="pre">Silex\Api\ServiceProviderInterface</span></code> を実装しなければなりません。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="p">{</span>
     <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">);</span>
+
+    <span class="k">function</span> <span class="nf">boot</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>これはとても単純な利用例であり、 <tt class="docutils literal"><span class="pre">register</span></tt> メソッドを実装している新しいクラスを作成しているだけです。
-このメソッドで、他のサービスやパラメータを利用するようなアプリケーション上にサービスを定義することができます。</p>
-<p>次がそのようなプロバイダーのサンプルです:</p>
+<p>単に二つのメソッドを実装したクラスを作成するだけです。 <code class="docutils literal"><span class="pre">register()</span></code>
+メソッドでは、他のサービスやパラメータを利用するようなアプリケーション上にサービスを定義することができます。 <code class="docutils literal"><span class="pre">boot()</span></code> メソッドでは、アプリケーションがリクエストをハンドリングする前にアプリケーションの設定を行えます。</p>
+<p>次がそのようなプロバイダーのサンプルです。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Acme</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Silex\ServiceProviderInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Silex\Api\ServiceProviderInterface</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">HelloServiceProvider</span> <span class="k">implements</span> <span class="nx">ServiceProviderInterface</span>
 <span class="p">{</span>
@@ -155,13 +155,17 @@
             <span class="k">return</span> <span class="s1">&#39;Hello &#39;</span><span class="o">.</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">escape</span><span class="p">(</span><span class="nv">$name</span><span class="p">);</span>
         <span class="p">});</span>
     <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>このクラスは <tt class="docutils literal"><span class="pre">hello</span></tt> サービスを提供します。このサービスは保護されたクロージャーです。
-<tt class="docutils literal"><span class="pre">name</span></tt> を引数として取り、 <tt class="docutils literal"><span class="pre">hello.default_name</span></tt> を返してくれます。
+<p>このクラスは <code class="docutils literal"><span class="pre">hello</span></code> サービスを提供します。このサービスは保護されたクロージャーです。
+<code class="docutils literal"><span class="pre">name</span></code> を引数として取り、 <code class="docutils literal"><span class="pre">name</span></code> が与えられていない場合 <code class="docutils literal"><span class="pre">hello.default_name</span></code> を返してくれます。
 初期値を与えられていない場合は空の文字列を使います。</p>
-<p>このプロバイダーは次のように使うことができます:</p>
+<p>このプロバイダーは次のように使うことができます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Acme\HelloServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
@@ -175,51 +179,14 @@
 <span class="p">});</span>
 </pre></div>
 </div>
-<p>このサンプルでは <tt class="docutils literal"><span class="pre">name</span></tt> パラメーターの値をクエリーストリングから取得しています。
-そのため <tt class="docutils literal"><span class="pre">/hello?name=Fabien</span></tt> のようなパスでリクエストします。</p>
-<div class="section" id="class-loading">
-<h3>クラスの読み込み (Class loading)<a class="headerlink" href="#class-loading" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">MonologServiceProvider</span></tt> や <tt class="docutils literal"><span class="pre">TwigServiceProvider</span></tt> を見てもらえばわかるように、プロバイダーは外部ライブラリを簡単に利用できる仕組みです。
-ごく普通のライブラリで、 <a class="reference external" href="http://groups.google.com/group/php-standards/web/psr-0-final-proposal">PSR-0 Naming Standard</a>
-や PEAR の命名ルールに準拠しているのであれば、 <tt class="docutils literal"><span class="pre">UniversalClassLoader</span></tt> を使ったクラスの自動読み込みが可能です。</p>
-<p><em>Services</em> の章で説明したように、 <em>autoloader</em> サービスによってこのようなクラスの自動読み込みが行われます。</p>
-<p>では、この自動読み込みをどのように使うかを見てみましょう。 (ここでは <a class="reference external" href="https://github.com/kriswallsmith/Buzz">Buzz</a> をライブラリとして読み込みます):</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Acme</span><span class="p">;</span>
-
-<span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Silex\ServiceProviderInterface</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">BuzzServiceProvider</span> <span class="k">implements</span> <span class="nx">ServiceProviderInterface</span>
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">share</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">});</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz.class_path&#39;</span><span class="p">]))</span> <span class="p">{</span>
-            <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;autoloader&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">registerNamespace</span><span class="p">(</span><span class="s1">&#39;Buzz&#39;</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;buzz.class_path&#39;</span><span class="p">]);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>次のようにプロバイダーを登録するときにオプションで渡すことで簡単にクラスのパスを追加することができます:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">BuzzServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">&#39;buzz.class_path&#39;</span> <span class="o">=&gt;</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/buzz/lib&#39;</span><span class="p">,</span>
-<span class="p">));</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">PHP 5.3 の名前空間を使っていないライブラリの場合は <tt class="docutils literal"><span class="pre">registerNamespace</span></tt> の代わりに <tt class="docutils literal"><span class="pre">registerPrefix</span></tt> を使うことができます。
-こうすることでディレクトリの区切り記号としてアンダースコアーを使うことができます。</p>
-</div>
-</div>
+<p>このサンプルでは <code class="docutils literal"><span class="pre">name</span></code> パラメーターの値をクエリーストリングから取得しています。
+そのため <code class="docutils literal"><span class="pre">/hello?name=Fabien</span></code> のようなパスでリクエストします。</p>
 </div>
 <div class="section" id="controllers-providers">
-<h2>コントロラープロバイダー(Controllers providers)<a class="headerlink" href="#controllers-providers" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id5">
-<h3>プロバイダーの読み込み<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>プロバイダーを読み込んで使うためには、パスで指定したコントローラーを &#8220;mount&#8221; する必要があります:</p>
+<span id="controller-providers"></span><h2>コントロラープロバイダー(Controllers providers)<a class="headerlink" href="#controllers-providers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h3>プロバイダーの読み込み<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>プロバイダーを読み込んで使うためには、パスで指定したコントローラーを &#8220;mount&#8221; する必要があります。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mount</span><span class="p">(</span><span class="s1">&#39;/blog&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Acme\BlogControllerProvider</span><span class="p">());</span>
@@ -227,27 +194,27 @@
 </div>
 <p>プロバイダーで定義されている全てのコントローラーは、 <cite>/blog</cite> パス以下で使用可能です。</p>
 </div>
-<div class="section" id="id6">
-<h3>プロバイダーの作成<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>プロバイダーは <tt class="docutils literal"><span class="pre">Silex\ControllerProviderInterface</span></tt> を実装しなければなりません:</p>
+<div class="section" id="id5">
+<h3>プロバイダーの作成<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>プロバイダーは <code class="docutils literal"><span class="pre">Silex\ControllerProviderInterface</span></code> を実装しなければなりません。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">interface</span> <span class="nx">ControllerProviderInterface</span>
 <span class="p">{</span>
     <span class="k">function</span> <span class="nf">connect</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>次がそのようなプロバイダーのサンプルです:</p>
+<p>次がそのようなプロバイダーのサンプルです。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="k">namespace</span> <span class="nx">Acme</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">Silex\Application</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Silex\ControllerProviderInterface</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Silex\ControllerCollection</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Silex\Api\ControllerProviderInterface</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">HelloControllerProvider</span> <span class="k">implements</span> <span class="nx">ControllerProviderInterface</span>
 <span class="p">{</span>
     <span class="k">public</span> <span class="k">function</span> <span class="nf">connect</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="nv">$controllers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerCollection</span><span class="p">();</span>
+        <span class="c1">// デフォルトのルーティングに基づいたコントローラの作成</span>
+        <span class="nv">$controllers</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;controllers_factory&#39;</span><span class="p">];</span>
 
         <span class="nv">$controllers</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">redirect</span><span class="p">(</span><span class="s1">&#39;/hello&#39;</span><span class="p">);</span>
@@ -258,31 +225,33 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">connect</span></tt> メソッドは、 <tt class="docutils literal"><span class="pre">ControllerCollection</span></tt> クラスのインスタンスを返さなければなりません。
-<tt class="docutils literal"><span class="pre">ControllerCollection</span></tt> は、``get``, <tt class="docutils literal"><span class="pre">post</span></tt>,  <tt class="docutils literal"><span class="pre">match</span></tt> などのメソッドが定義されたコントローラーのクラスです。</p>
+<p><code class="docutils literal"><span class="pre">connect</span></code> メソッドは、 <code class="docutils literal"><span class="pre">ControllerCollection</span></code> クラスのインスタンスを返さなければなりません。
+<code class="docutils literal"><span class="pre">ControllerCollection</span></code> は、<code class="docutils literal"><span class="pre">get</span></code>, <code class="docutils literal"><span class="pre">post</span></code>,  <code class="docutils literal"><span class="pre">match</span></code> などのメソッドが定義されたコントローラーのクラスです。</p>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p class="last"><tt class="docutils literal"><span class="pre">Application</span></tt> クラスは、実際はこれらのメソッドへのプロクシとして振る舞います。</p>
+<p class="last"><code class="docutils literal"><span class="pre">Application</span></code> クラスは、実際はこれらのメソッドへのプロクシとして振る舞います。</p>
 </div>
-<p>これで以下のようにプロバイダーを使うことができます:</p>
+<p>これで以下のようにプロバイダーを使うことができます。</p>
 <div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Silex\Application</span><span class="p">();</span>
 
 <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">mount</span><span class="p">(</span><span class="s1">&#39;/blog&#39;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Acme\HelloControllerProvider</span><span class="p">());</span>
 </pre></div>
 </div>
-<p>この例では、 <tt class="docutils literal"><span class="pre">/blog/</span></tt> のパスは、プロバイダーで定義されたコントローラーに結び付けられました。</p>
+<p>この例では、 <code class="docutils literal"><span class="pre">/blog/</span></code> のパスは、プロバイダーで定義されたコントローラーを参照するようになります。</p>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p class="last">サービスプロバイダーインタフェースとコントローラープロバイダーインタフェースの両方を実装したプロバイダーも定義することができ、同じクラスでパッケージ化できます。</p>
+<p class="last">サービスプロバイダーインタフェースとコントローラープロバイダーインタフェースの両方を実装したプロバイダーも定義することができ、コントローラの動作に必要なサービスと同じクラスの中で、そのプロバイダをパッケージ化できます。</p>
 </div>
+<p>commit: 1ba15a1769979083b19d775237fa0cfefb1475fe
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers.rst">https://github.com/silexphp/Silex/blob/master/doc/providers.rst</a></p>
 </div>
 </div>
 </div>
 
 
 <div id="page_prev_next">
-<a class="prev" href="usage.html">< 使用方法</a>
-<a class="next" href="testing.html">テスト ></a>
+<a class="prev" href="services.html">< サービス</a>
+<a class="next" href="testing.html">テスト (Testing) ></a>
 </div>
 
 <div class="common_content_footer">
@@ -308,18 +277,15 @@
 <li><a class="reference internal" href="#loading-extensions">プロバイダーの読み込み (Loading extensions)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id1">規約</a></li>
-<li><a class="reference internal" href="#id2">プロバイダーのインクルード</a><ul>
-<li><a class="reference internal" href="#id3">サードパーティーのプロバイダ</a></li>
+<li><a class="reference internal" href="#conventions">規約 (Conventions)</a></li>
+<li><a class="reference internal" href="#id1">プロバイダーのインクルード</a><ul>
+<li><a class="reference internal" href="#id2">サードパーティーのプロバイダ</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id4">プロバイダーの作成</a><ul>
-<li><a class="reference internal" href="#class-loading">クラスの読み込み (Class loading)</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#id3">プロバイダーの作成</a></li>
 <li><a class="reference internal" href="#controllers-providers">コントロラープロバイダー(Controllers providers)</a><ul>
-<li><a class="reference internal" href="#id5">プロバイダーの読み込み</a></li>
-<li><a class="reference internal" href="#id6">プロバイダーの作成</a></li>
+<li><a class="reference internal" href="#id4">プロバイダーの読み込み</a></li>
+<li><a class="reference internal" href="#id5">プロバイダーの作成</a></li>
 </ul>
 </li>
 </ul>
@@ -327,11 +293,11 @@
 </ul>
 
   <h4>前のドキュメント</h4>
-  <p class="topless"><a href="usage.html"
-                        title="previous chapter">使用方法</a></p>
+  <p class="topless"><a href="services.html"
+                        title="previous chapter">サービス</a></p>
   <h4>次のドキュメント</h4>
   <p class="topless"><a href="testing.html"
-                        title="next chapter">テスト</a></p>
+                        title="next chapter">テスト (Testing)</a></p>
   <h3>ソース</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/providers.txt"

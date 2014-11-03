@@ -48,3 +48,6 @@ Silex は二つの: `1.0` and `master` (`1.1`)という有効なブランチを�
 
     $ cd doc
     $ sphinx-build -b html . build
+
+commit: 2daa75051a195cad1b66a13b8df273161b9b8652
+original: https://github.com/silexphp/Silex/blob/master/doc/contributing.rst

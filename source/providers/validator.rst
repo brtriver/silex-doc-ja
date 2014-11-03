@@ -75,18 +75,6 @@ Validator プロバイダーは ``validator`` サービスを提供します。
 
     use Symfony\Component\Validator\Constraints as Assert;
 
-    class Book
-    
-        public $title;
-        public $author;
-    }
-
-    class Author
-    {
-        public $first_name;
-        public $last_name;
-    }
-
     $book = array(
         'title' => 'My Book',
         'author' => array(
@@ -118,6 +106,18 @@ Validator プロバイダーは ``validator`` サービスを提供します。
 もしクラスにバリデーションを追加したいなら、クラスのプロパティやゲッターに対する制約を定義し、 ``validate`` メソッドをコールできます。 ::
 
     use Symfony\Component\Validator\Constraints as Assert;
+
+    class Book
+    {
+        public $title;
+        public $author;
+    }
+
+    class Author
+    {
+        public $first_name;
+        public $last_name;
+    }
 
     $author = new Author();
     $author->first_name = 'Fabien';
@@ -215,3 +215,7 @@ Validator プロバイダーは ``validator`` サービスを提供します。
 
 詳細については、 `Symfony2 Validation のドキュメント
 <http://symfony.com/doc/2.0/book/validation.html>`_ を参照してください。
+
+
+commit: 6d03fe4107485fca92f6d6da9152f190b8a1e52a
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/validator.rst

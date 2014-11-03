@@ -58,9 +58,9 @@ Pimple は存在するサービスコンテナーの中でもおそらく最も�
 SPL の ArrayAccess インターフェースを実装し、クロージャーを活用しています。
 
 新しい Pimple のインスタンスを作成するところから始めてみましょう -- 
-そして ``Silex\Application`` は ``Pimple`` を拡張したものなので、これからの説明はすべて Silex においても適用できます。 ::
+そして ``Silex\Application`` は ``Pimple\Container`` を拡張したものなので、これからの説明はすべて Silex においても適用できます。 ::
 
-    $container = new Pimple();
+    $container = new Pimple\Container();
 
 もしくは、 ::
 
@@ -98,17 +98,6 @@ SPL の ArrayAccess インターフェースを実装し、クロージャーを
     $service = $app['some_service'];
 
 ``$app['some_service']`` を呼び出せば、呼び出すたびに新しいサービスのインスタンスが生成されます。
-
-共有サービス (Shared services)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-コード全体で共通となるようなサービスのインスタンスを使いたいときもあるでしょう。これを実現できるようにするため、 **shared** サービスを作ることができるようになっています。 ::
-
-    $app['some_service'] = $app->share(function () {
-        return new Service();
-    });
-
-このコードは最初の呼び出し時にサービスを生成し、2回目以降の呼び出しには生成しておいたインスタンスを返します。
 
 クロージャーからコンテナーへのアクセス
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,16 +195,9 @@ Silex は利用したり置き換えることができるサービスの範囲�
 * **request_context**: request contextとはRouter と UrlGenerator で利用されるリクエストを簡易化したものです。
  
 * **exception_handler**: exception ハンドラーは `error()` メソッドを通してエラーハンドラーを登録していないときや、 ハンドラーがレスポンスを返却しないときに利用される標準のハンドラーです。
-  この動きは `unset($app['exception_handler'])` で無効にすることができます。
+  この動きは `$app['exception_handler']->disable()` で無効にすることができます。
 
-* **logger**: ``Psr\Log\LoggerInterface`` のインスタンスです。デフォルトでは、値がnullに設定されているため無効になっています。ロギングを有効にするには ``MonologServiceProvider`` を使うか、PSR logger interfaceを実装した独自の ``logger`` サービスを使ってください。
-
-  Silex 1.1以前では、 ``Symfony\Component\HttpKernel\Log\LoggerInterface``
-  である必要があります。
-
-.. note::
-
-    これらすべての Silex のコアサービスは共有されています。
+* **logger**: ``Psr\Log\LoggerInterface`` のインスタンスです。デフォルトでは、値が ``null`` に設定されているため無効になっています。ロギングを有効にするには ``MonologServiceProvider`` を使うか、PSR logger interfaceを実装した独自の ``logger`` サービスを使ってください。
 
 コアパラメーター (Core parameters)
 -------------------------------------------
@@ -233,8 +215,6 @@ Silex は利用したり置き換えることができるサービスの範囲�
 
   このパラメーターは ``UrlGeneratorProvider`` で利用されます。
 
-* **locale** (オプション): ユーザーのロケールです。リクエストハンドリングの前に設定した場合、デフォルトロケール（標準では ``en`` ）を設定することになります。リクエストがハンドリングされているときは、現在のルーティングの ``_locale`` リクエスト属性に基づいて自動的に設定されます。
-
 * **debug** (オプション): デバッグモードでアプリケーションを動作させるかどうかを返します
 
   標準は false です。
@@ -242,3 +222,6 @@ Silex は利用したり置き換えることができるサービスの範囲�
 * **charset** (optional): レスンポンスで指定される文字コードです。
 
   標準は UTF-8 です。
+
+commit: 5a4b265e1b9be3feac897593cb3f48f481d8a662
+original: https://github.com/silexphp/Silex/blob/master/doc/services.rst

@@ -1,0 +1,336 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>FormServiceProvider | Japan Symfony Group</title>
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/configurationblock.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/js/jquery.corner.js"></script>
+      <script type="text/javascript" src="../_static/configurationblock.js"></script>
+      <script type="text/javascript">
+      $(function(){
+          $('.section h1').corner();
+          $('.highlight-python pre').corner();
+          $('.highlight-yml pre').corner();
+          $('.highlight-json pre').corner();
+          $('.highlight').corner();
+      });
+      </script>
+    <link rel="top" title="Silex 0.0.0 documentation" href="../index.html" />
+    <link rel="up" title="組み込みのプロバイダー" href="index.html" />
+    <link rel="next" title="HttpCacheServiceProvider" href="http_cache.html" />
+    <link rel="prev" title="ValidatorServiceProvider" href="validator.html" /> 
+  </head>
+  <body>
+
+<div id="all">
+  <div id="content">
+    <div id="content_wrapper">
+      <p class="title">Silex ユーザーガイド</title>
+      <!-- end #header -->
+      <div id="navbar">
+        <ul>
+          <li><a href="/">Silex ユーザーガイド</a></li>
+          <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+          <li><a href="index.html">エクステンション一覧</a></li>
+          <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+          <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      <div id="main">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="formserviceprovider">
+<h1>FormServiceProvider<a class="headerlink" href="#formserviceprovider" title="Permalink to this headline">¶</a></h1>
+<p><em>FormServiceProvider</em> はSymfony2 Form コンポーネントを使ったフォーム作成のためのサービスを提供します。</p>
+<div class="section" id="id1">
+<h2>パラメータ<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>form.secret</strong>: この秘密の値は特定のページでのCSRFトークンとして生成され、バリデーションされます。この値を静的かつランダムに生成された値にすることはフォームのハイジャック対策として重要です。デフォルトでは <code class="docutils literal"><span class="pre">md5(__DIR__)</span></code> になっています。</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>サービス<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>form.factory</strong>: フォームを作成する際に用いる <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Form/FormFactory.html">FormFactory</a> のインスタンス。</li>
+<li><strong>form.csrf_provider</strong>: <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/CsrfProviderInterface.html">CsrfProviderInterface</a> を実装したクラスのインスタンス。
+デフォルトは <a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/DefaultCsrfProvider.html">DefaultCsrfProvider</a>。</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>登録<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Silex\Provider\FormServiceProvider</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">FormServiceProvider</span><span class="p">());</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>もし、独自のフォームレイアウトを作成したくないのであれば、デフォルトのものを使用するとよいでしょう。しかしデフォルトレイアウトを使用するためには <a class="reference internal" href="translation.html"><em>translation provider</em></a> の登録が必要です。</p>
+<p class="last">フォームのバリデーションが欲しいなら、 <a class="reference internal" href="validator.html"><em>Validator provider</em></a> の登録も行ってください。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Symfony Form Component と、それの全ての依存関係(オプションや必須を含む) はは&#8221;fat&#8221; Silexに付属し、標準サイズのSilexには付属しません。
+もしComposerを使用している場合には、 <code class="docutils literal"><span class="pre">composer.json</span></code> ファイルに依存関係を記述してください。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/form&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>バリデーションエクステンションも使用したい場合、それらの依存関係として <code class="docutils literal"><span class="pre">symfony/config</span></code> と <code class="docutils literal"><span class="pre">`symfony/translation</span></code> が必要です。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/validator&quot;: &quot;~2.3&quot;,
+    &quot;symfony/config&quot;: &quot;~2.3&quot;,
+    &quot;symfony/translation&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>Symfony FormコンポーネントはPHP intl エクステンションに依存しています。
+もし持っていなかったら、Symfony Localeコンポーネントをインストールして置換してください。</p>
+<div class="highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/locale&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+<p>Twigテンプレートでフォームを使用したい場合はSymfony Twig Bridgeをインストールしてください。</p>
+<div class="last highlight-json"><div class="highlight"><pre>&quot;require&quot;: {
+    &quot;symfony/twig-bridge&quot;: &quot;~2.3&quot;
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>使用方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>FormServiceProviderは <code class="docutils literal"><span class="pre">form.factory</span></code> サービスを提供します。以下は使用例です。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">(</span><span class="s1">&#39;/form&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">Request</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// フォームの初回表示時用のデフォルトデータ</span>
+    <span class="nv">$data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Your name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Your email&#39;</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="nv">$form</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;form.factory&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">createBuilder</span><span class="p">(</span><span class="s1">&#39;form&#39;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;choice&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+            <span class="s1">&#39;choices&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span> <span class="o">=&gt;</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="s1">&#39;female&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;expanded&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">getForm</span><span class="p">();</span>
+
+    <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">handleRequest</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$form</span><span class="o">-&gt;</span><span class="na">isValid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">getData</span><span class="p">();</span>
+
+        <span class="c1">// データを使った何らかの処理</span>
+
+        <span class="c1">// どこかへのリダイレクト</span>
+        <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">redirect</span><span class="p">(</span><span class="s1">&#39;...&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// フォームの表示</span>
+    <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;twig&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">&#39;index.twig&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;form&#39;</span> <span class="o">=&gt;</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">createView</span><span class="p">()));</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>以下が <code class="docutils literal"><span class="pre">index.twig</span></code> フォームテンプレートです。( <code class="docutils literal"><span class="pre">symfony/twig-</span>
+<span class="pre">bridge</span></code> が必要です。)</p>
+<div class="highlight-jinja"><div class="highlight"><pre><span class="x">&lt;form action=&quot;#&quot; method=&quot;post&quot;&gt;</span>
+<span class="x">    </span><span class="cp">{{</span> <span class="nv">form_widget</span><span class="o">(</span><span class="nv">form</span><span class="o">)</span> <span class="cp">}}</span><span class="x"></span>
+
+<span class="x">    &lt;input type=&quot;submit&quot; name=&quot;submit&quot; /&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</pre></div>
+</div>
+<p>もしvalidator providerを使用している場合は、フォームの各フィールドに対して制約を与えることでバリデーションを行なうことができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="k">use</span> <span class="nx">Symfony\Component\Validator\Constraints</span> <span class="k">as</span> <span class="nx">Assert</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\ValidatorServiceProvider</span><span class="p">());</span>
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">Silex\Provider\TranslationServiceProvider</span><span class="p">(),</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;translator.messages&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(),</span>
+<span class="p">));</span>
+
+<span class="nv">$form</span> <span class="o">=</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;form.factory&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">createBuilder</span><span class="p">(</span><span class="s1">&#39;form&#39;</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;constraints&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="k">new</span> <span class="nx">Assert\NotBlank</span><span class="p">(),</span> <span class="k">new</span> <span class="nx">Assert\Length</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;min&#39;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">)))</span>
+    <span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;constraints&#39;</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Assert\Email</span><span class="p">()</span>
+    <span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;choice&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;choices&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="mi">1</span> <span class="o">=&gt;</span> <span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="s1">&#39;female&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;expanded&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">&#39;constraints&#39;</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">Assert\Choice</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="p">))</span>
+    <span class="o">-&gt;</span><span class="na">getForm</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">form.types</span></code> を拡張することでフォームタイプを登録することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;form.types&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$types</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$types</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">YourFormType</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$types</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">form.extensions</span></code> を拡張することでフォームエクステンションを登録することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;form.extensions&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$extensions</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$extensions</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">YourTopFormExtension</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$extensions</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">form.type.extensions</span></code> を拡張することでフォームタイプエクステンションを登録することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;form.type.extensions&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$extensions</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$extensions</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">YourFormTypeExtension</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$extensions</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">form.type.guessers</span></code> を拡張することでフォームタイプ推測器を登録することができます。</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">&#39;form.type.guessers&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$guessers</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$guessers</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">YourFormTypeGuesser</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$guessers</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>トレイト<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">Silex\Application\FormTrait</span></code> は以下のショートカットを追加します。</p>
+<ul class="simple">
+<li><strong>form</strong>: フォームビルダーインスタンスを生成します。</li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">form</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>より詳しい情報については、 <a class="reference external" href="http://symfony.com/doc/2.3/book/forms.html">Symfony2 Forms ドキュメント</a> を参照してください.</p>
+<p>commit: d74cb1f9b415356c598de181612eb251246c9408
+original: <a class="reference external" href="https://github.com/silexphp/Silex/blob/master/doc/providers/form.rst">https://github.com/silexphp/Silex/blob/master/doc/providers/form.rst</a></p>
+</div>
+</div>
+
+
+<div id="page_prev_next">
+<a class="prev" href="validator.html">< ValidatorServiceProvider</a>
+<a class="next" href="http_cache.html">HttpCacheServiceProvider ></a>
+</div>
+
+<div class="common_content_footer">
+<ul>
+  <li> → <a href="http://silex-project.org/doc/providers/form.html">公式英語ドキュメント</a></li>
+  <li> → <a href="https://github.com/fabpot/Silex/commits/master/doc/providers/form.rst">原文コミット履歴</a>
+  <li> → <a href="https://github.com/brtriver/silex-doc-ja/commits/master/source/providers/form.rst">翻訳コミット履歴</a>
+</ul>
+<br />
+翻訳の不備などは、お気軽にコメント欄にてご指摘ください！
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>このページのコンテンツ</h3>
+  <ul>
+<li><a class="reference internal" href="#">FormServiceProvider</a><ul>
+<li><a class="reference internal" href="#id1">パラメータ</a></li>
+<li><a class="reference internal" href="#id2">サービス</a></li>
+<li><a class="reference internal" href="#id3">登録</a></li>
+<li><a class="reference internal" href="#id4">使用方法</a></li>
+<li><a class="reference internal" href="#id5">トレイト</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>前のドキュメント</h4>
+  <p class="topless"><a href="validator.html"
+                        title="previous chapter">ValidatorServiceProvider</a></p>
+  <h4>次のドキュメント</h4>
+  <p class="topless"><a href="http_cache.html"
+                        title="next chapter">HttpCacheServiceProvider</a></p>
+  <h3>ソース</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/providers/form.txt"
+           rel="nofollow">ページのソースを表示</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>クイック検索</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+      </div>
+      <!-- end #main -->
+    </div>
+    <!-- end #content_wrapper -->
+  </div>
+  <!-- end #content -->
+
+
+  <div id="footer">
+    <div id="footer_wrapper">
+      <div id="footer_content">
+        <div style=" position: relative;">
+          <div id="footer_left"></div>
+          <div id="footer_right"></div>
+        </div>
+        <div id="f_navbar">
+        <ul>
+            <li><a href="/">Silex ユーザーガイド</a></li>
+            <li><a href="../index.html">日本語ドキュメント TOP (索引)</a></li>
+            <li><a href="index.html">プロバイダー 一覧</a></li>
+            <li><a href="http://silex.sensiolabs.org/">Silex 公式サイト(英語)</a></li>
+            <li><a href="http://www.symfony.gr.jp/">日本Symfonyユーザー会</a></li>
+        </ul>
+      </div>
+      <!-- end #navbar -->
+      </div>
+      <!-- end #footer_content -->
+        </div>
+        <!-- end #footer_wrapper -->
+      </div>
+      <!-- end #footer -->
+    </div>
+  </body>
+</html>

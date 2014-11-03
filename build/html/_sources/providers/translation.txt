@@ -6,13 +6,11 @@ TranslationServiceProvider
 パラメーター
 ------------
 
-* **translator.messages**: メッセージとロケールのマッピングした配列。　このパラメーターは全ての言語の翻訳されたデータを含む。
+* **translator.domains** (オプション): ドメインとロケールとメッセージのマップ。このパラメータは全ての言語とドメインの翻訳データを含みます。
 
-* **locale** (オプション): 翻訳のための使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は ``en`` です。
+* **locale** (オプション): 翻訳のために使用するロケール。 リクエストパラメーターに基づいて設定するようになるでしょう。　標準は ``en`` です。
 
-* **locale_fallback** (オプション): 翻訳のための使用する代替のためのロケール。　現在のロケールが設定されていないときに利用されます。
-
-* **translation.class_path** (オプション): Symfony2 の Translation コンポーネントを配置したパス。
+* **locale_fallbacks** (オプション): 翻訳のために使用する代替のためのロケール。　現在のロケールでメッセージが設定されていないときに利用されます。
 
 サービス
 --------
@@ -34,45 +32,56 @@ TranslationServiceProvider
 登録
 -----------
 
-Symfony2 Translation コンポーネントのコピーがが ``vendor/symfony/src`` に配置されていることを確認してください。
-一番簡単な方法は Symfony2 全体を　vendor 内に置いてしまうことです::
+.. code-block:: php
 
+    $app->register(new Silex\Provider\LocaleServiceProvider());
     $app->register(new Silex\Provider\TranslationServiceProvider(), array(
-        'locale_fallback'           => 'en',
-        'translation.class_path'    => __DIR__.'/vendor/symfony/src',
+        'locale_fallbacks' => array('en'),
     ));
 
+.. note::
+
+    Symfony Translation Componentは"fat" Silexに付属し、標準サイズのSilexには付属しません。
+    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+
+    .. code-block:: json
+
+        "require": {
+            "symfony/translation": "~2.3"
+        }
+
 使い方
---------
+----------
 
-Translation プロバイダーは ``translator`` サービスを提供し、 ``translator.messages`` パラメーターを利用します::
+Translation プロバイダーは ``translator`` サービスを提供し、 ``translator.domains`` パラメーターを利用します。 ::
 
-    $app['translator.messages'] = array(
-        'en' => array(
-            'hello'     => 'Hello %name%',
-            'goodbye'   => 'Goodbye %name%',
+    $app['translator.domains'] = array(
+        'messages' => array(
+            'en' => array(
+                'hello'     => 'Hello %name%',
+                'goodbye'   => 'Goodbye %name%',
+            ),
+            'de' => array(
+                'hello'     => 'Hallo %name%',
+                'goodbye'   => 'Tschüss %name%',
+            ),
+            'fr' => array(
+                'hello'     => 'Bonjour %name%',
+                'goodbye'   => 'Au revoir %name%',
+            ),
         ),
-        'de' => array(
-            'hello'     => 'Hallo %name%',
-            'goodbye'   => 'Tschüss %name%',
-        ),
-        'fr' => array(
-            'hello'     => 'Bonjour %name%',
-            'goodbye'   => 'Au revoir %name%',
+        'validators' => array(
+            'fr' => array(
+                'This value should be a valid number.' => 'Cette valeur doit être un nombre.',
+            ),
         ),
     );
 
-    $app->before(function () use ($app) {
-        if ($locale = $app['request']->get('locale')) {
-            $app['locale'] = $locale;
-        }
-    });
-
-    $app->get('/{locale}/{message}/{name}', function ($message, $name) use ($app) {
+    $app->get('/{_locale}/{message}/{name}', function ($message, $name) use ($app) {
         return $app['translator']->trans($message, array('%name%' => $name));
     });
 
-上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう:
+上のサンプルは次のようなルーティングにおいて示すような結果になるでしょう。
 
 * ``/en/hello/igor`` は ``Hello igor`` を返す。
                      
@@ -82,40 +91,94 @@ Translation プロバイダーは ``translator`` サービスを提供し、 ``t
                      
 * ``/it/hello/igor`` は ``Hello igor`` を返す。 (代替設定のため).
 
+トレイト
+--------
+
+``Silex\Application\TranslationTrait`` は以下のショートカットを追加します。
+
+* **trans**: 与えられたメッセージを翻訳します。
+
+* **transChoice**:　数字によって翻訳を選ぶことにより与えられた選択メッセージを翻訳します。
+
+
+.. code-block:: php
+
+    $app->trans('Hello World');
+
+    $app->transChoice('Hello World');
+
 レシピ
 -------
 
-YAMLで言語ファイル
+YAMLでの言語ファイル
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PHPファイルで翻訳ファイルを用意することは不便でしょう。
 このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。
 
-まず最初に Symfony2 にある ``Config`` と ``Yaml`` コンポーネントが必要です。
-オートローダーでこれらのコンポーネントが登録されるようにします。
-そのために Symfony2 全体のリポジトリを ``vendor/symfony`` ディレクトリにクローンしてしまいます::
+まず最初にSymfony2の ``Config`` と ``Yaml`` コンポーネントをcomposerファイルに追加します。
 
-    $app['autoloader']->registerNamespace('Symfony', __DIR__.'/vendor/symfony/src');
+.. code-block:: json
 
+    "require": {
+        "symfony/config": "~2.3",
+        "symfony/yaml": "~2.3"
+    }
 
-次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは ``locals/en.yml`` を使います。
-マッピングは以下のようなファイルで用意するだけです:
+次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは ``locals/en.yml`` のような名前を使います。
+マッピングは以下のようなファイルで用意するだけです。
 
 .. code-block:: yaml
 
     hello: Hello %name%
     goodbye: Goodbye %name%
 
-この作業をあなたが使いたい全ての言語ファイル分用意します。そして、　ファイルに言語をマッピングするために ``translator.messages`` を設定します::
+そして ``translator`` に ``YamlFileLoader`` と全ての翻訳ファイルを登録します。 ::
+    
+    use Symfony\Component\Translation\Loader\YamlFileLoader;
 
-    $app['translator.messages'] = array(
-        'en' => __DIR__.'/locales/en.yml',
-        'de' => __DIR__.'/locales/de.yml',
-        'fr' => __DIR__.'/locales/fr.yml',
-    );
+    $app['translator'] = $app->extend('translator', function($translator, $app) {
+        $translator->addLoader('yaml', new YamlFileLoader());
 
-最後に ``ArrayLoader`` の代わりに ``YamlFileLoader`` を使うために ``translator.loader`` を上書きします。::
+        $translator->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
+        $translator->addResource('yaml', __DIR__.'/locales/de.yml', 'de');
+        $translator->addResource('yaml', __DIR__.'/locales/fr.yml', 'fr');
 
-    $app['translator.loader'] = new Symfony\Component\Translation\Loader\YamlFileLoader();
+        return $translator;
+    });
 
-これで YAML ファイルから翻訳データを読み込むことができます。
+XLIFFに基づいた言語ファイル
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+YAMLで翻訳ファイルを作成するのと同じように、Symfony2 ``Config`` コンポーネントを追加するために、依存関係をcomposerに追加した後に、 XLIFFファイルをロケールディレクトリに配置し、トランスレーターに渡します。 ::
+
+    $translator->addResource('xliff', __DIR__.'/locales/en.xlf', 'en');
+    $translator->addResource('xliff', __DIR__.'/locales/de.xlf', 'de');
+    $translator->addResource('xliff', __DIR__.'/locales/fr.xlf', 'fr');
+
+.. note::
+
+    XLIFFローダーはエクステンションによって既に設定されています。
+
+
+Twigテンプレートでの翻訳データへのアクセス
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ロードされていれば、Twigテンプレートからtranslation service providerを利用可能です。
+
+.. code-block:: jinja
+
+    {{ app.translator.trans('translation_key') }}
+
+さらに、Symfonyによって提供されているTwig bridge (詳しくはこちらを見てください。
+:doc:`TwigServiceProvider </providers/twig>`), を使えば、Twig流に翻訳文字を使用することが出来ます。
+
+.. code-block:: jinja
+
+    {{ 'translation_key'|trans }}
+    {{ 'translation_key'|transchoice }}
+    {% trans %}translation_key{% endtrans %}
+
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/providers/translation.rst

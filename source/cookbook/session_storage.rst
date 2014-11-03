@@ -33,21 +33,21 @@ Symfony2の `NativeSessionStorage
         'db_time_col'   => 'session_time',
     );
 
-    $app['pdo'] = $app->share(function () use ($app) {
+    $app['pdo'] = function () use ($app) {
         return new PDO(
             $app['pdo.dsn'],
             $app['pdo.user'],
             $app['pdo.password']
         );
-    });
+    };
 
-    $app['session.storage.handler'] = $app->share(function () use ($app) {
+    $app['session.storage.handler'] = function () use ($app) {
         return new PdoSessionHandler(
             $app['pdo'],
             $app['session.db_options'],
             $app['session.storage.options']
         );
-    });
+    };
 
 DoctrineServiceProviderの使用
 ---------------------------------
@@ -67,13 +67,13 @@ DoctrineServiceProviderの使用
         'db_time_col'   => 'session_time',
     );
 
-    $app['session.storage.handler'] = $app->share(function () use ($app) {
+    $app['session.storage.handler'] = function () use ($app) {
         return new PdoSessionHandler(
             $app['db']->getWrappedConnection(),
             $app['session.db_options'],
             $app['session.storage.options']
         );
-    });
+    };
 
 データベースの構造
 ------------------
@@ -87,3 +87,7 @@ PdoSessionStorageを使用するには3カラムで構成されるデータベ�
 セッションテーブルを作成するためのSQLステートメントの例は
 `Symfony2 cookbook
 <http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements>`_ にあります。
+
+
+commit: fc8bbb623f33ce448c8bf1d4a95aa26360032de1
+original: https://github.com/silexphp/Silex/blob/master/doc/cookbook/session_storage.rst
