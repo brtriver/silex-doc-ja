@@ -132,7 +132,7 @@
 
 .. _controller-providers:
 
-コントロラープロバイダー(Controllers providers)
+コントローラープロバイダー(Controllers providers)
 ---------------------------------------------------
 
 プロバイダーの読み込み
