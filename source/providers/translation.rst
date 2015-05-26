@@ -42,13 +42,11 @@ TranslationServiceProvider
 .. note::
 
     Symfony Translation Componentは"fat" Silexに付属し、標準サイズのSilexには付属しません。
-    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+    もしComposerを使用している場合には、依存関係を追加してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/translation": "~2.3"
-        }
+        composer require symfony/translation
 
 使い方
 ----------
@@ -116,14 +114,11 @@ YAMLでの言語ファイル
 PHPファイルで翻訳ファイルを用意することは不便でしょう。
 このレシピで外部に用意したYAMLファイルから翻訳データを読み込む方法について説明します。
 
-まず最初にSymfony2の ``Config`` と ``Yaml`` コンポーネントをcomposerファイルに追加します。
+まず最初にSymfony2の ``Config`` と ``Yaml`` コンポーネントを追加します。
 
-.. code-block:: json
+.. code-block:: bash
 
-    "require": {
-        "symfony/config": "~2.3",
-        "symfony/yaml": "~2.3"
-    }
+    composer require symfony/config symfony/yaml
 
 次に、YAMLファイルで言語のマッピングを作らなければなりません。マッピングファイルは ``locals/en.yml`` のような名前を使います。
 マッピングは以下のようなファイルで用意するだけです。

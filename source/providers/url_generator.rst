@@ -51,7 +51,7 @@ Twigを使っている場合、サービスを以下のように使用するこ�
 
     {{ app.url_generator.generate('homepage') }}
 
-さらに ``composer.json`` に ``twig-bridge`` がある場合、 ``path()`` と ``url()`` 関数がテンプレート中で使用可能です。
+さらに Composer で ``twig-bridge`` の依存関係が設定されている場合、 ``path()`` と ``url()`` 関数がテンプレート中で使用可能です。
 
 .. code-block:: jinja
 

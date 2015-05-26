@@ -65,13 +65,11 @@ SwiftmailerServiceProvider
 
 .. note::
     SwiftMailerは"fat" Silexに付属し、標準サイズのSilexには付属しません。
-    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+    もしComposerを使用している場合には、依存関係を追加してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "swiftmailer/swiftmailer": ">=4.1.2,<4.2-dev"
-        }
+        composer require swiftmailer/swiftmailer
 
 使用方法
 -------------

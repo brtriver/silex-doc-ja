@@ -3,13 +3,11 @@ YAMLを使用してバリデーションを設定
 
 シンプルであることはSilexは心臓部であるので、YAMLファイルをバリデーションに使うための独創的な方法はありません。しかし、不可能ではありませんので方法を見てみましょう。
 
-まず、YAMLコンポーネントをインストールします。 ``composer.json`` ファイルで以下のように依存関係を宣言してください。
+まず、YAMLコンポーネントをインストールします。
 
-.. code-block:: json
+.. code-block:: bash
 
-    "require": {
-        "symfony/yaml": "~2.3"
-    }
+    composer require symfony/yaml
 
 次にバリデーションサービスに、あなたのクラスメタデータではなくYAMLファイルをロードするために ``StaticMethodLoader`` を使用しないことを伝えてください。 ::
 

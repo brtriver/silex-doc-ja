@@ -39,40 +39,30 @@ FormServiceProvider
 .. note::
 
     Symfony Form Component と、それの全ての依存関係(オプションや必須を含む) はは"fat" Silexに付属し、標準サイズのSilexには付属しません。
-    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+    もしComposerを使用している場合には、依存関係を追加してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/form": "~2.3"
-        }
+        composer require symfony/form
 
     バリデーションエクステンションも使用したい場合、それらの依存関係として ``symfony/config`` と ```symfony/translation`` が必要です。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/validator": "~2.3",
-            "symfony/config": "~2.3",
-            "symfony/translation": "~2.3"
-        }
+        composer require symfony/validator symfony/config symfony/translation
 
     Symfony FormコンポーネントはPHP intl エクステンションに依存しています。
     もし持っていなかったら、Symfony Localeコンポーネントをインストールして置換してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/locale": "~2.3"
-        }
+        composer require symfony/locale
 
     Twigテンプレートでフォームを使用したい場合はSymfony Twig Bridgeをインストールしてください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/twig-bridge": "~2.3"
-        }
+        composer require symfony/twig-bridge
 
 使用方法
 --------

@@ -38,13 +38,11 @@ ValidatorServiceProvider
 .. note::
 
     Symfony Validator Componentは"fat" Silexに付属し、標準サイズのSilexには付属しません。
-    もしComposerを使用している場合には、 ``composer.json`` ファイルに依存関係を記述してください。
+    もしComposerを使用している場合には、依存関係を追加してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/validator": "~2.3"
-        }
+        composer require symfony/validator
 
 使い方
 -------

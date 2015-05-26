@@ -18,38 +18,10 @@
         └── index.php
 
 Silexをもっと柔軟に使いたい場合は、 Composer_ を用います。
-まず以下の様な ``composer.json`` を作ってください。
-
-.. code-block:: json
-
-    {
-        "require": {
-            "silex/silex": "~1.1"
-        }
-    }
-
-その後に、 Composer_ を実行すればSilexと、それに関する全ての依存パッケージがインストールされます。
 
 .. code-block:: bash
 
-    $ curl -s http://getcomposer.org/installer | php
-    $ php composer.phar install
-
-.. tip::
-
-    デフォルトでは、SilexはSymfonyの安定版のコンポーネントに依存しています。
-    それらのmasterバージョンを使用したい場合は、 ``composer.json`` に、
-    ``"minimum-stability": "dev"`` と付け加えてください。
-
-アップグレード (Upgrading)
--------------------------------
-
-Silexを最新版にアップグレードするには、以下の ``update`` コマンドを実行してください。
-
-.. code-block:: bash
-
-    $ php composer.phar update
-
+    composer require silex/silex:~1.2
 
 ブートストラップ (Bootstrap)
 -------------------------------
