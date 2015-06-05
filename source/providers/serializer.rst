@@ -36,13 +36,11 @@ Services
     *SerializerServiceProvider* は Symfony の `Serializer Component
     <http://symfony.com/doc/current/components/serializer.html>`_ に依存しており、 
     "全部入り" Silex のアーカイブには含まれますが、通常版には含まれません。
-    そのため依存関係を ``composer.json`` ファイルに追記してください:
+    そのため依存関係を追加してください:
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "symfony/serializer": ">=2.3,<2.5-dev",
-         }
+        composer require symfony/serializer
 
 使い方
 ---------

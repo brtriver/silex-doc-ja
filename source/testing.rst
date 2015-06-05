@@ -72,15 +72,11 @@ Silex のために用意したバージョンは ``Silex\WebTestCase`` であり
 
 .. note::
 
-    もしSymfony2 ``WebTestCase`` クラスを使いたければ、プロジェクトにおいて明示的に依存関係をインストールしなければなりません。
-    そのためには ``composer.json`` に以下のように記述する必要があります。:
+    もしSymfony2 ``WebTestCase`` クラスを使いたければ、プロジェクトにおいて明示的に依存関係をインストールしなければなりません。:
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require-dev": {
-            "symfony/browser-kit": ">=2.3,<2.4-dev",
-            "symfony/css-selector": ">=2.3,<2.4-dev"
-        }
+        composer require --dev symfony/browser-kit symfony/css-selector
 
 WebTestCase のために、 ``createApplication`` メソッドを実装することになるでしょう。このメソッドはアプリケーションを返却します。
 次のようなコードになります。 ::

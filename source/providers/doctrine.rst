@@ -58,13 +58,11 @@ DoctrineServiceProvider
 
 .. note::
 
-    Doctrine DBALは "fat" Silexアーカイブに付属します。レギュラーサイズのSilexには付属しません。もしComposerを使っているのならば ``composer.json`` ファイルに依存関係を記述してください。
+    Doctrine DBALは "fat" Silexアーカイブに付属します。レギュラーサイズのSilexには付属しません。もしComposerを使っているのならば、依存関係を追加してください。
 
-    .. code-block:: json
+    .. code-block:: bash
 
-        "require": {
-            "doctrine/dbal": "2.2.*",
-         }
+        composer require "doctrine/dbal:~2.2"
 
 使い方
 ---------

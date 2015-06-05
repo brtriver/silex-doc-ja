@@ -46,6 +46,6 @@ submodule化したSilex.gitのdocへのコミット履歴を確認して差分�
     $ git push origin master
 
 ## 作業が完了している本家コミットの年月日
-2014-10-12
+2014-10-20
 
 [id]: http://silex.sensiolabs.org/
